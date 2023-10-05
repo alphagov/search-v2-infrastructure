@@ -1,0 +1,21 @@
+############################################
+#
+# Update this file with your customizations
+#
+############################################
+
+# Domain suffix to be used to construct IAM groups
+domain = "acme.com"
+
+# Get Folder ID of above folder
+folder_id = "123456789"
+
+# Principals for IAM roles
+id1 = ""
+id2 = ""
+
+# Principal Type: user or group
+type = "group"
+
+# Create discoveryengine Google Groups
+create_discoveryengine_groups = true

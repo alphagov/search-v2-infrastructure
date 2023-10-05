@@ -1,0 +1,26 @@
+############################################
+#
+# Update this file with your customizations
+#
+############################################
+
+domain = "kinandcarta.com"
+
+billing_id = "01C149-A77C09-A69641
+"
+
+folder_id = "123456789"
+
+env_code = "d"
+
+project_prefix = "prj"
+
+
+services = [
+  "logging.googleapis.com",
+  "monitoring.googleapis.com",
+  "discoveryengine.googleapis.com",
+  "bigquery.googleapis.com",
+  "bigquerystorage.googleapis.com",
+  "storage.googleapis.com"
+]
