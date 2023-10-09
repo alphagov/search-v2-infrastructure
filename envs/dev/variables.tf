@@ -40,7 +40,7 @@ variable "location" {
   default     = "EU"
 }
 
-variable "kc_group" {
+variable "govuk_group" {
   type        = string
   description = "K+C gcp group to use"
 }

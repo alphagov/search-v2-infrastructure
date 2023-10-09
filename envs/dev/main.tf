@@ -38,5 +38,5 @@ module "dev" {
   services       = var.services
   location       = var.location
   project_id = var.project_id
-  kc_group = var.kc_group
+  govuk_group = var.govuk_group
 }

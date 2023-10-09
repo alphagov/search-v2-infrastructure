@@ -3,7 +3,7 @@
 #   project = data.google_project.base.project_id
 #   role    = "roles/bigquery.dataEditor"
 #   members = [
-#     "serviceAccount:${var.kc_group}"
+#     "serviceAccount:${var.govuk_group}"
 #   ]
 # }
 
