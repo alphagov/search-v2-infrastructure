@@ -1,0 +1,13 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+	"name": "search-v2-infrastructure",
+	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"version": "1.6.0",
+			"tflint": "latest",
+			"terragrunt": "latest"
+		}
+	}
+}
