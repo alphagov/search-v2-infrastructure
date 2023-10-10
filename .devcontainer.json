@@ -12,5 +12,12 @@
 	},
 	"mounts": [
 		"source=${localWorkspaceFolder}/.terraform.credentials.d,target=/home/vscode/.terraform.d,type=bind,consistency=cached"
-	]
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.formatOnSave": true
+			}
+		}
+	}
 }
