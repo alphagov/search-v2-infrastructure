@@ -1,3 +1,9 @@
 # Terraform configuration directory
 /.terraform.credentials.d/*
 !/.terraform.credentials.d/.keep
+
+# Terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+*.lock.hcl
