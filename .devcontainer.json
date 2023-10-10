@@ -9,5 +9,8 @@
 			"tflint": "latest",
 			"terragrunt": "latest"
 		}
-	}
+	},
+	"mounts": [
+		"source=${localWorkspaceFolder}/.terraform.credentials.d,target=/home/vscode/.terraform.d,type=bind,consistency=cached"
+	]
 }

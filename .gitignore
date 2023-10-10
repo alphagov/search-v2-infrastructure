@@ -1,0 +1,3 @@
+# Terraform configuration directory
+/.terraform.credentials.d/*
+!/.terraform.credentials.d/.keep
