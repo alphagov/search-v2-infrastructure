@@ -21,8 +21,16 @@ provider "google" {
   region  = var.gcp_region
 }
 
-resource "google_project_service" "discovery_engine_service" {
+locals {
+  google_services = [
+    "cloudresourcemanager.googleapis.com",
+    "discoveryengine.googleapis.com"
+  ]
+}
+
+resource "google_project_service" "google_services" {
+  for_each                   = toset(local.google_services)
   project                    = var.gcp_project_id
-  service                    = "discoveryengine.googleapis.com"
+  service                    = each.value
   disable_dependent_services = true
 }
