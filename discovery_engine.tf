@@ -18,15 +18,24 @@ locals {
 resource "restapi_object" "discovery_engine_datastore" {
   depends_on   = [google_project_service.google_services]
   path         = "${local.discovery_engine_collection_path}/dataStores"
-  query_string = "dataStoreId=${var.gcp_discovery_engine_data_store_id}"
-  object_id    = var.gcp_discovery_engine_data_store_id
+  query_string = "dataStoreId=${var.gcp_discovery_engine_datastore_id}"
+  object_id    = var.gcp_discovery_engine_datastore_id
   data = jsonencode({
-    displayName      = var.gcp_discovery_engine_data_store_id
+    displayName      = var.gcp_discovery_engine_datastore_id
     industryVertical = "GENERIC"
     solutionTypes    = ["SOLUTION_TYPE_SEARCH"]
     searchTier       = "STANDARD"
-    contentConfig    = "CONTENT_REQUIRED"
+    contentConfig    = "CONTENT_REQUIRED" # makes the engine "unstructured"
     searchAddOns     = ["LLM"]
   })
   create_method = "POST"
+}
+
+resource "restapi_object" "discovery_engine_datastore_schema" {
+  depends_on = [restapi_object.discovery_engine_datastore]
+  path       = "${local.discovery_engine_collection_path}/dataStores/${var.gcp_discovery_engine_datastore_id}/schemas"
+  data = jsonencode({
+    name         = var.gcp_discovery_engine_datastore_schema_name
+    structSchema = file("${path.module}/files/datastore_schema.json")
+  })
 }

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.gov.uk/govuk_content_metadata_discoveryengine.json",
+  "title": "Vertex Schema for GOV.UK",
+  "description": "GOV.UK content object representation as stored in Google Vertex AI Enterprise Search",
+  "type": "object",
+  "properties": {
+    "content_id": {
+      "description": "Unique content ID from the Publishing API (for debugging/retrieving single objects)",
+      "type": "string",
+      "format": "uuid",
+      "retrievable": true
+    },
+    "title": {
+      "description": "The main title (shown in search results)",
+      "type": "string",
+      "keyPropertyMapping": "title",
+      "retrievable": true
+    },
+    "description": {
+      "description": "A short description (shown in search results)",
+      "type": "string",
+      "keyPropertyMapping": "description",
+      "retrievable": true
+    },
+    "additional_searchable_text": {
+      "description": "Additional textual content such as keywords that should be searchable but don't form part of the main body of content",
+      "type": "string",
+      "searchable": true
+    },
+    "link": {
+      "description": "URI reference either as a relative path for GOV.UK content, or as an absolute URL for external content (used to link to the content from search results)",
+      "type": "string",
+      "format": "uri-reference",
+      "retrievable": true
+    },
+    "url": {
+      "description": "Absolute URL including protocol and host even for content on GOV.UK proper (used for Vertex to incorporate popularity/event signals)",
+      "type": "string",
+      "format": "url",
+      "keyPropertyMapping": "uri"
+    },
+    "public_timestamp": {
+      "description": "Unix timestamp of when this object was last updated (for sorting/filtering/boosting)",
+      "type": "integer",
+      "retrievable": true,
+      "indexable": true
+    },
+    "document_type": {
+      "description": "The source document type (for boosting)",
+      "type": "string",
+      "indexable": true,
+      "retrievable": true
+    },
+    "content_purpose_supergroup": {
+      "description": "The content purpose supergroup (for filtering/boosting)",
+      "type": "string",
+      "indexable": true,
+      "retrievable": true
+    },
+    "part_of_taxonomy_tree": {
+      "description": "A list of GOV.UK taxon IDs that this content object is tagged to (for filtering)",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid",
+        "keyPropertyMapping": "category"
+      }
+    },
+    "is_historic": {
+      "description": "Whether the content is historic (for boosting; boosts don't support boolean)",
+      "type": "integer",
+      "multipleOf": 1,
+      "minimum": 0,
+      "maximum": 1,
+      "indexable": true
+    },
+    "organisation_state": {
+      "description": "The state of the organisation (for boosting)",
+      "type": "string",
+      "indexable": true
+    },
+    "locale": {
+      "description": "The locale of the content (not used yet, may be useful for i18n later)",
+      "type": "string",
+      "indexable": true
+    },
+    "parts": {
+      "description": "A list of parts (shown below search result if present)",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "slug"
+        ]
+      },
+      "searchable": true,
+      "retrievable": true
+    }
+  },
+  "required": [
+    "content_id",
+    "title",
+    "link",
+    "url",
+    "public_timestamp",
+    "document_type"
+  ]
+}

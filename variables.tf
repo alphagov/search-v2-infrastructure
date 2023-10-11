@@ -27,8 +27,14 @@ variable "gcp_discovery_engine_collection" {
   default     = "default_collection"
 }
 
-variable "gcp_discovery_engine_data_store_id" {
+variable "gcp_discovery_engine_datastore_id" {
   type        = string
   description = "The ID of the Discovery Engine Datastore instance to create, e.g. search-api-v2-integration"
   default     = "govuk-structured"
+}
+
+variable "gcp_discovery_engine_datastore_schema_name" {
+  type        = string
+  description = "The name for the Discovery Engine Datastore's metadata schema"
+  default     = "govuk_content_metadata"
 }
