@@ -1,0 +1,67 @@
+name: Terraform validation and linting
+on:
+  push:
+    paths: ["**/*.tf", "**/*.hcl", ".github/workflows/lint.yml"]
+env:
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+  TFLINT_VERSION: v0.48.0
+jobs:
+  lint_and_validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout source code
+
+      - name: Determine Terraform version to use
+        uses: dflook/terraform-version@4acf4de147e9ea706a8b30e3725fc522cd6ab001
+        id: terraform-version
+
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ steps.terraform-version.outputs.terraform }}
+          terraform_wrapper: false
+
+      - name: Create Terraform plugin cache dir
+        run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
+
+      - name: Cache Terraform plugins
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: terraform-plugins-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+
+      - uses: actions/cache@v2
+        name: Cache TFLint plugins
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ runner.os }}-${{ hashFiles('**/tflint.hcl') }}
+
+      - uses: terraform-linters/setup-tflint@v3
+        name: Set up TFLint
+        with:
+          tflint_version: ${{ env.TFLINT_VERSION }}
+
+      - name: terraform fmt
+        run: |
+          if ! terraform fmt -check -diff -list=true -recursive .; then
+            >&2 echo "Some terraform files weren't formatted correctly. Run 'terraform fmt' to fix them."
+            exit 1
+          fi
+
+      - name: terraform init
+        run: terraform init -backend=false
+
+      - name: terraform validate
+        run: terraform validate
+
+      - name: tflint
+        run: |
+          tflint --init --recursive
+          tflint --format compact --module --recursive \
+              --enable-rule=terraform_comment_syntax \
+              --enable-rule=terraform_deprecated_index \
+              --enable-rule=terraform_required_providers \
+              --enable-rule=terraform_standard_module_structure \
+              --enable-rule=terraform_typed_variables \
+              --enable-rule=terraform_unused_declarations \
+              --enable-rule=terraform_unused_required_providers
