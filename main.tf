@@ -43,7 +43,7 @@ provider "restapi" {
 locals {
   google_services = [
     # Required to create API token to use with REST API
-    "apicredentials.googleapis.com",
+    "iamcredentials.googleapis.com",
     # Required to create resources using Terraform
     "cloudresourcemanager.googleapis.com",
     "discoveryengine.googleapis.com"
@@ -59,6 +59,8 @@ resource "google_project_service" "google_services" {
 }
 
 resource "restapi_object" "vertex_datastore" {
-  path = "${local.vertex_collection_path}/dataStores?dataStoreId=${var.gcp_vertex_data_store_id}"
-  data = "{}"
+  path         = "${local.vertex_collection_path}/dataStores"
+  query_string = "dataStoreId=${var.gcp_vertex_data_store_id}"
+  object_id    = var.gcp_vertex_data_store_id
+  data         = "{}"
 }
