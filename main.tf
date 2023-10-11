@@ -30,10 +30,11 @@ data "google_client_config" "default" {
 }
 
 provider "restapi" {
-  uri                  = "https://discoveryengine.googleapis.com/v1alpha"
+  uri                  = "https://discoveryengine.googleapis.com/${var.gcp_discovery_engine_api_version}"
   write_returns_object = false
   headers = {
-    "Authorization" = "Bearer ${data.google_client_config.default.access_token}"
+    "Authorization"       = "Bearer ${data.google_client_config.default.access_token}"
+    "X-Goog-User-Project" = var.gcp_project_id
   }
 }
 
@@ -43,7 +44,7 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "discoveryengine.googleapis.com"
   ]
-  vertex_collection_path = "/projects/${var.gcp_project_id}/locations/${var.gcp_vertex_location}/collections/${var.gcp_vertex_collection}"
+  discovery_engine_collection_path = "/projects/${var.gcp_project_id}/locations/${var.gcp_discovery_engine_location}/collections/${var.gcp_discovery_engine_collection}"
 }
 
 resource "google_project_service" "google_services" {
@@ -53,9 +54,17 @@ resource "google_project_service" "google_services" {
   disable_dependent_services = true
 }
 
-resource "restapi_object" "vertex_datastore" {
-  path         = "${local.vertex_collection_path}/dataStores"
-  query_string = "dataStoreId=${var.gcp_vertex_data_store_id}"
-  object_id    = var.gcp_vertex_data_store_id
-  data         = "{}"
+resource "restapi_object" "discovery_engine_datastore" {
+  path         = "${local.discovery_engine_collection_path}/dataStores"
+  query_string = "dataStoreId=${var.gcp_discovery_engine_data_store_id}"
+  object_id    = var.gcp_discovery_engine_data_store_id
+  data = jsonencode({
+    displayName      = var.gcp_discovery_engine_data_store_id
+    industryVertical = "GENERIC"
+    solutionTypes    = ["SOLUTION_TYPE_SEARCH"]
+    searchTier       = "STANDARD"
+    contentConfig    = "CONTENT_REQUIRED"
+    searchAddOns     = ["LLM"]
+  })
+  create_method = "POST"
 }

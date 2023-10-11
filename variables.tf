@@ -9,20 +9,26 @@ variable "gcp_region" {
   default     = "europe-west2"
 }
 
-variable "gcp_vertex_location" {
+variable "gcp_discovery_engine_api_version" {
   type        = string
-  description = "GCP location to create Vertex Datastore instance in, e.g. global"
+  description = "The version of the Discovery Engine API to use, e.g. v1alpha"
+  default     = "v1alpha"
+}
+
+variable "gcp_discovery_engine_location" {
+  type        = string
+  description = "GCP location to create Discovery Engine Datastore instance in, e.g. global"
   default     = "global"
 }
 
-variable "gcp_vertex_collection" {
+variable "gcp_discovery_engine_collection" {
   type        = string
-  description = "The collection to use for Vertex Search, currently only `default_collection` is supported"
+  description = "The collection to use for Discovery Engine, currently only `default_collection` is supported"
   default     = "default_collection"
 }
 
-variable "gcp_vertex_data_store_id" {
+variable "gcp_discovery_engine_data_store_id" {
   type        = string
-  description = "The ID of the Vertex Datastore instance to create, e.g. search-api-v2-integration"
+  description = "The ID of the Discovery Engine Datastore instance to create, e.g. search-api-v2-integration"
   default     = "govuk-structured"
 }
