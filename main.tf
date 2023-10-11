@@ -34,3 +34,14 @@ resource "google_project_service" "google_services" {
   service                    = each.value
   disable_dependent_services = true
 }
+
+module "gcloud" {
+  source        = "terraform-google-modules/gcloud/google"
+  version       = "~> 3.3.0"
+  skip_download = false
+
+  create_cmd_entrypoint  = "gcloud"
+  create_cmd_body        = "version"
+  destroy_cmd_entrypoint = "gcloud"
+  destroy_cmd_body       = "version"
+}
