@@ -25,25 +25,20 @@ provider "google" {
   region  = var.gcp_region
 }
 
-data "google_service_account_access_token" "default" {
-  provider               = google
-  target_service_account = "search-api-v2-integration-tf@search-api-v2-integration.iam.gserviceaccount.com"
-  scopes                 = ["cloud-platform"]
-  lifetime               = "300s"
+# Used to extract access token so we can call the REST API
+data "google_client_config" "default" {
 }
 
 provider "restapi" {
   uri                  = "https://discoveryengine.googleapis.com/v1alpha"
   write_returns_object = false
   headers = {
-    "Authorization" = "Bearer ${data.google_service_account_access_token.default.access_token}"
+    "Authorization" = "Bearer ${data.google_client_config.default.access_token}"
   }
 }
 
 locals {
   google_services = [
-    # Required to create API token to use with REST API
-    "iamcredentials.googleapis.com",
     # Required to create resources using Terraform
     "cloudresourcemanager.googleapis.com",
     "discoveryengine.googleapis.com"
