@@ -43,7 +43,7 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "discoveryengine.googleapis.com"
   ]
-  vertex_collection_path = "projects/${var.gcp_project_id}/locations/${var.gcp_vertex_location}/collections/${var.gcp_vertex_collection}"
+  vertex_collection_path = "/projects/${var.gcp_project_id}/locations/${var.gcp_vertex_location}/collections/${var.gcp_vertex_collection}"
 }
 
 resource "google_project_service" "google_services" {
