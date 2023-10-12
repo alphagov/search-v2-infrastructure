@@ -25,17 +25,9 @@ provider "google" {
   region  = var.gcp_region
 }
 
-locals {
-  google_services = [
-    # Required to create resources using Terraform
-    "cloudresourcemanager.googleapis.com",
-    "discoveryengine.googleapis.com"
-  ]
-}
-
-resource "google_project_service" "google_services" {
-  for_each                   = toset(local.google_services)
+# Allows managing project properties through Terraform
+resource "google_project_service" "cloudresourcemanager" {
   project                    = var.gcp_project_id
-  service                    = each.value
+  service                    = "cloudresourcemanager.googleapis.com"
   disable_dependent_services = true
 }
