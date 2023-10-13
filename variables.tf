@@ -31,22 +31,8 @@ variable "discovery_engine_tier" {
   default     = "STANDARD"
 }
 
-variable "discovery_engine_collection" {
-  type        = string
-  description = "The collection to use for Discovery Engine"
-  # Defaulting to `default_collection` as this is the only supported collection (and we wouldn't
-  # need any custom collection anyway)
-  default = "default_collection"
-}
-
 variable "discovery_engine_datastore_id" {
   type        = string
   description = "The ID of the Discovery Engine Datastore instance to create, e.g. search-api-v2-integration"
   default     = "govuk-content"
-}
-
-variable "discovery_engine_datastore_schema_name" {
-  type        = string
-  description = "The name for the Discovery Engine Datastore's metadata schema"
-  default     = "govuk-content-metadata"
 }

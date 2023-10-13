@@ -92,22 +92,25 @@
         "type": "object",
         "properties": {
           "title": {
-            "type": "string"
+            "type": "string",
+            "searchable": true,
+            "retrievable": true
           },
           "body": {
-            "type": "string"
+            "type": "string",
+            "searchable": true,
+            "retrievable": true
           },
           "slug": {
-            "type": "string"
+            "type": "string",
+            "retrievable": true
           }
         },
         "required": [
           "title",
           "slug"
         ]
-      },
-      "searchable": true,
-      "retrievable": true
+      }
     }
   },
   "required": [
