@@ -10,6 +10,9 @@
 	"mounts": [
 		"source=${localWorkspaceFolder}/.terraform.credentials.d,target=/home/vscode/.terraform.d,type=bind,consistency=cached"
 	],
+	"remoteEnv": {
+		"GOOGLE_APPLICATION_CREDENTIALS": "/home/vscode/.terraform.d/google_credentials.json"
+	},
 	"customizations": {
 		"vscode": {
 			"settings": {
