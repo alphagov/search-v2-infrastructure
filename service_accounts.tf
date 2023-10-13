@@ -41,7 +41,12 @@ resource "google_project_iam_custom_role" "api_write" {
 
   permissions = [
     "discoveryengine.dataStores.get",
-    "discoveryengine.documents.*",
+    "discoveryengine.documents.create",
+    "discoveryengine.documents.delete",
+    "discoveryengine.documents.get",
+    "discoveryengine.documents.import",
+    "discoveryengine.documents.list",
+    "discoveryengine.documents.update",
     "discoveryengine.operations.get",
   ]
 }
