@@ -48,19 +48,19 @@ resource "google_project_iam_custom_role" "api_write" {
 
 resource "google_project_iam_binding" "api_read" {
   project = var.gcp_project_id
-  role    = "search_api_v2_read"
+  role    = google_project_iam_custom_role.api_read.id
 
   members = [
-    "serviceAccount:${google_service_account.api_read.email}"
+    google_service_account.api_read.member
   ]
 }
 
 resource "google_project_iam_binding" "api_write" {
   project = var.gcp_project_id
-  role    = "search_api_v2_write"
+  role    = google_project_iam_custom_role.api_write.id
 
   members = [
-    "serviceAccount:${google_service_account.api_write.email}"
+    google_service_account.api_write.member
   ]
 }
 
