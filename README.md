@@ -34,6 +34,7 @@ For an environment named `example`, you will need the following items set up:
 - `main.tf`: General Terraform and provider configuration and activates the required GCP APIs
   (prerequisite for other resources)
 - `discovery_engine.tf`: Sets up Discovery Engine resources
+- `service_accounts.tf`: Sets up service accounts for `search-api-v2` to access Discovery Engine
 
 > **Note**
 > The Discovery Engine resources are managed through the [RestAPI provider][restapi_provider_docs]
