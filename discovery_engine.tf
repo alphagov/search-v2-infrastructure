@@ -34,11 +34,11 @@ resource "google_project_service" "discoveryengine" {
 # A datastore for content to be ingested into
 # API resource: v1alpha.projects.locations.collections.dataStores
 resource "restapi_object" "discovery_engine_datastore" {
-  depends_on   = [google_project_service.discoveryengine]
-  path         = "/dataStores"
-  query_string = "dataStoreId=${var.discovery_engine_datastore_id}"
-  object_id    = var.discovery_engine_datastore_id
+  depends_on = [google_project_service.discoveryengine]
+  path       = "/dataStores"
+  object_id  = var.discovery_engine_datastore_id
   data = jsonencode({
+    dataStoreId      = var.discovery_engine_datastore_id
     displayName      = var.discovery_engine_datastore_id
     industryVertical = "GENERIC"
     solutionTypes    = ["SOLUTION_TYPE_SEARCH"]
