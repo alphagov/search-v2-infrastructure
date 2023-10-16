@@ -76,3 +76,21 @@ resource "google_service_account_key" "api_read" {
 resource "google_service_account_key" "api_write" {
   service_account_id = google_service_account.api_write.id
 }
+
+resource "aws_secretsmanager_secret" "key_read" {
+  name = "govuk/search-api-v2/google-key-read"
+}
+
+resource "aws_secretsmanager_secret" "key_write" {
+  name = "govuk/search-api-v2/google-key-write"
+}
+
+resource "aws_secretsmanager_secret_version" "key_read" {
+  secret_id     = aws_secretsmanager_secret.key_read.id
+  secret_string = google_service_account_key.api_read.private_key
+}
+
+resource "aws_secretsmanager_secret_version" "key_write" {
+  secret_id     = aws_secretsmanager_secret.key_write.id
+  secret_string = google_service_account_key.api_write.private_key
+}
