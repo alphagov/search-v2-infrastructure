@@ -1,6 +1,12 @@
+variable "govuk_environment" {
+  type        = string
+  description = "The environment to deploy to, e.g. dev, integration, staging, production"
+}
+
 variable "gcp_project_id" {
   type        = string
   description = "GCP Project ID of the project to create infrastructure in, e.g. search-api-v2-integration"
+  default     = "search-api-v2-${var.govuk_environment}"
 }
 
 variable "gcp_region" {
