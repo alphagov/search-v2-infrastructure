@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "govuk"
     workspaces {
-      name = "search-api-v2-terraformcloud"
+      name = "search-api-v2-meta"
     }
   }
 
@@ -20,16 +20,18 @@ provider "tfe" {
   organization = "govuk"
 }
 
+# TODO: This project was manually created and its properties/dependent resources need to be fully
+# reflected here eventually.
 resource "tfe_project" "project" {
   name = "govuk-search-api-v2"
 }
 
-# Note: This meta-workspace is used to store the state for this set of Terraform resources. These
-# resources were initially created locally and the state then imported into Terraform Cloud.
-resource "tfe_workspace" "terraformcloud_workspace" {
-  name        = "search-api-v2-terraformcloud"
+# NOTE: This is used to store the state for this module itself (see `terraform` block above). It was
+# initially created using a local backend, and then migrated to a remote backend.
+resource "tfe_workspace" "meta_workspace" {
+  name        = "search-api-v2-meta"
   project_id  = tfe_project.project.id
-  description = "State storage workspace for cross-environment TF Cloud resources"
+  description = "Meta workspace for cross-environment TF Cloud resources (state backend only)"
   tag_names   = ["govuk", "search-api-v2"]
 
   execution_mode = "local"
