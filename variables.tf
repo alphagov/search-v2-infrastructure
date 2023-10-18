@@ -36,3 +36,9 @@ variable "discovery_engine_datastore_ids" {
   description = "A list of IDs for Discovery Engine Datastore instances to create"
   default     = ["govuk-content"]
 }
+
+variable "generate_google_keys" {
+  type        = bool
+  description = "Whether or not to generate Google service account keys (and import them into AWS Secrets Manager) for this environment"
+  default     = true
+}
