@@ -88,13 +88,13 @@ resource "aws_secretsmanager_secret" "key_write" {
 resource "aws_secretsmanager_secret_version" "key_read" {
   secret_id = aws_secretsmanager_secret.key_read.id
   secret_string = jsonencode({
-    "credentials.json" = google_service_account_key.api_read.private_key
+    "credentials.json" = base64decode(google_service_account_key.api_read.private_key)
   })
 }
 
 resource "aws_secretsmanager_secret_version" "key_write" {
   secret_id = aws_secretsmanager_secret.key_write.id
   secret_string = jsonencode({
-    "credentials.json" = google_service_account_key.api_write.private_key
+    "credentials.json" = base64decode(google_service_account_key.api_write.private_key)
   })
 }
