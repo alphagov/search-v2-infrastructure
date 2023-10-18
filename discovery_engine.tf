@@ -40,16 +40,18 @@ resource "google_project_service" "discoveryengine" {
 #
 # API resource: v1alpha.projects.locations.collections.dataStores
 resource "restapi_object" "discovery_engine_datastore" {
+  for_each = var.discovery_engine_datastore_ids
+
   depends_on = [google_project_service.discoveryengine]
 
   path      = "/dataStores"
-  object_id = var.discovery_engine_datastore_id
+  object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores?dataStoreId=${var.discovery_engine_datastore_id}"
+  create_path = "/dataStores?dataStoreId=${each.key}"
 
   data = jsonencode({
-    displayName      = var.discovery_engine_datastore_id
+    displayName      = each.key
     industryVertical = "GENERIC"
     solutionTypes    = ["SOLUTION_TYPE_SEARCH"]
     searchTier       = var.discovery_engine_tier
@@ -66,15 +68,15 @@ resource "restapi_object" "discovery_engine_datastore" {
 #
 # API resource: v1alpha.projects.locations.collections.dataStores.schemas
 resource "restapi_object" "discovery_engine_datastore_schema" {
-  depends_on = [restapi_object.discovery_engine_datastore]
+  for_each = restapi_object.discovery_engine_datastore
 
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/schemas"
+  path      = "/dataStores/${each.value.object_id}/schemas"
   object_id = "default_schema"
 
   # Since the default schema is created automatically with the datastore, we need to update even on
   # initial Terraform resource creation
   create_method = "PATCH"
-  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/schemas/default_schema"
+  create_path   = "/dataStores/${each.value.object_id}/schemas/default_schema"
 
   data = jsonencode({
     jsonSchema = file("${path.module}/files/datastore_schema.json")

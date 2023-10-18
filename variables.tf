@@ -31,8 +31,8 @@ variable "discovery_engine_tier" {
   default     = "STANDARD"
 }
 
-variable "discovery_engine_datastore_id" {
-  type        = string
-  description = "The ID of the Discovery Engine Datastore instance to create, e.g. search-api-v2-integration"
-  default     = "govuk-content"
+variable "discovery_engine_datastore_ids" {
+  type        = set(string)
+  description = "A list of IDs for Discovery Engine Datastore instances to create"
+  default     = ["govuk-content"]
 }
