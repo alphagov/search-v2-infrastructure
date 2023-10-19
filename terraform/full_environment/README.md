@@ -1,4 +1,4 @@
-# discovery_engine
+# full_environment
 Set up Discovery Engine resources, service accounts and keys, and AWS Secrets Manager secrets
 consumed by the Kubernetes platform for an individual environment (e.g. integration, production) for
 [`search-api-v2`][search-api-v2-repo] (applied once per environment through Terraform Cloud)
@@ -12,8 +12,8 @@ This module provisions the following resources into the Google Cloud Platform pr
 - A Discovery Engine datastore and schema
 - Two service accounts with respective roles (read and write) and keys to access Discovery Engine
   from a consuming application
-- AWS Secrets Manager secrets to be consumed by the Kubernetes platform (unless
-  `generate_google_keys` variable is set to false)
+- AWS Secrets Manager secrets to be consumed by the API service application in the corresponding
+  environment on the Kubernetes platform
 
 > **Note**
 > The Discovery Engine resources are managed through the [RestAPI provider][restapi_provider_docs]
