@@ -73,6 +73,12 @@ resource "tfe_workspace" "environment_workspace" {
   working_directory = "terraform/${var.terraform_module}"
   auto_apply        = true
 
+  file_triggers_enabled = true
+  trigger_patterns = [
+    "/terraform/${var.terraform_module}/**/*.tf",
+    "/terraform/modules/**/*.tf"
+  ]
+
   vcs_repo {
     identifier     = "alphagov/search-v2-infrastructure"
     branch         = "main"
