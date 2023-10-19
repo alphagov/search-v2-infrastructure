@@ -115,9 +115,9 @@ resource "google_iam_workload_identity_pool" "tfc_pool" {
 resource "google_iam_workload_identity_pool_provider" "tfc_provider" {
   project                            = google_project.environment_project.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.tfc_pool.workload_identity_pool_id
-  workload_identity_pool_provider_id = "terraform-cloud-oidc-provider"
+  workload_identity_pool_provider_id = "terraform-cloud-provider-oidc"
 
-  display_name = "Terraform Cloud ID Provider"
+  display_name = "Terraform Cloud OIDC Provider"
   description  = "Configures Terraform Cloud as an external identity provider for this project"
 
   attribute_mapping = {
