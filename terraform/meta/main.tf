@@ -161,3 +161,30 @@ resource "google_iam_workload_identity_pool_provider" "tfc_provider" {
 
   attribute_condition = "assertion.sub.startsWith(\"organization:${var.tfc_organization_name}:project:${tfe_project.project.name}:workspace:${tfe_workspace.environment_workspace[each.key].name}\")"
 }
+
+resource "google_service_account" "tfc_service_account" {
+  for_each = var.environments
+
+  project = google_project.environment_project[each.key].project_id
+
+  account_id   = "tfc-service-account"
+  display_name = "Terraform Cloud Service Account"
+  description  = "Used by Terraform Cloud to manage resources in this project through Workload Identity Federation"
+}
+
+resource "google_service_account_iam_member" "tfc_service_account_member" {
+  for_each = var.environments
+
+  service_account_id = google_service_account.tfc_service_account[each.key].name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.tfc_pool[each.key].name}/*"
+}
+
+resource "google_project_iam_member" "tfc_project_member" {
+  for_each = var.environments
+
+  project = google_project.environment_project[each.key].project_id
+
+  role   = "roles/editor"
+  member = "serviceAccount:${google_service_account.tfc_service_account[each.key].email}"
+}
