@@ -27,6 +27,11 @@ provider "tfe" {
 provider "google" {
 }
 
+locals {
+  # Environments that exist on AWS, i.e. all environments except those that are local-only
+  aws_environments = setsubtract(keys(var.environments), var.local_only_environments)
+}
+
 resource "google_project" "environment_project" {
   for_each = var.environments
 
@@ -105,6 +110,19 @@ resource "tfe_workspace" "environment_workspace" {
   tag_names   = ["govuk", "search-api-v2", each.key]
 
   execution_mode = "remote"
+}
+
+data "tfe_variable_set" "aws_credentials" {
+  for_each = local.aws_environments
+
+  name = "aws-credentials-${each.key}"
+}
+
+resource "tfe_workspace_variable_set" "aws_workspace_credentials" {
+  for_each = local.aws_environments
+
+  variable_set_id = data.tfe_variable_set.aws_credentials[each.key].id
+  workspace_id    = tfe_workspace.environment_workspace[each.key].id
 }
 
 resource "tfe_variable" "gcp_project_id" {

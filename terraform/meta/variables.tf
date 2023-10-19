@@ -9,6 +9,12 @@ variable "environments" {
   }
 }
 
+variable "local_only_environments" {
+  type        = set(string)
+  description = "A subset of keys from `environments` that represent environments that don't have an API service running on Kubernetes. These will not have AWS resources created for them."
+  default     = ["dev"]
+}
+
 variable "google_cloud_folder" {
   type        = string
   description = "The ID of the Google Cloud folder to create projects under"
