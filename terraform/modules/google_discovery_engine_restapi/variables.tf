@@ -8,8 +8,3 @@ variable "tier" {
   description = "The tier of the Discovery Engine to use, e.g. STANDARD or ENTERPRISE"
   default     = "STANDARD"
 }
-
-variable "json_schema" {
-  type        = string
-  description = "A JSON schema to use for the datastore"
-}
