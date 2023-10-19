@@ -118,7 +118,7 @@ resource "tfe_workspace" "discovery_engine_workspace" {
 
   execution_mode    = "remote"
   working_directory = "terraform/discovery_engine"
-  auto_apply        = false # TODO: Change me once setup looks stable
+  auto_apply        = true
 
   vcs_repo {
     identifier     = "alphagov/search-v2-infrastructure"
