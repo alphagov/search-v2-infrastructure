@@ -115,7 +115,7 @@ resource "tfe_variable" "gcp_project_id" {
   description  = "The GCP project ID for the ${each.key} environment"
 
   key       = "gcp_project_id"
-  value     = google_project.environment_project[each.key].id
+  value     = google_project.environment_project[each.key].project_id
   sensitive = false
 }
 
@@ -187,4 +187,40 @@ resource "google_project_iam_member" "tfc_project_member" {
 
   role   = "roles/editor"
   member = "serviceAccount:${google_service_account.tfc_service_account[each.key].email}"
+}
+
+resource "tfe_variable" "enable_gcp_provider_auth" {
+  for_each = var.environments
+
+  workspace_id = tfe_workspace.environment_workspace[each.key].id
+
+  key      = "TFC_GCP_PROVIDER_AUTH"
+  value    = "true"
+  category = "env"
+
+  description = "Enable Workload Identity Federation on GCP"
+}
+
+resource "tfe_variable" "tfc_gcp_workload_provider_name" {
+  for_each = var.environments
+
+  workspace_id = tfe_workspace.environment_workspace[each.key].id
+
+  key      = "TFC_GCP_WORKLOAD_PROVIDER_NAME"
+  value    = google_iam_workload_identity_pool_provider.tfc_provider[each.key].name
+  category = "env"
+
+  description = "The workload provider name to authenticate against on GCP"
+}
+
+resource "tfe_variable" "tfc_gcp_service_account_email" {
+  for_each = var.environments
+
+  workspace_id = tfe_workspace.environment_workspace[each.key].id
+
+  key      = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value    = google_service_account.tfc_service_account[each.key].email
+  category = "env"
+
+  description = "The GCP service account email runs will use to authenticate"
 }
