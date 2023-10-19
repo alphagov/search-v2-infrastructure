@@ -52,6 +52,33 @@ resource "google_project_service" "cloudresourcemanager_service" {
   disable_dependent_services = true
 }
 
+# Required to set up service accounts and manage dynamic credentials
+resource "google_project_service" "iam_service" {
+  for_each = google_project.environment_project
+
+  project                    = each.value.project_id
+  service                    = "iam.googleapis.com"
+  disable_dependent_services = true
+}
+
+# Required to manage dynamic credentials
+resource "google_project_service" "iamcredentials_service" {
+  for_each = google_project.environment_project
+
+  project                    = each.value.project_id
+  service                    = "iamcredentials.googleapis.com"
+  disable_dependent_services = true
+}
+
+# Required to manage dynamic credentials
+resource "google_project_service" "sts_service" {
+  for_each = google_project.environment_project
+
+  project                    = each.value.project_id
+  service                    = "sts.googleapis.com"
+  disable_dependent_services = true
+}
+
 # TODO: This project was manually created and its properties/dependent resources need to be fully
 # reflected here eventually.
 resource "tfe_project" "project" {
