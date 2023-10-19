@@ -1,7 +1,7 @@
 # discovery_engine
 Set up Discovery Engine resources, service accounts and keys, and AWS Secrets Manager secrets
 consumed by the Kubernetes platform for an individual environment (e.g. integration, production) for
-[`search-api-v2`][search-api-v2] (applied once per environment through Terraform Cloud)
+[`search-api-v2`][search-api-v2-repo] (applied once per environment through Terraform Cloud)
 
 ## Terraform Cloud
 This module will automatically be planned and applied in [Terraform Cloud][terraform-cloud] on
