@@ -9,6 +9,12 @@ variable "gcp_region" {
   default     = "europe-west2"
 }
 
+variable "aws_region" {
+  type        = string
+  description = "AWS region to create infrastructure in, e.g. eu-west-1"
+  default     = "eu-west-1"
+}
+
 variable "discovery_engine_api_version" {
   type        = string
   description = "The version of the Discovery Engine API to use, e.g. v1alpha"

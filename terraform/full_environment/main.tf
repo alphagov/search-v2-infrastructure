@@ -33,7 +33,7 @@ provider "google" {
 }
 
 provider "aws" {
-  region = "eu-west-1"
+  region = var.aws_region
 }
 
 # Used to extract access token from the provider so we can call the REST API
