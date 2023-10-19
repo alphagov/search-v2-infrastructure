@@ -59,36 +59,30 @@ resource "google_project_iam_binding" "api_write" {
 
 resource "google_service_account_key" "api_read" {
   service_account_id = google_service_account.api_read.id
-  count              = var.generate_google_keys ? 1 : 0
 }
 
 resource "google_service_account_key" "api_write" {
   service_account_id = google_service_account.api_write.id
-  count              = var.generate_google_keys ? 1 : 0
 }
 
 resource "aws_secretsmanager_secret" "key_read" {
-  name  = "govuk/search-api-v2/google-key-read"
-  count = var.generate_google_keys ? 1 : 0
+  name = "govuk/search-api-v2/google-key-read"
 }
 
 resource "aws_secretsmanager_secret" "key_write" {
-  name  = "govuk/search-api-v2/google-key-write"
-  count = var.generate_google_keys ? 1 : 0
+  name = "govuk/search-api-v2/google-key-write"
 }
 
 resource "aws_secretsmanager_secret_version" "key_read" {
-  secret_id = aws_secretsmanager_secret.key_read[count.index].id
+  secret_id = aws_secretsmanager_secret.key_read.id
   secret_string = jsonencode({
-    "credentials.json" = base64decode(google_service_account_key.api_read[count.index].private_key)
+    "credentials.json" = base64decode(google_service_account_key.api_read.private_key)
   })
-  count = var.generate_google_keys ? 1 : 0
 }
 
 resource "aws_secretsmanager_secret_version" "key_write" {
-  secret_id = aws_secretsmanager_secret.key_write[count.index].id
+  secret_id = aws_secretsmanager_secret.key_write.id
   secret_string = jsonencode({
-    "credentials.json" = base64decode(google_service_account_key.api_write[count.index].private_key)
+    "credentials.json" = base64decode(google_service_account_key.api_write.private_key)
   })
-  count = var.generate_google_keys ? 1 : 0
 }

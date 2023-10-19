@@ -24,21 +24,3 @@ variable "discovery_engine_location" {
   # there, but this may change before going live
   default = "global"
 }
-
-variable "discovery_engine_tier" {
-  type        = string
-  description = "The tier of the Discovery Engine to use, e.g. STANDARD or ENTERPRISE"
-  default     = "STANDARD"
-}
-
-variable "discovery_engine_datastore_ids" {
-  type        = set(string)
-  description = "A list of IDs for Discovery Engine Datastore instances to create"
-  default     = ["govuk-content"]
-}
-
-variable "generate_google_keys" {
-  type        = bool
-  description = "Whether or not to generate Google service account keys (and import them into AWS Secrets Manager) for this environment"
-  default     = true
-}
