@@ -4,8 +4,8 @@ terraform {
     workspaces {
       project = "govuk-search-api-v2"
 
-      # All workspaces that relate to deployable environments have this tag set up in `meta` module
-      tags = ["search-api-v2-discovery-engine"]
+      # All workspaces for this module have this tag set up by `meta` module
+      tags = ["search-api-v2-full_environment"]
     }
   }
 

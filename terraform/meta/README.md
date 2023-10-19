@@ -3,11 +3,17 @@ Terraform module to bootstrap Terraform Cloud project/workspaces, GCP projects, 
 federation between the two.
 
 ## Resources
-This module sets up the following resources:
+This module manages the following resources:
 - A Terraform Cloud project
-- A set of Terraform Cloud workspaces (per environment), with appropriate environment-specific
-  variables (based on `environments` set variable)
-- A set of GCP projects (per environment)
+- A Terraform Cloud workspace for itself
+- For every desired environment (dev, integration, staging, prod), through the `modules/environment`
+  child module:
+  - A Terraform Cloud workspace to run Terraform from the `terraform_working_directory` folder in
+    this repository on VCS merges
+  - A GCP project
+  - Workload identity federation between the GCP project and Terraform Cloud project
+  - A binding to the (existing) Terraform Cloud variable set for AWS access (except for environments
+    where `has_deployed_service_in_aws` is false, i.e. dev)
 
 ## Applying this module
 This module uses Terraform Cloud for remote state storage, but is intended to be run *locally* by a
