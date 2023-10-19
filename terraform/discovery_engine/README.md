@@ -19,6 +19,13 @@ This module provisions the following resources into the Google Cloud Platform pr
 > The Discovery Engine resources are managed through the [RestAPI provider][restapi_provider_docs]
 > due to the Google provider not offering first party Terraform resources yet (as of October 2023).
 
+> **Warning**
+> As of October 2023, the Google Discovery Engine API has a _manual_ enabling step that can only be
+> done [through the GCP console][enable-de]. This only needs doing once after initial project
+> creation, but the datastore creation (or any other Discovery Engine API calls) will fail until
+> then.
+
+[enable-de]: https://console.cloud.google.com/gen-app-builder/start
 [restapi_provider_docs]: https://registry.terraform.io/providers/Mastercard/restapi/latest
 [search-api-v2-repo]: https://github.com/alphagov/search-api-v2
 [terraform-cloud]: https://app.terraform.io/
