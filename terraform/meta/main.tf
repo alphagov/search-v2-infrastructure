@@ -218,7 +218,7 @@ resource "google_project_iam_member" "tfc_project_member" {
 
   project = google_project.environment_project[each.key].project_id
 
-  role   = "roles/editor"
+  role   = "roles/owner"
   member = "serviceAccount:${google_service_account.tfc_service_account[each.key].email}"
 }
 
