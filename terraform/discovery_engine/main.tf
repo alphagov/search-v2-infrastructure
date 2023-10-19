@@ -2,7 +2,10 @@ terraform {
   cloud {
     organization = "govuk"
     workspaces {
-      name = "search-v2-infrastructure-integration"
+      project = "govuk-search-api-v2"
+
+      # All workspaces that relate to deployable environments have this tag set up in `meta` module
+      tags = ["search-api-v2-discovery-engine"]
     }
   }
 
@@ -31,11 +34,4 @@ provider "google" {
 
 provider "aws" {
   region = "eu-west-1"
-}
-
-# Allows managing project properties through Terraform
-resource "google_project_service" "cloudresourcemanager" {
-  project                    = var.gcp_project_id
-  service                    = "cloudresourcemanager.googleapis.com"
-  disable_dependent_services = true
 }
