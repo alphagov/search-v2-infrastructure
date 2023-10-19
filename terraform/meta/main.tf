@@ -158,7 +158,7 @@ resource "google_iam_workload_identity_pool" "tfc_pool" {
   for_each = var.environments
 
   project                   = google_project.environment_project[each.key].project_id
-  workload_identity_pool_id = "terraform-cloud-pool"
+  workload_identity_pool_id = "terraform-cloud-id-pool"
 
   display_name = "Terraform Cloud ID Pool"
   description  = "Pool to enable access to project resources for Terraform Cloud"
