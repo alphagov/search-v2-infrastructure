@@ -13,6 +13,5 @@ module "govuk_content_discovery_engine" {
 
   depends_on = [google_project_service.discoveryengine]
 
-  engine_id   = "govuk_content"
-  json_schema = file("${path.module}/files/datastore_schema.json")
+  engine_id = "govuk_content"
 }

@@ -42,8 +42,6 @@ resource "restapi_object" "discovery_engine_datastore" {
 #
 # API resource: v1alpha.projects.locations.collections.dataStores.schemas
 resource "restapi_object" "discovery_engine_datastore_schema" {
-  for_each = restapi_object.discovery_engine_datastore
-
   path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/schemas"
   object_id = "default_schema"
 
@@ -53,6 +51,6 @@ resource "restapi_object" "discovery_engine_datastore_schema" {
   create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/schemas/default_schema"
 
   data = jsonencode({
-    jsonSchema = var.json_schema
+    jsonSchema = file("${path.module}/files/datastore_schema.json")
   })
 }
