@@ -11,6 +11,10 @@ terraform {
       source  = "hashicorp/tfe"
       version = "~> 0.49.2"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.2"
+    }
   }
 
   required_version = "~> 1.6"
@@ -18,6 +22,34 @@ terraform {
 
 provider "tfe" {
   organization = "govuk"
+}
+
+provider "google" {
+}
+
+resource "google_project" "environment_project" {
+  for_each = var.environments
+
+  name       = "Search API V2 ${each.value}"
+  project_id = "search-api-v2-${each.key}"
+
+  folder_id       = var.google_cloud_folder
+  billing_account = var.google_cloud_billing_account
+
+  labels = {
+    "programme"         = "govuk"
+    "team"              = "govuk-search-improvement"
+    "govuk_environment" = each.key
+  }
+}
+
+# Required to be able to manage resources using Terraform in the environment-specific module(s)
+resource "google_project_service" "cloudresourcemanager_service" {
+  for_each = google_project.environment_project
+
+  project                    = each.value.project_id
+  service                    = "cloudresourcemanager.googleapis.com"
+  disable_dependent_services = true
 }
 
 # TODO: This project was manually created and its properties/dependent resources need to be fully
@@ -42,7 +74,7 @@ resource "tfe_workspace" "environment_workspace" {
 
   name        = "search-api-v2-${each.key}"
   project_id  = tfe_project.project.id
-  description = "Provisions search-api-v2 resources for the ${each.key} environment"
+  description = "Provisions search-api-v2 resources for the ${each.value} environment"
   tag_names   = ["govuk", "search-api-v2", each.key]
 
   execution_mode = "remote"
@@ -56,6 +88,6 @@ resource "tfe_variable" "gcp_project_id" {
   description  = "The GCP project ID for the ${each.key} environment"
 
   key       = "gcp_project_id"
-  value     = "search-api-v2-${each.key}"
+  value     = google_project.environment_project[each.key].id
   sensitive = false
 }

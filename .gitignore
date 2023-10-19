@@ -2,8 +2,15 @@
 /.terraform.credentials.d/*
 !/.terraform.credentials.d/.keep
 
+# Google configuration directory
+/.google.credentials.d/*
+!/.google.credentials.d/.keep
+
 # Terraform
 .terraform
 *.tfstate
 *.tfstate.backup
 *.lock.hcl
+
+# Local configuration
+local.auto.tfvars

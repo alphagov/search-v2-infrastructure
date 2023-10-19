@@ -22,7 +22,8 @@ engineer with the required Google and Terraform Cloud access to bootstrap the in
 resources. You can also run plans for other modules locally.
 
 > **Warning**
-> A gitignored .terraform.credentials.d directory is included in the repository, which is mounted
-> into the devcontainer's home folder for terraform login to store Terraform Cloud tokens into (so
-> they persist across container rebuilds). This directory will contain sensitive information, so do
-> not stop it being gitignored or force any files within to be checked in.
+> Gitignored `.terraform.credentials.d` and `.google.credentials.d` directories are included in the
+> repository, which are mounted into the devcontainer's home folder for `terraform login`/`gcloud
+> login` to store credentials into (so they persist across container rebuilds). These directories
+> will contain sensitive information, so do not stop them being gitignored or force any files within
+> to be checked in.
