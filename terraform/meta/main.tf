@@ -84,8 +84,6 @@ resource "google_project_service" "sts_service" {
   disable_dependent_services = true
 }
 
-# TODO: This project was manually created and its properties/dependent resources need to be fully
-# reflected here eventually.
 resource "tfe_project" "project" {
   name = "govuk-search-api-v2"
 }
@@ -101,6 +99,11 @@ resource "tfe_workspace" "meta_workspace" {
   execution_mode = "local"
 }
 
+data "tfe_oauth_client" "github" {
+  organization     = var.tfc_organization_name
+  service_provider = "github"
+}
+
 resource "tfe_workspace" "environment_workspace" {
   for_each = var.environments
 
@@ -109,7 +112,18 @@ resource "tfe_workspace" "environment_workspace" {
   description = "Provisions search-api-v2 resources for the ${each.value} environment"
   tag_names   = ["govuk", "search-api-v2", each.key]
 
-  execution_mode = "remote"
+  source_name = "search-v2-infrastructure meta module"
+  source_url  = "https://github.com/alphagov/search-v2-infrastructure/tree/main/terraform/meta"
+
+  execution_mode    = "remote"
+  working_directory = "terraform/discovery_engine"
+  auto_apply        = false # TODO: Change me once setup looks stable
+
+  vcs_repo {
+    identifier     = "alphagov/search-v2-infrastructure"
+    branch         = "main"
+    oauth_token_id = data.tfe_oauth_client.github.oauth_token_id
+  }
 }
 
 data "tfe_variable_set" "aws_credentials" {
