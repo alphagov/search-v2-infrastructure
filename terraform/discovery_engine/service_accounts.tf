@@ -1,13 +1,5 @@
 # Creates and configures service accounts, IAM roles, role bindings, and keys for `search-api-v2` to
 # be able to access the Discovery Engine API.
-
-# Allows managing IAM programmatically
-resource "google_project_service" "iam" {
-  project                    = var.gcp_project_id
-  service                    = "iam.googleapis.com"
-  disable_dependent_services = true
-}
-
 resource "google_service_account" "api_read" {
   depends_on   = [google_project_service.iam]
   account_id   = "search-api-v2-read"

@@ -2,7 +2,8 @@ terraform {
   cloud {
     organization = "govuk"
     workspaces {
-      name = "search-api-v2-meta"
+      project = "govuk-search-api-v2"
+      name    = "search-api-v2-meta"
     }
   }
 
@@ -104,13 +105,13 @@ data "tfe_oauth_client" "github" {
   service_provider = "github"
 }
 
-resource "tfe_workspace" "environment_workspace" {
+resource "tfe_workspace" "discovery_engine_workspace" {
   for_each = var.environments
 
-  name        = "search-api-v2-${each.key}"
+  name        = "search-api-v2-discovery-engine-${each.key}"
   project_id  = tfe_project.project.id
-  description = "Provisions search-api-v2 resources for the ${each.value} environment"
-  tag_names   = ["govuk", "search-api-v2", each.key]
+  description = "Provisions search-api-v2 Discovery Engine resources for the ${each.value} environment"
+  tag_names   = ["govuk", "search-api-v2", "search-api-v2-discovery-engine", each.key]
 
   source_name = "search-v2-infrastructure meta module"
   source_url  = "https://github.com/alphagov/search-v2-infrastructure/tree/main/terraform/meta"
@@ -136,13 +137,13 @@ resource "tfe_workspace_variable_set" "aws_workspace_credentials" {
   for_each = local.aws_environments
 
   variable_set_id = data.tfe_variable_set.aws_credentials[each.key].id
-  workspace_id    = tfe_workspace.environment_workspace[each.key].id
+  workspace_id    = tfe_workspace.discovery_engine_workspace[each.key].id
 }
 
 resource "tfe_variable" "gcp_project_id" {
   for_each = var.environments
 
-  workspace_id = tfe_workspace.environment_workspace[each.key].id
+  workspace_id = tfe_workspace.discovery_engine_workspace[each.key].id
   category     = "terraform"
   description  = "The GCP project ID for the ${each.key} environment"
 
@@ -191,7 +192,7 @@ resource "google_iam_workload_identity_pool_provider" "tfc_provider" {
     issuer_uri = "https://${var.tfc_hostname}"
   }
 
-  attribute_condition = "assertion.sub.startsWith(\"organization:${var.tfc_organization_name}:project:${tfe_project.project.name}:workspace:${tfe_workspace.environment_workspace[each.key].name}\")"
+  attribute_condition = "assertion.sub.startsWith(\"organization:${var.tfc_organization_name}:project:${tfe_project.project.name}:workspace:${tfe_workspace.discovery_engine_workspace[each.key].name}\")"
 }
 
 resource "google_service_account" "tfc_service_account" {
@@ -224,7 +225,7 @@ resource "google_project_iam_member" "tfc_project_member" {
 resource "tfe_variable" "enable_gcp_provider_auth" {
   for_each = var.environments
 
-  workspace_id = tfe_workspace.environment_workspace[each.key].id
+  workspace_id = tfe_workspace.discovery_engine_workspace[each.key].id
 
   key      = "TFC_GCP_PROVIDER_AUTH"
   value    = "true"
@@ -236,7 +237,7 @@ resource "tfe_variable" "enable_gcp_provider_auth" {
 resource "tfe_variable" "tfc_gcp_workload_provider_name" {
   for_each = var.environments
 
-  workspace_id = tfe_workspace.environment_workspace[each.key].id
+  workspace_id = tfe_workspace.discovery_engine_workspace[each.key].id
 
   key      = "TFC_GCP_WORKLOAD_PROVIDER_NAME"
   value    = google_iam_workload_identity_pool_provider.tfc_provider[each.key].name
@@ -248,7 +249,7 @@ resource "tfe_variable" "tfc_gcp_workload_provider_name" {
 resource "tfe_variable" "tfc_gcp_service_account_email" {
   for_each = var.environments
 
-  workspace_id = tfe_workspace.environment_workspace[each.key].id
+  workspace_id = tfe_workspace.discovery_engine_workspace[each.key].id
 
   key      = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
   value    = google_service_account.tfc_service_account[each.key].email
