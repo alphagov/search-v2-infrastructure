@@ -66,11 +66,13 @@ resource "google_service_account_key" "api_write" {
 }
 
 resource "aws_secretsmanager_secret" "key_read" {
-  name = "govuk/search-api-v2/google-key-read"
+  name                    = "govuk/search-api-v2/google-key-read"
+  recovery_window_in_days = 0 # Force delete to allow re-applying immediately after destroying
 }
 
 resource "aws_secretsmanager_secret" "key_write" {
-  name = "govuk/search-api-v2/google-key-write"
+  name                    = "govuk/search-api-v2/google-key-write"
+  recovery_window_in_days = 0 # Force delete to allow re-applying immediately after destroying
 }
 
 resource "aws_secretsmanager_secret_version" "key_read" {
