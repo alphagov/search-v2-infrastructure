@@ -41,6 +41,17 @@ variable "google_cloud_apis" {
     "sts.googleapis.com",
     # Required for Discovery Engine
     "discoveryengine.googleapis.com",
+    # Required for event data pipeline
+    "bigquery.googleapis.com",
+    "bigquerystorage.googleapis.com",
+    "storage.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "run.googleapis.com",
+    # Required for observability
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
   ]
 }
 
