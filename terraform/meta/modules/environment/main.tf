@@ -27,31 +27,11 @@ resource "google_project" "environment_project" {
   }
 }
 
-# Required to be able to manage resources using Terraform in the environment-specific module(s)
-resource "google_project_service" "cloudresourcemanager_service" {
-  project                    = google_project.environment_project.project_id
-  service                    = "cloudresourcemanager.googleapis.com"
-  disable_dependent_services = true
-}
+resource "google_project_service" "api_service" {
+  for_each = var.google_cloud_apis
 
-# Required to set up service accounts and manage dynamic credentials
-resource "google_project_service" "iam_service" {
   project                    = google_project.environment_project.project_id
-  service                    = "iam.googleapis.com"
-  disable_dependent_services = true
-}
-
-# Required to manage dynamic credentials
-resource "google_project_service" "iamcredentials_service" {
-  project                    = google_project.environment_project.project_id
-  service                    = "iamcredentials.googleapis.com"
-  disable_dependent_services = true
-}
-
-# Required to manage dynamic credentials
-resource "google_project_service" "sts_service" {
-  project                    = google_project.environment_project.project_id
-  service                    = "sts.googleapis.com"
+  service                    = each.value
   disable_dependent_services = true
 }
 

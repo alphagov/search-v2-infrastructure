@@ -6,6 +6,7 @@ resource "google_project_service" "discoveryengine" {
   project                    = var.gcp_project_id
   service                    = "discoveryengine.googleapis.com"
   disable_dependent_services = true
+  disable_on_destroy         = false
 }
 
 module "govuk_content_discovery_engine" {
