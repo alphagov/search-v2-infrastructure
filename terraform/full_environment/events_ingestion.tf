@@ -121,7 +121,7 @@ resource "google_project_iam_custom_role" "trigger_function_role" {
   description = "Enables read-only access to the search-api-v2 Rails app"
 
   permissions = [
-    "bigquery.datasets.get"
+    "cloudfunctions.functions.invoke"
   ]
 }
 
