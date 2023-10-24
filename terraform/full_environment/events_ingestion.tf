@@ -137,17 +137,19 @@ resource "google_project_iam_binding" "trigger_function" {
 
 #
 resource "google_cloud_scheduler_job" "daily_transfer" {
-    name = 
-    description = 
-    schedule = 
-    time_zone = 
+    name = "transfer_ga4_to_bq"
+    description = "transfer ga4 bq data to vertex schemas within bq"
+    schedule = "0 12 * * *"
+    time_zone = "Europe/London"
 
     http_target {
         http_method = "POST"
-        uri = 
-        body = 
+        uri = google_cloudfunctions2_function.function_analytics_events_transfer.url
         headers = {
              "Content-Type" = "application/json"
+        }
+        oidc_token {
+          service_account_email = google_service_account.trigger_function.email
         }
     }
 }
