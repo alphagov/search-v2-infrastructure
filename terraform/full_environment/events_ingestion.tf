@@ -1,11 +1,11 @@
-# service account for reading data
+# service account for writing ga analytics data to our bq store 
 resource "google_service_account" "analytics_write" {
   account_id   = "ga4-write-bq"
   display_name = "ga4-write-bq"
   project      = var.gcp_project_id
 }
 
-# custom role for analytics transfer
+# custom role for writing ga analytics data to our bq store 
 resource "google_project_iam_custom_role" "analytics_write_role" {
   role_id     = "analytics_write_role"
   title       = "ga4-write-bq-permissions"
@@ -18,7 +18,7 @@ resource "google_project_iam_custom_role" "analytics_write_role" {
   ]
 }
 
-# binding role to service account
+# binding ga write role to ga write service account
 resource "google_project_iam_binding" "analytics_write" {
   project = var.gcp_project_id
   role    = google_project_iam_custom_role.analytics_write_role.id
