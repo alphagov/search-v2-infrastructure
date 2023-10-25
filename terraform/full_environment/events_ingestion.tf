@@ -134,8 +134,8 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
       }
     }
     environment_variables = {
-      project_name = var.gcp_project_id,
-      dataset_name = google_bigquery_dataset.dataset.dataset_id
+      PROJECT_NAME = var.gcp_project_id,
+      DATASET_NAME = google_bigquery_dataset.dataset.dataset_id
     }
   }
   service_config {

@@ -13,8 +13,8 @@ def hello_http(request):
     from google.cloud import bigquery
     import os
     from concurrent.futures import ThreadPoolExecutor, as_completed
-    env_project_name = os.environ.get("project_name")
-    env_dataset_name = os.environ.get("dataset_name")
+    env_project_name = os.environ.get("PROJECT_NAME")
+    env_dataset_name = os.environ.get("DATASET_NAME")
     client = bigquery.Client(project=env_project_name)
     # Perform a query.
     QUERY = (
