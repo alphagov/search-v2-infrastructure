@@ -120,5 +120,6 @@
     "url",
     "public_timestamp",
     "document_type"
-  ]
+  ],
+  "additionalProperties": false
 }
