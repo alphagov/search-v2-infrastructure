@@ -28,13 +28,15 @@ resource "google_project_iam_binding" "analytics_write" {
   ]
 }
 
-###
+data "google_project" "analytics_project" {
+  project_id = var.gcp_analytics_project_id
+}
 
 # service account for reading ga4 data
 resource "google_service_account" "analytics_read" {
   account_id   = "ga4-read-bq"
   display_name = "ga4-read-bq"
-  project      = "GA4-Analytics"
+  project      = data.google_project.analytics_project.project_id
 }
 
 # custom role for analytics read
