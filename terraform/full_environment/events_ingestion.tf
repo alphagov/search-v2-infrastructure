@@ -1,3 +1,6 @@
+### TO DO
+### Change deletion protection to true once I'm happy with the BQ
+
 # service account for writing ga analytics data to our bq store 
 resource "google_service_account" "analytics_write" {
   account_id   = "ga4-write-bq"
@@ -75,7 +78,7 @@ resource "google_bigquery_table" "search-event" {
   table_id            = "search-event"
   project             = var.gcp_project_id
   schema              = jsondecode(file("./files/search-event-schema.json"))
-  deletion_protection = true
+  deletion_protection = false
   time_partitioning {
     field = "eventTime"
     type  = "DAY"
@@ -103,17 +106,17 @@ resource "google_storage_bucket" "storage_analytics_transfer_function" {
 }
 
 # zipped function into bucket
-resource "google_storage_bucket_object" "function_zipped" {
-  name   = "func.zip"
+resource "google_storage_bucket_object" "analytics_transfer_function_zipped" {
+  name   = "analytics_transfer_function.zip"
   bucket = google_storage_bucket.storage_analytics_transfer_function.name
-  source = data.archive_file.init.output_path
+  source = data.archive_file.analytics_transfer_function.output_path
 }
 
 # archive .py and requirements.txt to zip
-data "archive_file" "init" {
+data "archive_file" "analytics_transfer_function" {
   type        = "zip"
   source_dir  = "${path.module}/files/function/"
-  output_path = "${path.module}/files/init.zip"
+  output_path = "${path.module}/files/analytics_transfer_function.zip"
 }
 
 # gen 2 function for transferring from bq - ga4 to bq - vertex events schema
@@ -121,13 +124,13 @@ data "archive_file" "init" {
 resource "google_cloudfunctions2_function" "function_analytics_events_transfer" {
   name        = "function_analytics_events_transfer"
   description = "function that will trigger daily transfer of GA4 data within BQ to BQ instance used for search"
-  location    = ""
+  location    = var.gcp_region
   build_config {
     runtime = "python311"
     source {
       storage_source {
         bucket = google_storage_bucket.storage_analytics_transfer_function.name
-        object = google_storage_bucket_object.function_zipped.name
+        object = google_storage_bucket_object.analytics_transfer_function_zipped.name
       }
     }
     environment_variables = {
