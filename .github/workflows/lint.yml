@@ -1,7 +1,6 @@
 name: Terraform validation and linting
 on:
   push:
-    paths: ["**/*.tf", "**/*.hcl", ".github/workflows/lint.yml"]
 env:
   TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
   TFLINT_VERSION: v0.48.0
