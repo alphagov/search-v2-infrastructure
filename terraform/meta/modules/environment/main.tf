@@ -51,7 +51,7 @@ resource "tfe_workspace" "environment_workspace" {
 
   execution_mode    = "remote"
   working_directory = "terraform/${var.terraform_module}"
-  auto_apply        = true
+  auto_apply        = var.auto_apply
 
   file_triggers_enabled = true
   trigger_patterns = [

@@ -54,6 +54,7 @@ module "environment_dev" {
   name                        = "dev"
   display_name                = "Development"
   has_deployed_service_in_aws = false
+  auto_apply                  = true
   terraform_module            = "dev_environment"
 }
 
@@ -68,6 +69,7 @@ module "environment_integration" {
   name                        = "integration"
   display_name                = "Integration"
   has_deployed_service_in_aws = true
+  auto_apply                  = true
   terraform_module            = "full_environment"
 }
 
