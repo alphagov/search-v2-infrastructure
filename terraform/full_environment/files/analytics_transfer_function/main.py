@@ -1,6 +1,7 @@
 ### TO DO
 ### Docstring
-
+### WILL empty pageCategories field cause issues?
+### Add time partitioning and time argument features
 import functions_framework
 @functions_framework.http
 def analytics_events_transfer_http(request):
@@ -32,8 +33,6 @@ def analytics_events_transfer_http(request):
 
 
         ''')
-    executor = ThreadPoolExecutor(1)
-    job = client.query(QUERY)
-
-    for future in as_completed([executor.submit(job.done)]):
-      return 'success'
+    def return_success():
+        return 'success'
+    job = client.query(QUERY).add_done_callback(return_success)
