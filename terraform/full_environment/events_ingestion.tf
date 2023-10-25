@@ -1,10 +1,11 @@
 ### TO DO
 ### Change deletion protection to true once I'm happy with the BQ
+### Change time on the cloud scheduler resource
 
 # service account for writing ga analytics data to our bq store 
-resource "google_service_account" "analytics_write" {
-  account_id   = "ga4-write-bq"
-  display_name = "ga4-write-bq"
+resource "google_service_account" "analytics_read_write" {
+  account_id   = "ga4-read-write-bq"
+  display_name = "ga4-read-write-bq"
   project      = var.gcp_project_id
 }
 
@@ -27,19 +28,12 @@ resource "google_project_iam_binding" "analytics_write" {
   role    = google_project_iam_custom_role.analytics_write_role.id
 
   members = [
-    google_service_account.analytics_write.member
+    google_service_account.analytics_read_write.member
   ]
 }
 
 data "google_project" "analytics_project" {
   project_id = var.gcp_analytics_project_id
-}
-
-# service account for reading ga4 data
-resource "google_service_account" "analytics_read" {
-  account_id   = "ga4-read-bq"
-  display_name = "ga4-read-bq"
-  project      = data.google_project.analytics_project.project_id
 }
 
 # custom role for analytics read
@@ -61,7 +55,7 @@ resource "google_project_iam_binding" "analytics_read" {
   role    = google_project_iam_custom_role.analytics_read_role.id
 
   members = [
-    google_service_account.analytics_read.member
+    google_service_account.analytics_read_write.member
   ]
 }
 
@@ -142,12 +136,13 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
     max_instance_count            = 5
     vpc_connector_egress_settings = "ALL_TRAFFIC"
     ingress_settings              = "ALLOW_INTERNAL_ONLY"
+    service_account_email = google_service_account.analytics_read_write.member
   }
 }
 
-# 
+# service account to trigger the function
 resource "google_service_account" "trigger_function" {
-  account_id   = "ga4-to-vertex-transfer"
+  account_id   = "ga4_to_bq_vertex_transfer"
   display_name = "ga4_to_bq_vertex_transfer"
   project      = var.gcp_project_id
 }
@@ -156,14 +151,14 @@ resource "google_service_account" "trigger_function" {
 resource "google_project_iam_custom_role" "trigger_function_role" {
   role_id     = "trigger_function_role"
   title       = "scheduler_ga4_to_bq_vertex_transfer-permissions"
-  description = "Enables read-only access to the search-api-v2 Rails app"
+  description = "Trigger the function for BQ GA4 -> BQ Vertex Schema data"
 
   permissions = [
     "cloudfunctions.functions.invoke"
   ]
 }
 
-# binding role to service account
+# binding role to trigger function to service account for the function
 resource "google_project_iam_binding" "trigger_function" {
   project = var.gcp_project_id
   role    = google_project_iam_custom_role.trigger_function_role.id
@@ -173,7 +168,7 @@ resource "google_project_iam_binding" "trigger_function" {
   ]
 }
 
-#
+# scheduler resource that will transfer data at midday 
 resource "google_cloud_scheduler_job" "daily_transfer" {
   name        = "transfer_ga4_to_bq"
   description = "transfer ga4 bq data to vertex schemas within bq"
