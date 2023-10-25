@@ -74,7 +74,7 @@ resource "google_bigquery_table" "search-event" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "search-event"
   project             = var.gcp_project_id
-  schema              = file("./files/search-event-schema.txt")
+  schema              = jsondecode(file("./files/search-event-schema.json"))
   deletion_protection = true
   time_partitioning {
     field = "eventTime"
@@ -88,7 +88,7 @@ resource "google_bigquery_table" "view-item-event" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "view-item-event"
   project             = var.gcp_project_id
-  schema              = file("./files/view-item-event-schema.txt")
+  schema              = jsondecode(file("./files/view-item-event-schema.json"))
   deletion_protection = false
   time_partitioning {
     field = "eventTime"
