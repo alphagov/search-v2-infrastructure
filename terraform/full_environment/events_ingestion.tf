@@ -51,7 +51,7 @@ resource "google_project_iam_custom_role" "analytics_read_role" {
 
 # binding role to service account
 resource "google_project_iam_binding" "analytics_read" {
-  project = "GA4-Analytics"
+  project = data.google_project.analytics_project
   role    = google_project_iam_custom_role.analytics_read_role.id
 
   members = [
