@@ -92,10 +92,7 @@
     },
     "parts": {
       "description": "A list of parts (shown below search result if present)",
-      "type": [
-        "array",
-        "null"
-      ],
+      "type": "array",
       "items": {
         "type": "object",
         "properties": {
