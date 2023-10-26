@@ -142,8 +142,8 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
 
 # service account to trigger the function
 resource "google_service_account" "trigger_function" {
-  account_id   = "ga4_to_bq_vertex_transfer"
-  display_name = "ga4_to_bq_vertex_transfer"
+  account_id   = "ga4-to-bq-vertex-transfer"
+  display_name = "ga4-to-bq-vertex-transfer"
   project      = var.gcp_project_id
 }
 
