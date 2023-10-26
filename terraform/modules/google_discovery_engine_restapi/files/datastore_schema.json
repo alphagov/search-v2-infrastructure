@@ -80,6 +80,11 @@
       "type": "string",
       "indexable": true
     },
+    "government_name": {
+      "description": "The name of the government under which the content was originally created (shown as part of search result if present)",
+      "type": "string",
+      "retrievable": true
+    },
     "locale": {
       "description": "The locale of the content (not used yet, may be useful for i18n later)",
       "type": "string",
