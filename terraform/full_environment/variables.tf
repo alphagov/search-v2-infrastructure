@@ -6,7 +6,7 @@ variable "gcp_project_id" {
 variable "gcp_analytics_project_id" {
   type        = string
   description = "GCP project ID for the project containing BigQuery analytics data"
-  default     = "GA4-Analytics"
+  default     = "ga4-analytics-352613"
 }
 
 variable "gcp_region" {
