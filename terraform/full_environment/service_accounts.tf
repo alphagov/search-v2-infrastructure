@@ -1,7 +1,7 @@
 # Creates and configures service accounts, IAM roles, role bindings, and keys for `search-api-v2` to
 # be able to access the Discovery Engine API.
 resource "google_service_account" "api" {
-  account_id   = "search-api-v2-read"
+  account_id   = "search-api-v2"
   display_name = "search-api-v2 (Rails API app and document sync worker)"
   description  = "Service account to provide access to the search-api-v2 Rails app and document sync worker"
 }
