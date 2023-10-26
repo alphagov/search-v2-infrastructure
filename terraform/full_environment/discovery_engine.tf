@@ -8,7 +8,7 @@ module "govuk_content_discovery_engine" {
 }
 
 resource "aws_secretsmanager_secret" "discovery_engine_configuration" {
-  name                    = "govuk/search-api-v2/google-cloud-credentials"
+  name                    = "govuk/search-api-v2/google-cloud-discovery-engine-configuration"
   recovery_window_in_days = 0 # Force delete to allow re-applying immediately after destroying
 }
 
