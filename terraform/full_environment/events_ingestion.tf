@@ -109,7 +109,7 @@ resource "google_storage_bucket_object" "analytics_transfer_function_zipped" {
 # archive .py and requirements.txt to zip
 data "archive_file" "analytics_transfer_function" {
   type        = "zip"
-  source_dir  = "${path.module}/files/function/"
+  source_dir  = "${path.module}/files/analytics_transfer_function/"
   output_path = "${path.module}/files/analytics_transfer_function.zip"
 }
 
