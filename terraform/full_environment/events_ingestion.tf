@@ -94,10 +94,9 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
     }
   }
   service_config {
-    max_instance_count            = 5
-    vpc_connector_egress_settings = "ALL_TRAFFIC"
-    ingress_settings              = "ALLOW_INTERNAL_ONLY"
-    service_account_email         = google_service_account.analytics_events_pipeline.email
+    max_instance_count    = 5
+    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    service_account_email = google_service_account.analytics_events_pipeline.email
   }
 }
 
