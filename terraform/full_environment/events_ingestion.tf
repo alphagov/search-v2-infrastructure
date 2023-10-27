@@ -3,6 +3,7 @@
 ### Change time on the cloud scheduler resource
 
 # service account for writing ga analytics data to our bq store 
+# have just the service account - pr - read role and read role binding we can take out too
 resource "google_service_account" "analytics_read_write" {
   account_id   = "ga4-read-write-bq"
   display_name = "ga4-read-write-bq"
@@ -32,34 +33,6 @@ resource "google_project_iam_binding" "analytics_write" {
   ]
 }
 
-data "google_project" "analytics_project" {
-  project_id = var.gcp_analytics_project_id
-}
-
-# custom role for analytics read
-resource "google_project_iam_custom_role" "analytics_read_role" {
-  role_id     = "analytics_read_role"
-  title       = "ga4-read-bq-permissions"
-  description = "Read source ga4 bq event data"
-
-  permissions = [
-    "bigquery.datasets.get",
-    "bigquery.tables.get",
-    "bigquery.tables.getData"
-  ]
-}
-
-# binding role to service account
-resource "google_project_iam_binding" "analytics_read" {
-  project = data.google_project.analytics_project
-  role    = google_project_iam_custom_role.analytics_read_role.id
-
-  members = [
-    google_service_account.analytics_read_write.member
-  ]
-}
-
-###
 # top level dataset to store events for ingestion into vertex
 resource "google_bigquery_dataset" "dataset" {
   dataset_id = "analytics_events_vertex"
