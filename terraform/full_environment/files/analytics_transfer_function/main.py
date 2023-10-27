@@ -4,7 +4,7 @@
 ### Add time partitioning and time argument features
 import functions_framework
 @functions_framework.http
-def analytics_events_transfer_http(request):
+def function_analytics_events_transfer(request):
     """
     """
     from google.cloud import bigquery
