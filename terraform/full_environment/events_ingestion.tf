@@ -4,11 +4,6 @@
 
 # service account for writing ga analytics data to our bq store 
 # have just the service account - pr - read role and read role binding we can take out too
-resource "google_service_account" "analytics_read_write" {
-  account_id   = "ga4-read-write-bq"
-  display_name = "ga4-read-write-bq"
-  project      = var.gcp_project_id
-}
 
 # custom role for writing ga analytics data to our bq store 
 resource "google_project_iam_custom_role" "analytics_write_role" {
@@ -29,7 +24,7 @@ resource "google_project_iam_binding" "analytics_write" {
   role    = google_project_iam_custom_role.analytics_write_role.id
 
   members = [
-    google_service_account.analytics_read_write.member
+    google_service_account.analytics_events_pipeline.member
   ]
 }
 
@@ -109,7 +104,7 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
     max_instance_count            = 5
     vpc_connector_egress_settings = "ALL_TRAFFIC"
     ingress_settings              = "ALLOW_INTERNAL_ONLY"
-    service_account_email         = google_service_account.analytics_read_write.member
+    service_account_email         = google_service_account.analytics_events_pipeline.member
   }
 }
 
