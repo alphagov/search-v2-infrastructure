@@ -55,6 +55,7 @@ variable "google_cloud_apis" {
     "artifactregistry.googleapis.com",
     "cloudfunctions.googleapis.com",
     "run.googleapis.com",
+    "cloudscheduler.googleapis.com",
     # Required for observability
     "logging.googleapis.com",
     "monitoring.googleapis.com",
