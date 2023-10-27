@@ -55,7 +55,7 @@ resource "google_bigquery_table" "view-item-event" {
 
 # bucket for function .zip
 resource "google_storage_bucket" "storage_analytics_transfer_function" {
-  name     = "storage_analytics_transfer_function"
+  name     = "${var.gcp_project_id}_storage_analytics_transfer"
   location = var.gcp_region
 }
 
