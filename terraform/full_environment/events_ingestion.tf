@@ -41,10 +41,6 @@ resource "google_bigquery_table" "search-event" {
   project             = var.gcp_project_id
   schema              = file("./files/search-event-schema.json")
   deletion_protection = false
-  time_partitioning {
-    field = "eventTime"
-    type  = "DAY"
-  }
 
 }
 
@@ -55,15 +51,11 @@ resource "google_bigquery_table" "view-item-event" {
   project             = var.gcp_project_id
   schema              = file("./files/view-item-event-schema.json")
   deletion_protection = false
-  time_partitioning {
-    field = "eventTime"
-    type  = "DAY"
-  }
 }
 
 # bucket for function .zip
 resource "google_storage_bucket" "storage_analytics_transfer_function" {
-  name     = "storage_analytics_transfer_function"
+  name     = "${var.gcp_project_id}_storage_analytics_transfer"
   location = var.gcp_region
 }
 
