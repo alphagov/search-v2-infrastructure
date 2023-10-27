@@ -56,8 +56,9 @@ resource "tfe_workspace" "environment_workspace" {
   file_triggers_enabled = true
   trigger_patterns = [
     "/terraform/${var.terraform_module}/**/*.tf",
+    "/terraform/${var.terraform_module}/**/files/*",
     "/terraform/modules/**/*.tf",
-    "/terraform/modules/**/*.json",
+    "/terraform/modules/**/files/*",
   ]
 
   vcs_repo {
