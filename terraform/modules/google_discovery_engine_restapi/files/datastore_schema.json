@@ -118,6 +118,10 @@
         ],
         "additionalProperties": false
       }
+    },
+    "payload_version": {
+      "description": "Incrementing document version number (used to avoid document update race conditions)",
+      "type": "integer"
     }
   },
   "required": [
