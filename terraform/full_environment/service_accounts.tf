@@ -66,3 +66,9 @@ resource "aws_secretsmanager_secret_version" "key" {
     "credentials.json" = base64decode(google_service_account_key.api.private_key)
   })
 }
+
+resource "google_service_account" "analytics_events_pipeline" {
+  account_id   = "analytics-events-pipeline"
+  display_name = "analytics-events-pipeline"
+  description  = "Service account for reading GA4 search events data and importing events into our project"
+}
