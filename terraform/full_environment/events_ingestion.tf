@@ -114,7 +114,9 @@ resource "google_project_iam_custom_role" "trigger_function_role" {
   description = "Trigger the function for BQ GA4 -> BQ Vertex Schema data"
 
   permissions = [
-    "cloudfunctions.functions.invoke"
+    "cloudfunctions.functions.invoke",
+    "run.jobs.run",
+    "run.routes.invoke"
   ]
 }
 
