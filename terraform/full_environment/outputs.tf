@@ -3,7 +3,7 @@ output "google_cloud_discovery_engine_datastore_path" {
   value       = module.govuk_content_discovery_engine.datastore_path
 }
 
-output "google_cloud_discovery_engine_engine_path" {
-  description = "The full path of the engine created by the module (for querying)"
-  value       = module.govuk_content_discovery_engine.engine_path
+output "google_cloud_discovery_engine_serving_config_path" {
+  description = "The full path of the default serving config on the engine created by the module (for querying)"
+  value       = module.govuk_content_discovery_engine.serving_config_path
 }
