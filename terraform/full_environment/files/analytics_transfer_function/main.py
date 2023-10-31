@@ -34,6 +34,5 @@ def function_analytics_events_transfer(request):
 
 
         ''')
-    def return_success(future):
-        return 'success'
-    job = client.query(QUERY).add_done_callback(return_success)
+    bq_location = os.environ.get("BQ_LOCATION")
+    as_completed(client.query(QUERY, location=bq_location))
