@@ -33,7 +33,7 @@ resource "google_bigquery_dataset" "dataset" {
   dataset_id                 = "analytics_events_vertex"
   project                    = var.gcp_project_id
   location                   = var.gcp_region
-  delete_contents_on_destory = true
+  delete_contents_on_destroy = true
 }
 
 # ga4 'view_item_list' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
