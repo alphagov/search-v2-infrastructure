@@ -36,24 +36,24 @@ resource "google_bigquery_dataset" "dataset" {
   delete_contents_on_destroy = true
 }
 
-# # ga4 'view_item_list' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
-# resource "google_bigquery_table" "search-event" {
-#   dataset_id          = google_bigquery_dataset.dataset.dataset_id
-#   table_id            = "search-event"
-#   project             = var.gcp_project_id
-#   schema              = file("./files/search-event-schema.json")
-#   deletion_protection = false
+# ga4 'view_item_list' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
+resource "google_bigquery_table" "search-event" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "search-event"
+  project             = var.gcp_project_id
+  schema              = file("./files/search-event-schema.json")
+  deletion_protection = false
 
-# }
+}
 
-# # ga4 'select_item' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
-# resource "google_bigquery_table" "view-item-event" {
-#   dataset_id          = google_bigquery_dataset.dataset.dataset_id
-#   table_id            = "view-item-event"
-#   project             = var.gcp_project_id
-#   schema              = file("./files/view-item-event-schema.json")
-#   deletion_protection = false
-# }
+# ga4 'select_item' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
+resource "google_bigquery_table" "view-item-event" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "view-item-event"
+  project             = var.gcp_project_id
+  schema              = file("./files/view-item-event-schema.json")
+  deletion_protection = false
+}
 
 # bucket for function .zip
 resource "google_storage_bucket" "storage_analytics_transfer_function" {
