@@ -14,7 +14,10 @@ resource "google_project_iam_custom_role" "analytics_write_role" {
   permissions = [
     "bigquery.tables.update",
     "bigquery.tables.updateData",
-    "bigquery.jobs.create"
+    "bigquery.jobs.create",
+    "bigquery.datasets.get",
+    "bigquery.tables.get",
+    "bigquery.tables.getData"
   ]
 }
 
