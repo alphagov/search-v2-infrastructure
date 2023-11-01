@@ -89,17 +89,17 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
         object = google_storage_bucket_object.analytics_transfer_function_zipped.name
       }
     }
+  }
+  service_config {
+    max_instance_count    = 5
+    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
       PROJECT_NAME           = var.gcp_project_id,
       DATASET_NAME           = google_bigquery_dataset.dataset.dataset_id
       ANALYTICS_PROJECT_NAME = var.gcp_analytics_project_id
       BQ_LOCATION            = var.gcp_region
     }
-  }
-  service_config {
-    max_instance_count    = 5
-    ingress_settings      = "ALLOW_INTERNAL_ONLY"
-    service_account_email = google_service_account.analytics_events_pipeline.email
   }
 }
 
