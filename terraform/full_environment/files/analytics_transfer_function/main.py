@@ -2,6 +2,7 @@
 ### Docstring
 ### WILL empty pageCategories field cause issues?
 ### Add time partitioning and time argument features
+### Add logic to evaluate whether the query has been successful
 import functions_framework
 @functions_framework.http
 def function_analytics_events_transfer(request):
@@ -9,7 +10,7 @@ def function_analytics_events_transfer(request):
     """
     from google.cloud import bigquery
     import os
-    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from concurrent.futures import as_completed
     env_project_name = os.environ.get("PROJECT_NAME")
     env_dataset_name = os.environ.get("DATASET_NAME")
     env_analytics_project_name = os.environ.get("ANALYTICS_PROJECT_NAME")
@@ -34,6 +35,6 @@ def function_analytics_events_transfer(request):
 
 
         ''')
-    def return_success(future):
-        return 'success'
-    job = client.query(QUERY).add_done_callback(return_success)
+    bq_location = os.environ.get("BQ_LOCATION")
+    as_completed(client.query(QUERY, location=bq_location))
+    return 'Success'
