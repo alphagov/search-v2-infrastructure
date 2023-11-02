@@ -51,7 +51,7 @@ def function_analytics_events_transfer(request):
     }
 
     try:
-        job = client.query(all_queries.get(event_type).query, location=bq_location)
+        job = client.query(all_queries.get(event_type).get('query'), location=bq_location)
         output = job.result()
         print(job.done())
         return 'Success'
