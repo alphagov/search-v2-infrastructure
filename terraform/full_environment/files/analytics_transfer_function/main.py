@@ -1,6 +1,5 @@
 ### TO DO
 ### Docstring
-### WILL empty pageCategories field cause issues?
 ### Add time partitioning and time argument features
 ### Add logic to evaluate whether the query has been successful
 import functions_framework
@@ -35,6 +34,11 @@ def function_analytics_events_transfer(request):
 
 
         ''')
-    bq_location = os.environ.get("BQ_LOCATION")
-    as_completed(client.query(QUERY, location=bq_location))
-    return 'Success'
+
+    try:
+        bq_location = os.environ.get("BQ_LOCATION")
+        job = client.query(QUERY, location=bq_location)
+        output = job.result()
+        return 'Success'
+    except Exception as e:
+        raise(e)
