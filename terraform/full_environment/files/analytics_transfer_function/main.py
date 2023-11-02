@@ -19,7 +19,7 @@ def function_analytics_events_transfer(request):
     QUERY = (
        
         f'''
-        INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event`
+        INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event` (eventType, userPseudoId, eventTime, documents)
         SELECT
         'view-item' AS eventType,
             ga.user_pseudo_id AS userPseudoId,
