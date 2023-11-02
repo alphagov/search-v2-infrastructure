@@ -33,5 +33,10 @@ def function_analytics_events_transfer(request):
 
         ''')
     bq_location = os.environ.get("BQ_LOCATION")
-    as_completed(client.query(QUERY, location=bq_location))
-    return 'Success'
+    try:
+        job = client.query(QUERY, location=bq_location)
+        output = job.result()
+        print(job.done())
+        return 'Success'
+    except Exception as e:
+        raise(e)
