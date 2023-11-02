@@ -19,20 +19,17 @@ def function_analytics_events_transfer(request):
     QUERY = (
        
         f'''
-        INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event` (eventType, userPseudoId, eventTime, documents)
-        SELECT
-        'view-item' AS eventType,
+            INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event` (eventType, userPseudoId, eventTime, documents)
+            SELECT
+            'view-item' AS eventType,
             ga.user_pseudo_id AS userPseudoId,
             FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
-        (case when params.value.string_value is not null then [STRUCT(STRUCT(params.value.string_value AS id, CAST(NULL as string) as name) as documentDescriptor)] end) AS documents,
-        CAST(NULL as string) as searchQuery,
-        [''] as pageCategories
-        FROM `{env_analytics_project_name}.analytics_330577055.events_20230603` ga,
-        UNNEST(event_params) AS params
-        WHERE
-        ga.event_name='page_view' AND
-        params.key='content_id'
-
+            (case when params.value.string_value is not null then [STRUCT(STRUCT(params.value.string_value AS id, CAST(NULL as string) as name) as documentDescriptor)] end) AS documents
+            FROM `{env_analytics_project_name}.analytics_330577055.events_20230603` ga,
+            UNNEST(event_params) AS params
+            WHERE
+            ga.event_name='page_view' AND
+            params.key='content_id'
 
         ''')
     bq_location = os.environ.get("BQ_LOCATION")
