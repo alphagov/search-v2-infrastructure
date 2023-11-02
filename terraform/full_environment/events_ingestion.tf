@@ -144,8 +144,12 @@ resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
   time_zone   = "Europe/London"
 
   http_target {
-    http_method = "GET"
-    uri         = join("", [google_cloudfunctions2_function.function_analytics_events_transfer.url, "?event_type=view-item"])
+    http_method = "POST"
+    uri         = google_cloudfunctions2_function.function_analytics_events_transfer.url
+    body = base64encode({
+      "event_type" : "view-item",
+      "date" : null
+    })
     headers = {
       "Content-Type" = "application/json"
     }
@@ -164,8 +168,12 @@ resource "google_cloud_scheduler_job" "daily_transfer_search" {
   time_zone   = "Europe/London"
 
   http_target {
-    http_method = "GET"
-    uri         = join("", [google_cloudfunctions2_function.function_analytics_events_transfer.url, "?event_type=search"])
+    http_method = "POST"
+    uri         = google_cloudfunctions2_function.function_analytics_events_transfer.url
+    body = base64encode({
+      "event_type" : "search",
+      "date" : null
+    })
     headers = {
       "Content-Type" = "application/json"
     }
