@@ -151,6 +151,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
     }
     oidc_token {
       service_account_email = google_service_account.trigger_function.email
+      audience = google_cloudfunctions2_function.function_analytics_events_transfer.url
     }
   }
 }
@@ -170,6 +171,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_search" {
     }
     oidc_token {
       service_account_email = google_service_account.trigger_function.email
+      audience = google_cloudfunctions2_function.function_analytics_events_transfer.url
     }
   }
 }
