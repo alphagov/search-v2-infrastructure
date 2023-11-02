@@ -23,8 +23,11 @@ def function_analytics_events_transfer(request):
 
 
     from datetime import date
-    source_date = yesterday() if request.args.get("date") is None else request.args.get("date")
-    event_type = request.args.get("event_type")
+
+    request_json = request.get_json(silent=True)
+
+    source_date = yesterday() if request_json.get("date") is None else request_json.get("date")
+    event_type = request_json.get("event_type")
 
     client = bigquery.Client(project=env_project_name)
 
