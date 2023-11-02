@@ -137,15 +137,34 @@ resource "google_project_iam_binding" "trigger_function" {
 }
 
 # scheduler resource that will transfer data at midday 
-resource "google_cloud_scheduler_job" "daily_transfer" {
-  name        = "transfer_ga4_to_bq"
-  description = "transfer ga4 bq data to vertex schemas within bq"
+resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
+  name        = "transfer_ga4_to_bq_view_item"
+  description = "transfer view-item ga4 bq data to vertex schemas within bq"
   schedule    = "0 12 * * *"
   time_zone   = "Europe/London"
 
   http_target {
     http_method = "POST"
-    uri         = google_cloudfunctions2_function.function_analytics_events_transfer.url
+    uri         = join("", [google_cloudfunctions2_function.function_analytics_events_transfer.url, "?eventtype=view-item"])
+    headers = {
+      "Content-Type" = "application/json"
+    }
+    oidc_token {
+      service_account_email = google_service_account.trigger_function.email
+    }
+  }
+}
+
+# scheduler resource that will transfer data at midday 
+resource "google_cloud_scheduler_job" "daily_transfer_search" {
+  name        = "transfer_ga4_to_bq_search"
+  description = "transfer search ga4 bq data to vertex schemas within bq"
+  schedule    = "0 12 * * *"
+  time_zone   = "Europe/London"
+
+  http_target {
+    http_method = "POST"
+    uri         = join("", [google_cloudfunctions2_function.function_analytics_events_transfer.url, "?eventtype=search"])
     headers = {
       "Content-Type" = "application/json"
     }
