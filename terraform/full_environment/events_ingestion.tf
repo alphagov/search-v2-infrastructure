@@ -149,8 +149,8 @@ resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
     body = base64encode(
       <<EOT
     {
-      \"event_type\" : \"view-item\",
-      \"date\" : null
+      "event_type" : "view-item",
+      "date" : null
     }
     EOT
     )
@@ -176,8 +176,8 @@ resource "google_cloud_scheduler_job" "daily_transfer_search" {
     uri         = google_cloudfunctions2_function.function_analytics_events_transfer.url
     body = base64encode(
       <<EOT
-      {\"event_type\" : \"search\",
-      \"date\" : null}
+      {"event_type" : "search",
+      "date" : null}
     EOT
     )
     headers = {
