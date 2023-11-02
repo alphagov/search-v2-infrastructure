@@ -9,7 +9,6 @@ def function_analytics_events_transfer(request):
     """
     from google.cloud import bigquery
     import os
-    from concurrent.futures import as_completed
     env_project_name = os.environ.get("PROJECT_NAME")
     env_dataset_name = os.environ.get("DATASET_NAME")
     env_analytics_project_name = os.environ.get("ANALYTICS_PROJECT_NAME")
