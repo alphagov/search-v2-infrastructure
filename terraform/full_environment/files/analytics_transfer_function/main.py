@@ -47,7 +47,40 @@ def function_analytics_events_transfer(request):
                 params.key='content_id'
 
             '''},
-        'search': {'query': 'search_query'}
+        'search': {'query': f'''
+                INSERT INTO `{env_project_name}.{env_dataset_name}.search-event` (eventType, userPseudoId, eventTime, searchQuery, documents)
+                with events AS
+                (
+                    SELECT
+                        'search' AS eventType,
+                        ga.user_pseudo_id AS userPseudoId,
+                        FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
+                        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'search_term') AS searchQuery,
+                        item_params.value.string_value as id,
+                        max(item.item_id),
+                        item.item_list_index
+                    FROM `{env_analytics_project_name}.analytics_330577055.events_{source_date}`  ga
+                    ,
+                    UNNEST(items) AS item,
+                    UNNEST(item.item_params) as item_params
+                    WHERE
+                        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'publishing_app') = "search-api" AND
+                        EXISTS (SELECT 1 FROM UNNEST(event_params) WHERE key = 'search_term') AND
+                        event_name='view_item_list'
+                    GROUP BY eventTime,userPseudoId,eventType,searchQuery, id, item_list_index
+                )
+                SELECT 
+                    eventType,
+                    userPseudoId,
+                    eventTime,
+                    searchQuery,
+                    ARRAY_AGG(STRUCT(STRUCT(id as id, CAST(NULL as string) as name) as documentDescriptor) ORDER BY SAFE_CAST(item_list_index AS INT64) ) as documents
+                FROM events
+                WHERE id IS NOT NULL AND
+                    searchQuery IS NOT NULL AND
+                    SAFE_CAST(item_list_index AS INT64)<=20
+                group by eventTime,userPseudoId,eventType,searchQuery
+                   '''}
     }
 
     try:
