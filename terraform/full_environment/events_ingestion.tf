@@ -254,10 +254,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_to_vertex" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-    body        = base64encode("{ \"event_type\" : \"search\", \"date\" : null}")
-    headers = {
-      "Content-Type" = "application/json"
-    }
+    body        = base64encode("")
     oidc_token {
       service_account_email = google_service_account.trigger_function.email
       audience              = google_cloudfunctions2_function.import_user_events_vertex.url
