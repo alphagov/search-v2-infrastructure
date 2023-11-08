@@ -30,21 +30,14 @@
       "mode": "REPEATED",
       "fields": [
         {
-          "name": "documentDescriptor",
-          "type": "RECORD",
-          "mode": "REQUIRED",
-          "fields": [
-            {
-              "name": "id",
-              "type": "STRING",
-              "mode": "NULLABLE"
-            },
-            {
-              "name": "name",
-              "type": "STRING",
-              "mode": "NULLABLE"
-            }
-          ]
+          "name": "id",
+          "type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "mode": "NULLABLE"
         }
       ]
     },
