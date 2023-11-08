@@ -193,7 +193,7 @@ resource "google_project_iam_custom_role" "vertex_upload_role" {
 }
 
 # binding ga write role to ga write service account
-resource "google_project_iam_binding" "analytics_write" {
+resource "google_project_iam_binding" "vertex_datastore_write" {
   project = var.gcp_project_id
   role    = google_project_iam_custom_role.vertex_upload_role.id
 
