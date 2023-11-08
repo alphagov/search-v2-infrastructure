@@ -6,7 +6,7 @@
 
 import functions_framework
 @functions_framework.http
-def import_user_events_vertex():
+def import_user_events_vertex(request):
     '''
     '''
     from google.cloud import discoveryengine
