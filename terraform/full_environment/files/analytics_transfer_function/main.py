@@ -74,7 +74,7 @@ def function_analytics_events_transfer(request):
                     userPseudoId,
                     eventTime,
                     searchQuery,
-                    ARRAY_AGG(STRUCT(STRUCT(id as id, CAST(NULL as string) as name) as documentDescriptor) ORDER BY SAFE_CAST(item_list_index AS INT64) ) as documents
+                    ARRAY_AGG(STRUCT(id as id, CAST(NULL as string) as name) ORDER BY SAFE_CAST(item_list_index AS INT64) ) as documents
                 FROM events
                 WHERE id IS NOT NULL AND
                     searchQuery IS NOT NULL AND
