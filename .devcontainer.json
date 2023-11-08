@@ -15,7 +15,10 @@
 		"vscode": {
 			"settings": {
 				"editor.formatOnSave": true
-			}
+			},
+			"extensions": [
+				"ms-python.python"
+			]
 		}
 	}
 }

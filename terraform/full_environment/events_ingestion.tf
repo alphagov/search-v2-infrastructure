@@ -1,9 +1,7 @@
 ### TO DO
 ### Change deletion protection to true once I'm happy with the BQ
-### Change time on the cloud scheduler resource
-
-# service account for writing ga analytics data to our bq store 
-# have just the service account - pr - read role and read role binding we can take out too
+### have just the service account - pr - read role and read role binding we can take out too
+### Modularise the below codebase
 
 # custom role for writing ga analytics data to our bq store 
 resource "google_project_iam_custom_role" "analytics_write_role" {
@@ -58,20 +56,20 @@ resource "google_bigquery_table" "view-item-event" {
   deletion_protection = false
 }
 
-# bucket for function .zip
+# bucket for ga4 bq -> vertex bq function .zip
 resource "google_storage_bucket" "storage_analytics_transfer_function" {
   name     = "${var.gcp_project_id}_storage_analytics_transfer"
   location = var.gcp_region
 }
 
-# zipped function into bucket
+# zipped storage_analytics_transfer_function into bucket
 resource "google_storage_bucket_object" "analytics_transfer_function_zipped" {
   name   = "analytics_transfer_function.zip"
   bucket = google_storage_bucket.storage_analytics_transfer_function.name
   source = data.archive_file.analytics_transfer_function.output_path
 }
 
-# archive .py and requirements.txt to zip
+# archive .py and requirements.txt for storage_analytics_transfer_function to zip
 data "archive_file" "analytics_transfer_function" {
   type        = "zip"
   source_dir  = "${path.module}/files/analytics_transfer_function/"
@@ -167,6 +165,95 @@ resource "google_cloud_scheduler_job" "daily_transfer_search" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.function_analytics_events_transfer.url
+    body        = base64encode("{ \"event_type\" : \"search\", \"date\" : null}")
+    headers = {
+      "Content-Type" = "application/json"
+    }
+    oidc_token {
+      service_account_email = google_service_account.trigger_function.email
+      audience              = google_cloudfunctions2_function.function_analytics_events_transfer.url
+    }
+  }
+}
+
+# custom role for writing vertex analytics data to vertex datastore 
+resource "google_project_iam_custom_role" "vertex_upload_role" {
+  role_id     = "vertex_upload_role"
+  title       = "bq-write-vertex-permissions"
+  description = "Write data to vertex datastore from bq"
+
+  permissions = [
+    "bigquery.jobs.create",
+    "bigquery.datasets.get",
+    "bigquery.tables.get",
+    "bigquery.tables.getData",
+    "discoveryengine.userEvents.import",
+    "discoveryengine.userEvents.create"
+  ]
+}
+
+# binding ga write role to ga write service account
+resource "google_project_iam_binding" "analytics_write" {
+  project = var.gcp_project_id
+  role    = google_project_iam_custom_role.vertex_upload_role.id
+
+  members = [
+    google_service_account.analytics_events_pipeline.member
+  ]
+}
+
+# bucket for vertex bq -> vertex datastore function .zip
+resource "google_storage_bucket" "import_user_events_vertex_function" {
+  name     = "${var.gcp_project_id}_import_user_events_vertex"
+  location = var.gcp_region
+}
+
+# zipped import_user_events_vertex function into bucket
+resource "google_storage_bucket_object" "import_user_events_vertex_function_zipped" {
+  name   = "import_user_events_vertex_function.zip"
+  bucket = google_storage_bucket.import_user_events_vertex_function.name
+  source = data.archive_file.import_user_events_vertex_function.output_path
+}
+
+# archive .py and requirements.txt for import_user_events_vertex to zip
+data "archive_file" "import_user_events_vertex_function" {
+  type        = "zip"
+  source_dir  = "${path.module}/files/vertex_events_push/"
+  output_path = "${path.module}/files/vertex_events_push.zip"
+}
+
+
+# gen 2 function for transferring from bq - vertex events schema to vertex engine
+resource "google_cloudfunctions2_function" "import_user_events_vertex" {
+  name        = "import_user_events_vertex"
+  description = "function that will trigger daily to transfer of ga4 events data in vertex schema in bq to vertex"
+  location    = var.gcp_region
+  build_config {
+    runtime = "python311"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.import_user_events_vertex_function.name
+        object = google_storage_bucket_object.import_user_events_vertex_function_zipped.name
+      }
+    }
+  }
+  service_config {
+    max_instance_count    = 5
+    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    service_account_email = google_service_account.analytics_events_pipeline.email
+  }
+}
+
+# scheduler resource that will transfer vertex bq data - > vertex datastore at 1230 
+resource "google_cloud_scheduler_job" "daily_transfer_bq_to_vertex" {
+  name        = "transfer_vertex_bq__to_vertex_datastore"
+  description = "transfer search vertex bq data to vertex datastore"
+  schedule    = "30 12 * * *"
+  time_zone   = "Europe/London"
+
+  http_target {
+    http_method = "POST"
+    uri         = google_cloudfunctions2_function.import_user_events_vertex.url
     body        = base64encode("{ \"event_type\" : \"search\", \"date\" : null}")
     headers = {
       "Content-Type" = "application/json"
