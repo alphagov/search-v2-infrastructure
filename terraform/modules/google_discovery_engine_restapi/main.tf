@@ -11,26 +11,19 @@ terraform {
 
 # The datastore to store content in
 #
-# Currently (October 2023), the datastore is the core entity of the Discovery Engine API, used for
-# both querying and storing content. There are plans for this to change and for an "engine" resource
-# to be introduced, at which point we will need to create an engine and associate it with the
-# datastore.
-#
 # API resource: v1alpha.projects.locations.collections.dataStores
 resource "restapi_object" "discovery_engine_datastore" {
   path      = "/dataStores"
-  object_id = var.engine_id
+  object_id = var.datastore_id
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores?dataStoreId=${var.engine_id}"
+  create_path = "/dataStores?dataStoreId=${var.datastore_id}"
 
   data = jsonencode({
-    displayName      = var.engine_id
+    displayName      = var.datastore_id
     industryVertical = "GENERIC"
     solutionTypes    = ["SOLUTION_TYPE_SEARCH"]
-    searchTier       = var.tier
     contentConfig    = "CONTENT_REQUIRED" # makes the engine type "unstructured"
-    searchAddOns     = ["LLM"]            # this is the only valid value supported by the API
   })
 }
 
@@ -52,5 +45,31 @@ resource "restapi_object" "discovery_engine_datastore_schema" {
 
   data = jsonencode({
     jsonSchema = file("${path.module}/files/datastore_schema.json")
+  })
+}
+
+# The engine used for querying the datastore
+#
+# API resource: v1alpha.projects.locations.collections.engines
+resource "restapi_object" "discovery_engine_engine" {
+  path      = "/engines"
+  object_id = var.engine_id
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/engines?engineId=${var.engine_id}"
+
+  data = jsonencode({
+    displayName = var.engine_id,
+    dataStoreIds = [
+      var.datastore_id
+    ],
+    solutionType = "SOLUTION_TYPE_SEARCH",
+    commonConfig = {
+      companyName = "GOV.UK"
+    },
+    searchEngineConfig = {
+      searchTier   = var.search_tier,
+      searchAddOns = ["SEARCH_ADD_ON_LLM"] # this is the only valid value supported by the API
+    }
   })
 }

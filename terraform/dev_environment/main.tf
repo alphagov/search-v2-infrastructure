@@ -55,5 +55,6 @@ module "engine" {
   source   = "../modules/google_discovery_engine_restapi"
   for_each = var.engines
 
-  engine_id = each.key
+  datastore_id = each.key
+  engine_id    = each.key
 }
