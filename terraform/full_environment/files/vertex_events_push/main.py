@@ -11,10 +11,13 @@ def import_user_events_vertex(request):
     '''
     from google.cloud import discoveryengine
 
+    request_json = request.get_json(silent=True)
+    event_type = request_json.get("event_type") # `view-item` or `search`
+
     bq_client = discoveryengine.BigQuerySource(
         project_id = 'search-api-v2-integration', 
         dataset_id= 'analytics_events_vertex', 
-        table_id = 'view-item-event'
+        table_id = f'{event_type}-event'
         )
 
     client = discoveryengine.UserEventServiceClient()
