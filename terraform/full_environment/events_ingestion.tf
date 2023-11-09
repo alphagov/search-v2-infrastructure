@@ -3,7 +3,7 @@
 ### have just the service account - pr - read role and read role binding we can take out too
 ### Modularise the below codebase
 
-# custom role for writing ga analytics data to our bq store 
+# custom role for writing ga analytics data to our bq store
 resource "google_project_iam_custom_role" "analytics_write_role" {
   role_id     = "analytics_write_role"
   title       = "ga4-write-bq-permissions"
@@ -37,7 +37,7 @@ resource "google_bigquery_dataset" "dataset" {
   delete_contents_on_destroy = true
 }
 
-# ga4 'view_item_list' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
+# ga4 'view_item_list' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema
 resource "google_bigquery_table" "search-event" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "search-event"
@@ -47,7 +47,7 @@ resource "google_bigquery_table" "search-event" {
 
 }
 
-# ga4 'select_item' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema 
+# ga4 'select_item' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema
 resource "google_bigquery_table" "view-item-event" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "view-item-event"
@@ -64,7 +64,7 @@ resource "google_storage_bucket" "storage_analytics_transfer_function" {
 
 # zipped storage_analytics_transfer_function into bucket
 resource "google_storage_bucket_object" "analytics_transfer_function_zipped" {
-  name   = "analytics_transfer_function.zip"
+  name   = "analytics_transfer_function_${data.archive_file.analytics_transfer_function.output_md5}.zip"
   bucket = google_storage_bucket.storage_analytics_transfer_function.name
   source = data.archive_file.analytics_transfer_function.output_path
 }
@@ -135,7 +135,7 @@ resource "google_project_iam_binding" "trigger_function" {
   ]
 }
 
-# scheduler resource that will transfer data at midday 
+# scheduler resource that will transfer data at midday
 resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
   name        = "transfer_ga4_to_bq_view_item"
   description = "transfer view-item ga4 bq data to vertex schemas within bq"
@@ -156,7 +156,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
   }
 }
 
-# scheduler resource that will transfer data at midday 
+# scheduler resource that will transfer data at midday
 resource "google_cloud_scheduler_job" "daily_transfer_search" {
   name        = "transfer_ga4_to_bq_search"
   description = "transfer search ga4 bq data to vertex schemas within bq"
@@ -177,7 +177,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_search" {
   }
 }
 
-# custom role for writing vertex analytics data to vertex datastore 
+# custom role for writing vertex analytics data to vertex datastore
 resource "google_project_iam_custom_role" "vertex_upload_role" {
   role_id     = "vertex_upload_role"
   title       = "bq-write-vertex-permissions"
@@ -211,7 +211,7 @@ resource "google_storage_bucket" "import_user_events_vertex_function" {
 
 # zipped import_user_events_vertex function into bucket
 resource "google_storage_bucket_object" "import_user_events_vertex_function_zipped" {
-  name   = "import_user_events_vertex_function.zip"
+  name   = "import_user_events_vertex_function_${data.archive_file.import_user_events_vertex_function.output_md5}.zip"
   bucket = google_storage_bucket.import_user_events_vertex_function.name
   source = data.archive_file.import_user_events_vertex_function.output_path
 }
@@ -246,7 +246,7 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
   }
 }
 
-# scheduler resource that will transfer vertex bq data - > vertex datastore at 1230 
+# scheduler resource that will transfer vertex bq data - > vertex datastore at 1230
 resource "google_cloud_scheduler_job" "daily_transfer_bq_to_vertex" {
   name        = "transfer_vertex_bq__to_vertex_datastore"
   description = "transfer search vertex bq data to vertex datastore"
