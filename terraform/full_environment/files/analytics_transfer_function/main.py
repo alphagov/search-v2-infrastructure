@@ -39,7 +39,7 @@ def function_analytics_events_transfer(request):
                 'view-item' AS eventType,
                 ga.user_pseudo_id AS userPseudoId,
                 FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
-                (case when params.value.string_value is not null then [STRUCT(STRUCT(params.value.string_value AS id, CAST(NULL as string) as name) as documentDescriptor)] end) AS documents
+                (case when params.value.string_value is not null then [STRUCT(params.value.string_value AS id, CAST(NULL as string) as name)] end) AS documents
                 FROM `{env_analytics_project_name}.analytics_330577055.events_{source_date}` ga,
                 UNNEST(event_params) AS params
                 WHERE
