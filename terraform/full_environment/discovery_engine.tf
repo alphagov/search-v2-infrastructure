@@ -4,7 +4,8 @@
 module "govuk_content_discovery_engine" {
   source = "../modules/google_discovery_engine_restapi"
 
-  engine_id = "govuk_content"
+  datastore_id = "govuk_content"
+  engine_id    = "govuk"
 }
 
 resource "aws_secretsmanager_secret" "discovery_engine_configuration" {
