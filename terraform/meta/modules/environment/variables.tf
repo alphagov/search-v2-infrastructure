@@ -14,12 +14,6 @@ variable "has_deployed_service_in_aws" {
   default     = true
 }
 
-variable "auto_apply" {
-  type        = bool
-  description = "Whether to automatically apply changes to this environment through Terraform Cloud"
-  default     = false
-}
-
 variable "terraform_module" {
   type        = string
   description = "The name of the Terraform module for this environment (used as working directory)"

@@ -51,7 +51,7 @@ resource "tfe_workspace" "environment_workspace" {
 
   execution_mode    = "remote"
   working_directory = "terraform/${var.terraform_module}"
-  auto_apply        = var.auto_apply
+  auto_apply        = true
   terraform_version = "~> 1.6.3"
 
   file_triggers_enabled = true
