@@ -83,7 +83,7 @@ module "environment_staging" {
   name                        = "staging"
   display_name                = "Staging"
   has_deployed_service_in_aws = true
-  terraform_module            = "full_environment"
+  terraform_module            = "full_environment_without_events"
 }
 
 module "environment_production" {
@@ -96,5 +96,5 @@ module "environment_production" {
   name                        = "production"
   display_name                = "Production"
   has_deployed_service_in_aws = true
-  terraform_module            = "full_environment"
+  terraform_module            = "full_environment_without_events"
 }
