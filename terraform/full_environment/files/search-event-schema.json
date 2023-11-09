@@ -32,9 +32,16 @@
     ]
   },
   {
-    "name": "searchQuery",
-    "type": "STRING",
-    "mode": "NULLABLE"
+    "name": "searchInfo",
+    "type": "RECORD",
+    "mode": "REQUIRED",
+    "fields": [
+      {
+        "name": "searchQuery",
+        "type": "STRING",
+        "mode": "REQUIRED"
+      }
+    ]
   },
   {
     "name": "pageCategories",
