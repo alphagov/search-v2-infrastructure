@@ -55,7 +55,7 @@ def function_analytics_events_transfer(request):
                         'search' AS eventType,
                         ga.user_pseudo_id AS userPseudoId,
                         FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
-                        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'search_term') AS searchQuery,
+                        STRUCT((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'search_term') AS searchQuery) as searchInfo,
                         item_params.value.string_value as id,
                         max(item.item_id),
                         item.item_list_index
