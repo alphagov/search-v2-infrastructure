@@ -6,6 +6,10 @@ resource "google_service_account" "api" {
   description  = "Service account to provide access to the search-api-v2 Rails app and document sync worker"
 }
 
+resource "google_service_account_key" "api" {
+  service_account_id = google_service_account.api.id
+}
+
 resource "google_project_iam_custom_role" "api_read" {
   role_id     = "search_api_v2_read"
   title       = "search-api-v2 (read only)"
@@ -49,22 +53,6 @@ resource "google_project_iam_binding" "api_write" {
   members = [
     google_service_account.api.member
   ]
-}
-
-resource "google_service_account_key" "api" {
-  service_account_id = google_service_account.api.id
-}
-
-resource "aws_secretsmanager_secret" "key" {
-  name                    = "govuk/search-api-v2/google-cloud-credentials"
-  recovery_window_in_days = 0 # Force delete to allow re-applying immediately after destroying
-}
-
-resource "aws_secretsmanager_secret_version" "key" {
-  secret_id = aws_secretsmanager_secret.key.id
-  secret_string = jsonencode({
-    "credentials.json" = base64decode(google_service_account_key.api.private_key)
-  })
 }
 
 resource "google_service_account" "analytics_events_pipeline" {
