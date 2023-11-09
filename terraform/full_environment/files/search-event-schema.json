@@ -42,10 +42,5 @@
         "mode": "REQUIRED"
       }
     ]
-  },
-  {
-    "name": "pageCategories",
-    "type": "STRING",
-    "mode": "REPEATED"
   }
 ]
