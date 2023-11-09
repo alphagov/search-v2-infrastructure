@@ -83,7 +83,8 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
   description = "function that will trigger daily transfer of GA4 data within BQ to BQ instance used for search"
   location    = var.gcp_region
   build_config {
-    runtime = "python311"
+    entry_point = "function_analytics_events_transfer"
+    runtime     = "python311"
     source {
       storage_source {
         bucket = google_storage_bucket.storage_analytics_transfer_function.name
@@ -229,7 +230,8 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
   description = "function that will trigger daily to transfer of ga4 events data in vertex schema in bq to vertex"
   location    = var.gcp_region
   build_config {
-    runtime = "python311"
+    entry_point = "import_user_events_vertex"
+    runtime     = "python311"
     source {
       storage_source {
         bucket = google_storage_bucket.import_user_events_vertex_function.name
