@@ -16,7 +16,8 @@ resource "aws_secretsmanager_secret" "discovery_engine_configuration" {
 resource "aws_secretsmanager_secret_version" "discovery_engine_configuration" {
   secret_id = aws_secretsmanager_secret.discovery_engine_configuration.id
   secret_string = jsonencode({
-    "DISCOVERY_ENGINE_DATASTORE"      = module.govuk_content_discovery_engine.datastore_path,
-    "DISCOVERY_ENGINE_SERVING_CONFIG" = module.govuk_content_discovery_engine.serving_config_path,
+    "DISCOVERY_ENGINE_DATASTORE_BRANCH" = module.govuk_content_discovery_engine.datastore_default_branch_path,
+    "DISCOVERY_ENGINE_DATASTORE"        = module.govuk_content_discovery_engine.datastore_path,
+    "DISCOVERY_ENGINE_SERVING_CONFIG"   = module.govuk_content_discovery_engine.serving_config_path,
   })
 }
