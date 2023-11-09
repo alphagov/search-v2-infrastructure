@@ -48,14 +48,14 @@ def function_analytics_events_transfer(request):
 
             '''},
         'search': {'query': f'''
-                INSERT INTO `{env_project_name}.{env_dataset_name}.search-event` (eventType, userPseudoId, eventTime, searchQuery, documents)
+                INSERT INTO `{env_project_name}.{env_dataset_name}.search-event` (eventType, userPseudoId, eventTime, searchInfo, documents)
                 with events AS
                 (
                     SELECT
                         'search' AS eventType,
                         ga.user_pseudo_id AS userPseudoId,
                         FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
-                        STRUCT((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'search_term') AS searchQuery) as searchInfo,
+                        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'search_term') AS searchQuery,
                         item_params.value.string_value as id,
                         max(item.item_id),
                         item.item_list_index
@@ -73,7 +73,7 @@ def function_analytics_events_transfer(request):
                     eventType,
                     userPseudoId,
                     eventTime,
-                    searchQuery,
+                    STRUCT(searchQuery) as searchInfo,
                     ARRAY_AGG(STRUCT(id as id, CAST(NULL as string) as name) ORDER BY SAFE_CAST(item_list_index AS INT64) ) as documents
                 FROM events
                 WHERE id IS NOT NULL AND
