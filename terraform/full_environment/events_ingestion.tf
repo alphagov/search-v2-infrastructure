@@ -47,7 +47,7 @@ resource "google_bigquery_table" "search-event" {
   deletion_protection = false
   time_partitioning {
     field = "eventDate"
-    type = "DAY"
+    type  = "DAY"
   }
 
 }
