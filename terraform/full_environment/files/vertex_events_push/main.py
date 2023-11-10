@@ -14,10 +14,18 @@ def import_user_events_vertex(request):
     request_json = request.get_json(silent=True)
     event_type = request_json.get("event_type") # `view-item` or `search`
 
+    def yesterday():
+        from datetime import datetime, timedelta
+        yesterday = datetime.now() - timedelta(days=1)
+        return yesterday.strftime('%Y-%m-%d')
+
+    source_date = yesterday() if request_json.get("date") is None else request_json.get("date")
+
     bq_client = discoveryengine.BigQuerySource(
         project_id = 'search-api-v2-integration', 
         dataset_id= 'analytics_events_vertex', 
-        table_id = f'{event_type}-event'
+        table_id = f'{event_type}-event',
+        partition_date = source_date
         )
 
     client = discoveryengine.UserEventServiceClient()

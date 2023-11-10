@@ -1,5 +1,10 @@
 [
   {
+    "name": "eventDate",
+    "type": "DATE",
+    "mode": "REQUIRED"
+  },
+  {
     "name": "eventType",
     "type": "STRING",
     "mode": "REQUIRED"
