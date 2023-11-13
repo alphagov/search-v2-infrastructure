@@ -20,7 +20,9 @@ def import_user_events_vertex(request):
         return yesterday.strftime('%Y-%m-%d')
 
     source_date = yesterday() if request_json.get("date") is None else request_json.get("date")
-
+    import logging
+    logging.info(source_date)
+    print(source_date)
     bq_client = discoveryengine.BigQuerySource(
         project_id = 'search-api-v2-integration', 
         dataset_id= 'analytics_events_vertex', 
