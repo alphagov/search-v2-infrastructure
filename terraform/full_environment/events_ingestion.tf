@@ -261,7 +261,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-    body        = base64encode("{ \"event_type\" : \"search\"}")
+    body        = base64encode("{ \"event_type\" : \"search\", \"date\" : null}")
     headers = {
       "Content-Type" = "application/json"
     }

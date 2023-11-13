@@ -1,2 +1,3 @@
 functions_framework~=3.4
 google-cloud-bigquery~=3.12
+protofbuf~=4.25.0
