@@ -23,7 +23,7 @@ def import_user_events_vertex(request):
 
     source_date = yesterday() if request_json.get("date") is None else request_json.get("date")
     source_date_datetime = datetime.strptime(source_date, '%Y-%m-%d')
-    source_date = date_pb2(year= source_date_datetime.year, month = source_date_datetime.month, day=source_date_datetime.day)
+    source_date = date_pb2.Date(year= source_date_datetime.year, month = source_date_datetime.month, day=source_date_datetime.day)
 
     bq_client = discoveryengine.BigQuerySource(
         project_id = 'search-api-v2-integration', 
