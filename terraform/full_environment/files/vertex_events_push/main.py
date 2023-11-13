@@ -26,8 +26,7 @@ def import_user_events_vertex(request):
     bq_client = discoveryengine.BigQuerySource(
         project_id = 'search-api-v2-integration', 
         dataset_id= 'analytics_events_vertex', 
-        table_id = f'{event_type}-event',
-        partition_date = source_date
+        table_id = f'{event_type}-event'
         )
 
     client = discoveryengine.UserEventServiceClient()
