@@ -246,26 +246,26 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
   }
 }
 
-# # scheduler resource that will transfer `search` vertex bq data - > vertex datastore at 1230
-# resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
-#   name        = "transfer_search_event_to_vertex_datastore"
-#   description = "transfer search vertex bq data to vertex datastore"
-#   schedule    = "30 12 * * *"
-#   time_zone   = "Europe/London"
+# scheduler resource that will transfer `search` vertex bq data - > vertex datastore at 1230
+resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
+  name        = "transfer_search_event_to_vertex_datastore"
+  description = "transfer search vertex bq data to vertex datastore"
+  schedule    = "30 12 * * *"
+  time_zone   = "Europe/London"
 
-#   http_target {
-#     http_method = "POST"
-#     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-#     body        = base64encode("{ \"event_type\" : \"search\"}")
-#     headers = {
-#       "Content-Type" = "application/json"
-#     }
-#     oidc_token {
-#       service_account_email = google_service_account.trigger_function.email
-#       audience              = google_cloudfunctions2_function.import_user_events_vertex.url
-#     }
-#   }
-# }
+  http_target {
+    http_method = "POST"
+    uri         = google_cloudfunctions2_function.import_user_events_vertex.url
+    body        = base64encode("{ \"event_type\" : \"search\"}")
+    headers = {
+      "Content-Type" = "application/json"
+    }
+    oidc_token {
+      service_account_email = google_service_account.trigger_function.email
+      audience              = google_cloudfunctions2_function.import_user_events_vertex.url
+    }
+  }
+}
 
 # # scheduler resource that will transfer `view-item` vertex bq data - > vertex datastore at 1230
 # resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
