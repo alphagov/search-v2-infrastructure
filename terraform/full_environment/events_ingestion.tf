@@ -46,7 +46,7 @@ resource "google_bigquery_table" "search-event" {
   schema              = file("./files/search-event-schema.json")
   deletion_protection = false
   time_partitioning {
-    type  = "DAY"
+    type = "DAY"
   }
 
 }
