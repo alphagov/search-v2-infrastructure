@@ -52,6 +52,7 @@ def function_analytics_events_transfer(request):
                 with events AS
                 (
                     SELECT
+                        FORMAT_DATE("%F",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventDate,
                         'search' AS eventType,
                         ga.user_pseudo_id AS userPseudoId,
                         FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,

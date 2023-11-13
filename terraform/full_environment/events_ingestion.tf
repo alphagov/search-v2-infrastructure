@@ -2,6 +2,7 @@
 ### Change deletion protection to true once I'm happy with the BQ
 ### have just the service account - pr - read role and read role binding we can take out too
 ### Modularise the below codebase
+### renable triggers and allow bq -> vertex ds scheduler job to provide a date
 
 # custom role for writing ga analytics data to our bq store
 resource "google_project_iam_custom_role" "analytics_write_role" {
@@ -44,6 +45,10 @@ resource "google_bigquery_table" "search-event" {
   project             = var.gcp_project_id
   schema              = file("./files/search-event-schema.json")
   deletion_protection = false
+  time_partitioning {
+    field = "eventDate"
+    type  = "DAY"
+  }
 
 }
 
@@ -252,11 +257,17 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
 #   description = "transfer search vertex bq data to vertex datastore"
 #   schedule    = "30 12 * * *"
 #   time_zone   = "Europe/London"
+# # scheduler resource that will transfer `search` vertex bq data - > vertex datastore at 1230
+# resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
+#   name        = "transfer_search_event_to_vertex_datastore"
+#   description = "transfer search vertex bq data to vertex datastore"
+#   schedule    = "30 12 * * *"
+#   time_zone   = "Europe/London"
 
 #   http_target {
 #     http_method = "POST"
 #     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-#     body        = base64encode("{ \"event_type\" : \"search\"}")
+#     body        = base64encode("{ \"event_type\" : \"search\"}") 
 #     headers = {
 #       "Content-Type" = "application/json"
 #     }
@@ -273,11 +284,17 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
 #   description = "transfer view item vertex bq data to vertex datastore"
 #   schedule    = "30 12 * * *"
 #   time_zone   = "Europe/London"
+# # scheduler resource that will transfer `view-item` vertex bq data - > vertex datastore at 1230
+# resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
+#   name        = "transfer_view_item_to_vertex_datastore"
+#   description = "transfer view item vertex bq data to vertex datastore"
+#   schedule    = "30 12 * * *"
+#   time_zone   = "Europe/London"
 
 #   http_target {
 #     http_method = "POST"
 #     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-#     body        = base64encode("{ \"event_type\" : \"view-item\"}")
+#     body        = base64encode("{ \"event_type\" : \"view-item\"}") 
 #     headers = {
 #       "Content-Type" = "application/json"
 #     }
