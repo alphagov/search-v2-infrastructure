@@ -10,6 +10,8 @@ def import_user_events_vertex(request):
     '''
     '''
     from google.cloud import discoveryengine
+    from google.protobuf import timestamp_pb2
+    from datetime import datetime 
 
     request_json = request.get_json(silent=True)
     event_type = request_json.get("event_type") # `view-item` or `search`
@@ -20,13 +22,14 @@ def import_user_events_vertex(request):
         return yesterday.strftime('%Y-%m-%d')
 
     source_date = yesterday() if request_json.get("date") is None else request_json.get("date")
-    import logging
-    logging.info(source_date)
-    print(source_date)
+    timestamp = timestamp_pb2.Timestamp()
+    timestamp.FromDatetime(datetime.strptime(source_date, '%Y-%m-%d'))
+
     bq_client = discoveryengine.BigQuerySource(
         project_id = 'search-api-v2-integration', 
         dataset_id= 'analytics_events_vertex', 
-        table_id = f'{event_type}-event'
+        table_id = f'{event_type}-event',
+        partition_date = timestamp
         )
 
     client = discoveryengine.UserEventServiceClient()
