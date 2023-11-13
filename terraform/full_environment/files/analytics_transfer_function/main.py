@@ -48,11 +48,10 @@ def function_analytics_events_transfer(request):
 
             '''},
         'search': {'query': f'''
-                INSERT INTO `{env_project_name}.{env_dataset_name}.search-event` (eventDate, eventType, userPseudoId, eventTime, searchInfo, documents)
+                INSERT INTO `{env_project_name}.{env_dataset_name}.search-event` (eventType, userPseudoId, eventTime, searchInfo, documents)
                 with events AS
                 (
                     SELECT
-                        DATE(TIMESTAMP_MICROS(ga.event_timestamp)) AS eventDate,
                         'search' AS eventType,
                         ga.user_pseudo_id AS userPseudoId,
                         FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
@@ -68,10 +67,9 @@ def function_analytics_events_transfer(request):
                         (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'publishing_app') = "search-api" AND
                         EXISTS (SELECT 1 FROM UNNEST(event_params) WHERE key = 'search_term') AND
                         event_name='view_item_list'
-                    GROUP BY eventDate, eventTime,userPseudoId,eventType,searchQuery, id, item_list_index
+                    GROUP BY eventTime,userPseudoId,eventType,searchQuery, id, item_list_index
                 )
                 SELECT 
-                    eventDate,
                     eventType,
                     userPseudoId,
                     eventTime,
@@ -81,7 +79,7 @@ def function_analytics_events_transfer(request):
                 WHERE id IS NOT NULL AND
                     searchQuery IS NOT NULL AND
                     SAFE_CAST(item_list_index AS INT64)<=20
-                group by eventDate, eventTime,userPseudoId,eventType,searchQuery
+                group by eventTime,userPseudoId,eventType,searchQuery
                    '''}
     }
 
