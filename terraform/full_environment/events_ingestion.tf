@@ -51,17 +51,17 @@ resource "google_bigquery_table" "search-event" {
 
 }
 
-# ga4 'select_item' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema
-resource "google_bigquery_table" "view-item-event" {
-  dataset_id          = google_bigquery_dataset.dataset.dataset_id
-  table_id            = "view-item-event"
-  project             = var.gcp_project_id
-  schema              = file("./files/view-item-event-schema.json")
-  deletion_protection = false
-  time_partitioning {
-    type = "DAY"
-  }
-}
+# # ga4 'select_item' events get transformed and inserted into this time-partitioned search-event table defined with a vertex schema
+# resource "google_bigquery_table" "view-item-event" {
+#   dataset_id          = google_bigquery_dataset.dataset.dataset_id
+#   table_id            = "view-item-event"
+#   project             = var.gcp_project_id
+#   schema              = file("./files/view-item-event-schema.json")
+#   deletion_protection = false
+#   time_partitioning {
+#     type = "DAY"
+#   }
+# }
 
 # bucket for ga4 bq -> vertex bq function .zip
 resource "google_storage_bucket" "storage_analytics_transfer_function" {
