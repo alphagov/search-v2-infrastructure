@@ -284,7 +284,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-    body        = base64encode("{ \"event_type\" : \"view-item\", \"date\" : null}") 
+    body        = base64encode("{ \"event_type\" : \"view-item\", \"date\" : null}")
     headers = {
       "Content-Type" = "application/json"
     }
