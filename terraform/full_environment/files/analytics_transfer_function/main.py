@@ -34,8 +34,9 @@ def function_analytics_events_transfer(request):
     all_queries = {
         'view-item' : {
             'query' : f'''
-                INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event` (eventType, userPseudoId, eventTime, documents)
+                INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event` (_PARTITIONTIME, eventType, userPseudoId, eventTime, documents)
                 SELECT
+                TIMESTAMP_TRUNC(TIMESTAMP_MICROS(ga.event_timestamp),DAY) as _PARTITIONTIME,
                 'view-item' AS eventType,
                 ga.user_pseudo_id AS userPseudoId,
                 FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,

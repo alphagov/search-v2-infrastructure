@@ -58,6 +58,9 @@ resource "google_bigquery_table" "view-item-event" {
   project             = var.gcp_project_id
   schema              = file("./files/view-item-event-schema.json")
   deletion_protection = false
+  time_partitioning {
+    type = "DAY"
+  }
 }
 
 # bucket for ga4 bq -> vertex bq function .zip
@@ -271,23 +274,23 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
   }
 }
 
-# # scheduler resource that will transfer `view-item` vertex bq data - > vertex datastore at 1230
-# resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
-#   name        = "transfer_view_item_to_vertex_datastore"
-#   description = "transfer view item vertex bq data to vertex datastore"
-#   schedule    = "30 12 * * *"
-#   time_zone   = "Europe/London"
+# scheduler resource that will transfer `view-item` vertex bq data - > vertex datastore at 1230
+resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
+  name        = "transfer_view_item_to_vertex_datastore"
+  description = "transfer view item vertex bq data to vertex datastore"
+  schedule    = "30 12 * * *"
+  time_zone   = "Europe/London"
 
-#   http_target {
-#     http_method = "POST"
-#     uri         = google_cloudfunctions2_function.import_user_events_vertex.url
-#     body        = base64encode("{ \"event_type\" : \"view-item\"}") 
-#     headers = {
-#       "Content-Type" = "application/json"
-#     }
-#     oidc_token {
-#       service_account_email = google_service_account.trigger_function.email
-#       audience              = google_cloudfunctions2_function.import_user_events_vertex.url
-#     }
-#   }
-# }
+  http_target {
+    http_method = "POST"
+    uri         = google_cloudfunctions2_function.import_user_events_vertex.url
+    body        = base64encode("{ \"event_type\" : \"view-item\", \"date\" : null}") 
+    headers = {
+      "Content-Type" = "application/json"
+    }
+    oidc_token {
+      service_account_email = google_service_account.trigger_function.email
+      audience              = google_cloudfunctions2_function.import_user_events_vertex.url
+    }
+  }
+}
