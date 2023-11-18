@@ -1,0 +1,34 @@
+# Configure general boosting of results by metadata fields.
+#
+# Each key in this file represents the ID and displayName of a serving control with a boost action.
+#
+# IMPORTANT: The ID needs to be between 1-63 characters and *unique both within this file and
+# amongst all controls*! Stay consistent by using `boost_` as the prefix for any boost control added
+# in this file.
+#
+# see https://cloud.google.com/generative-ai-app-builder/docs/reference/rest/v1alpha/projects.locations.collections.dataStores.controls#boostaction
+# and https://cloud.google.com/retail/docs/filter-and-order for `filter` syntax
+
+boost_promote_heavy:
+  filter: 'content_purpose_supergroup: ANY("services")'
+  boost: 0.4
+
+boost_promote_moderate:
+  filter: 'document_type: ANY("coronavirus_landing_page", "minister", "organisation", "specialist_sector", "transaction", "guide", "detailed_guide", "travel_advice")'
+  boost: 0.2
+
+boost_promote_light:
+  filter: 'document_type: ANY("document_collection", "person")'
+  boost: 0.05
+
+boost_demote_light:
+  filter: 'document_type: ANY("aaib_report", "research_for_development_output")'
+  boost: -0.25
+
+boost_demote_moderate:
+  filter: 'document_type: ANY("service_manual_guide", "service_manual_topic", "service_standard_report", "service_standard_report", "foi_release")'
+  boost: -0.5
+
+boost_demote_heavy:
+  filter: 'is_historic = 1 OR organisation_state: ANY("devolved", "closed") OR document_type: ANY("hmrc_manual_section")'
+  boost: -0.75
