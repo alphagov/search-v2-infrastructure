@@ -86,6 +86,10 @@ resource "restapi_object" "discovery_engine_boost_control" {
   data = jsonencode({
     name        = each.key
     displayName = each.key
+
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    useCases     = ["SEARCH_USE_CASE_SEARCH"]
+
     boostAction = each.value
   })
 }
