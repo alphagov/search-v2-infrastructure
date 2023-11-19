@@ -78,23 +78,24 @@ resource "restapi_object" "discovery_engine_engine" {
   })
 }
 
-resource "restapi_object" "discovery_engine_serving_config" {
-  path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs"
-  object_id = "default_serving_config"
+# TODO: Work out with Google why serving controls can't be updated (probably bug?)
+# resource "restapi_object" "discovery_engine_serving_config" {
+#   path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs"
+#   object_id = "default_serving_config"
 
-  # Since the default serving config is created automatically with the datastore, we need to update
-  # even on initial Terraform resource creation
-  create_method = "PATCH"
-  create_path   = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs/default_serving_config"
-  update_method = "PATCH"
+#   # Since the default serving config is created automatically with the datastore, we need to update
+#   # even on initial Terraform resource creation
+#   create_method = "PATCH"
+#   create_path   = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs/default_serving_config"
+#   update_method = "PATCH"
 
-  # Stop Terraform from messing with any other fields in the serving config
-  query_string = "updateMask=boostControlIds"
+#   # Stop Terraform from messing with any other fields in the serving config
+#   query_string = "updateMask=boostControlIds"
 
-  data = jsonencode({
-    boostControlIds = keys(local.boostControls)
-  })
-}
+#   data = jsonencode({
+#     boostControlIds = keys(local.boostControls)
+#   })
+# }
 
 resource "restapi_object" "discovery_engine_boost_control" {
   for_each = local.boostControls
