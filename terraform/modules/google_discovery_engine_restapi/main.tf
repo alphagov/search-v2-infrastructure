@@ -95,7 +95,7 @@ resource "restapi_object" "discovery_engine_engine" {
 
 #   data = jsonencode({
 #     boostControlIds = keys(local.boostControls)
-#     synonymControlIds = keys(local.synonymControls)
+#     synonymsControlIds = keys(local.synonymControls)
 #   })
 # }
 
@@ -135,7 +135,7 @@ resource "restapi_object" "discovery_engine_synonym_control" {
     solutionType = "SOLUTION_TYPE_SEARCH"
     useCases     = ["SEARCH_USE_CASE_SEARCH"]
 
-    synonymAction = {
+    synonymsAction = {
       synonyms = each.value
     }
   })
