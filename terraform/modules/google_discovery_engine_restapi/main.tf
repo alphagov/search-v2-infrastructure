@@ -75,7 +75,23 @@ resource "restapi_object" "discovery_engine_engine" {
       searchTier   = var.search_tier,
       searchAddOns = ["SEARCH_ADD_ON_LLM"] # this is the only valid value supported by the API
     }
+  })
+}
 
+resource "restapi_object" "discovery_engine_serving_config" {
+  path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs"
+  object_id = "default_serving_config"
+
+  # Since the default serving config is created automatically with the datastore, we need to update
+  # even on initial Terraform resource creation
+  create_method = "PATCH"
+  create_path   = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs/default_serving_config"
+  update_method = "PATCH"
+
+  # Stop Terraform from messing with any other fields in the serving config
+  query_string = "updateMask=boostControlIds"
+
+  data = jsonencode({
     boostControlIds = keys(local.boostControls)
   })
 }
