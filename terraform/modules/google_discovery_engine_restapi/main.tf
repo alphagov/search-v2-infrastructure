@@ -73,3 +73,19 @@ resource "restapi_object" "discovery_engine_engine" {
     }
   })
 }
+
+resource "restapi_object" "discovery_engine_boost_control" {
+  for_each = yamldecode(file("${path.module}/files/controls/boosts.yml"))
+
+  path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls"
+  object_id = each.key
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls?controlId=${each.key}"
+
+  data = jsonencode({
+    name        = each.key
+    displayName = each.key
+    boostAction = each.value
+  })
+}
