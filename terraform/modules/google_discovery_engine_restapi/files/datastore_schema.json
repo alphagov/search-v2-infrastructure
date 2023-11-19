@@ -32,7 +32,8 @@
       "description": "URI reference either as a relative path for GOV.UK content, or as an absolute URL for external content (used to link to the content from search results)",
       "type": "string",
       "format": "uri-reference",
-      "retrievable": true
+      "retrievable": true,
+      "indexable": true
     },
     "url": {
       "description": "Absolute URL including protocol and host even for content on GOV.UK proper (used for Vertex to incorporate popularity/event signals)",
