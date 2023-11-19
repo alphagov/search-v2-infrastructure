@@ -10,7 +10,8 @@ terraform {
 }
 
 locals {
-  boostControls = yamldecode(file("${path.module}/files/controls/boosts.yml"))
+  boostControls   = yamldecode(file("${path.module}/files/controls/boosts.yml"))
+  synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
 }
 
 # The datastore to store content in
@@ -94,6 +95,7 @@ resource "restapi_object" "discovery_engine_engine" {
 
 #   data = jsonencode({
 #     boostControlIds = keys(local.boostControls)
+#     synonymControlIds = keys(local.synonymControls)
 #   })
 # }
 
@@ -114,5 +116,27 @@ resource "restapi_object" "discovery_engine_boost_control" {
     useCases     = ["SEARCH_USE_CASE_SEARCH"]
 
     boostAction = each.value
+  })
+}
+
+resource "restapi_object" "discovery_engine_synonym_control" {
+  for_each = local.synonymControls
+
+  path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls"
+  object_id = each.key
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls?controlId=${each.key}"
+
+  data = jsonencode({
+    name        = each.key
+    displayName = each.key
+
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    useCases     = ["SEARCH_USE_CASE_SEARCH"]
+
+    synonymAction = {
+      synonyms = each.value
+    }
   })
 }
