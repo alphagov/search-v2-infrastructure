@@ -9,6 +9,10 @@ terraform {
   required_version = "~> 1.6"
 }
 
+locals {
+  boostControls = yamldecode(file("${path.module}/files/controls/boosts.yml"))
+}
+
 # The datastore to store content in
 #
 # API resource: v1alpha.projects.locations.collections.dataStores
@@ -71,11 +75,13 @@ resource "restapi_object" "discovery_engine_engine" {
       searchTier   = var.search_tier,
       searchAddOns = ["SEARCH_ADD_ON_LLM"] # this is the only valid value supported by the API
     }
+
+    boostControlIds = keys(local.boostControls)
   })
 }
 
 resource "restapi_object" "discovery_engine_boost_control" {
-  for_each = yamldecode(file("${path.module}/files/controls/boosts.yml"))
+  for_each = local.boostControls
 
   path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls"
   object_id = each.key
