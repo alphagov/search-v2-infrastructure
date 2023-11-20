@@ -352,7 +352,7 @@ resource "google_cloudfunctions2_function" "function_automated_eval" {
 resource "google_cloud_scheduler_job" "daily_search_eval" {
   name        = "automated_search_eval"
   description = "daily evaluation of search against judgement lists"
-  schedule    = "0 12 * * *"
+  schedule    = "0 17 * * *"
   time_zone   = "Europe/London"
 
   http_target {
