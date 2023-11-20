@@ -294,3 +294,78 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
     }
   }
 }
+
+################################
+################################
+# SEARCH EVAULATION
+
+# bucket for ga4 bq -> vertex bq function .zip
+resource "google_storage_bucket" "automated_eval_function" {
+  name     = "${var.gcp_project_id}_automated_eval"
+  location = var.gcp_region
+}
+
+# zipped automated_eval_function into bucket
+resource "google_storage_bucket_object" "automated_eval_function_zipped" {
+  name   = "automated_eval_function_${data.archive_file.automated_eval_function.output_md5}.zip"
+  bucket = google_storage_bucket.storage_automated_eval_function.name
+  source = data.archive_file.automated_eval_function.output_path
+}
+
+# archive .py and requirements.txt for automated_eval_function to zip
+data "archive_file" "automated_eval_function" {
+  type        = "zip"
+  source_dir  = "${path.module}/files/automated_eval_function/"
+  output_path = "${path.module}/files/automated_eval_function.zip"
+}
+
+# gen 2 function for transferring from bq - ga4 to bq - vertex events schema
+### TO DO - starting with just one schema
+resource "google_cloudfunctions2_function" "function_automated_eval" {
+  name        = "function_automated_eval"
+  description = "function that will automatically evaluate the search results daily"
+  location    = var.gcp_region
+  build_config {
+    entry_point = "function_automated_eval"
+    runtime     = "python311"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.storage_analytics_transfer_function.name
+        object = google_storage_bucket_object.analytics_transfer_function_zipped.name
+      }
+    }
+  }
+  service_config {
+    max_instance_count    = 5
+    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    service_account_email = google_service_account.analytics_events_pipeline.email
+    environment_variables = {
+      PROJECT_NAME           = var.gcp_project_id,
+      DATASET_NAME           = google_bigquery_dataset.dataset.dataset_id
+      ANALYTICS_PROJECT_NAME = var.gcp_analytics_project_id
+      BQ_LOCATION            = var.gcp_region
+    }
+  }
+}
+
+
+# scheduler resource that will transfer data at midday
+resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
+  name        = "transfer_ga4_to_bq_view_item"
+  description = "transfer view-item ga4 bq data to vertex schemas within bq"
+  schedule    = "0 12 * * *"
+  time_zone   = "Europe/London"
+
+  http_target {
+    http_method = "POST"
+    uri         = google_cloudfunctions2_function.function_automated_eval.url
+    body        = base64encode("{ \"event_type\" : \"view-item\", \"date\" : null}")
+    headers = {
+      "Content-Type" = "application/json"
+    }
+    oidc_token {
+      service_account_email = google_service_account.trigger_function.email
+      audience              = google_cloudfunctions2_function.function_automated_eval.url
+    }
+  }
+}
