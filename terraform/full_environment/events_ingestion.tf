@@ -308,7 +308,7 @@ resource "google_storage_bucket" "automated_eval_function" {
 # zipped automated_eval_function into bucket
 resource "google_storage_bucket_object" "automated_eval_function_zipped" {
   name   = "automated_eval_function_${data.archive_file.automated_eval_function.output_md5}.zip"
-  bucket = google_storage_bucket.storage_automated_eval_function.name
+  bucket = google_storage_bucket.automated_eval_function.name
   source = data.archive_file.automated_eval_function.output_path
 }
 
