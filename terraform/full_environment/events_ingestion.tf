@@ -299,7 +299,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
 ################################
 # SEARCH EVAULATION
 
-# bucket for ga4 bq -> vertex bq function .zip
+# bucket for automated_eval_function function.zip
 resource "google_storage_bucket" "automated_eval_function" {
   name     = "${var.gcp_project_id}_automated_eval"
   location = var.gcp_region
@@ -319,8 +319,7 @@ data "archive_file" "automated_eval_function" {
   output_path = "${path.module}/files/automated_eval_function.zip"
 }
 
-# gen 2 function for transferring from bq - ga4 to bq - vertex events schema
-### TO DO - starting with just one schema
+# gen 2 function for daily evaluation of search against judgement lists
 resource "google_cloudfunctions2_function" "function_automated_eval" {
   name        = "function_automated_eval"
   description = "function that will automatically evaluate the search results daily"
@@ -349,17 +348,16 @@ resource "google_cloudfunctions2_function" "function_automated_eval" {
 }
 
 
-# scheduler resource that will transfer data at midday
-resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
-  name        = "transfer_ga4_to_bq_view_item"
-  description = "transfer view-item ga4 bq data to vertex schemas within bq"
+# scheduler resource that will trigger daily evaluation of search against judgement lists
+resource "google_cloud_scheduler_job" "daily_search_eval" {
+  name        = "automated_search_eval"
+  description = "daily evaluation of search against judgement lists"
   schedule    = "0 12 * * *"
   time_zone   = "Europe/London"
 
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.function_automated_eval.url
-    body        = base64encode("{ \"event_type\" : \"view-item\", \"date\" : null}")
     headers = {
       "Content-Type" = "application/json"
     }
