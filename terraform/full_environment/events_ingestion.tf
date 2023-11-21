@@ -329,8 +329,8 @@ resource "google_cloudfunctions2_function" "function_automated_eval" {
     runtime     = "python311"
     source {
       storage_source {
-        bucket = google_storage_bucket.storage_analytics_transfer_function.name
-        object = google_storage_bucket_object.analytics_transfer_function_zipped.name
+        bucket = google_storage_bucket.automated_eval_function.name
+        object = google_storage_bucket_object.automated_eval_function_zipped.name
       }
     }
   }
