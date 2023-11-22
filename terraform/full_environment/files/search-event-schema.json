@@ -53,7 +53,7 @@
       },
       {
         "name": "offset",
-        "type": "STRING",
+        "type": "INT64",
         "mode": "REQUIRED"
       }
     ]
