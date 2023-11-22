@@ -47,6 +47,11 @@
         "mode": "REQUIRED"
       },
       {
+        "name": "orderBy",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
         "name": "offset",
         "type": "STRING",
         "mode": "REQUIRED"
