@@ -35,7 +35,7 @@ resource "google_project_iam_custom_role" "evaluator" {
 resource "google_bigquery_table_iam_binding" "evaluator" {
   dataset_id = google_bigquery_dataset.evaluator.dataset_id
   table_id   = google_bigquery_table.evaluator_ratings.table_id
-  role       = google_project_iam_custom_role.evaluator.role_id
+  role       = google_project_iam_custom_role.evaluator.id
 
   members = [
     "serviceAccount:${google_service_account.evaluator.email}",
