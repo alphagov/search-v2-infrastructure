@@ -41,3 +41,18 @@ resource "google_bigquery_table_iam_binding" "evaluator" {
     "serviceAccount:${google_service_account.evaluator.email}",
   ]
 }
+
+resource "aws_secretsmanager_secret" "bigquery_configuration" {
+  name                    = "govuk/search-v2-evaluator/google-cloud-bigquery-configuration"
+  recovery_window_in_days = 0 # Force delete to allow re-applying immediately after destroying
+}
+
+resource "aws_secretsmanager_secret_version" "bigquery_configuration" {
+  secret_id = aws_secretsmanager_secret.bigquery_configuration.id
+  secret_string = jsonencode({
+    "GOOGLE_CLOUD_CREDENTIALS" = base64decode(google_service_account_key.evaluator.private_key)
+    "BIGQUERY_PROJECT"         = var.gcp_project_id
+    "BIGQUERY_DATASET"         = google_bigquery_dataset.evaluator.dataset_id
+    "BIGQUERY_TABLE"           = google_bigquery_table.evaluator_ratings.table_id
+  })
+}
