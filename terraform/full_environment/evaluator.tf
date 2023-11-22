@@ -1,13 +1,13 @@
 resource "google_bigquery_dataset" "evaluator" {
-  dataset_id                 = "search-v2-evaluator"
+  dataset_id                 = "search_v2_evaluator"
   location                   = var.gcp_region
   delete_contents_on_destroy = true
 }
 
-resource "google_bigquery_table" "evaluator" {
+resource "google_bigquery_table" "evaluator_ratings" {
   dataset_id          = google_bigquery_dataset.evaluator.dataset_id
-  table_id            = "evaluator"
-  schema              = file("./files/evaluator-schema.json")
+  table_id            = "evaluator_ratings"
+  schema              = file("./files/evaluator-ratings-schema.json")
   deletion_protection = false
 }
 
@@ -34,7 +34,7 @@ resource "google_project_iam_custom_role" "evaluator" {
 
 resource "google_bigquery_table_iam_binding" "evaluator" {
   dataset_id = google_bigquery_dataset.evaluator.dataset_id
-  table_id   = google_bigquery_table.evaluator.table_id
+  table_id   = google_bigquery_table.evaluator_ratings.table_id
   role       = google_project_iam_custom_role.evaluator.role_id
 
   members = [
