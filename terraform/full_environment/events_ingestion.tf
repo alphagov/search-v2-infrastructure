@@ -146,7 +146,7 @@ resource "google_project_iam_binding" "trigger_function" {
 resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
   name        = "transfer_ga4_to_bq_view_item"
   description = "transfer view-item ga4 bq data to vertex schemas within bq"
-  schedule    = "0 12 * * *"
+  schedule    = "15 12 * * *"
   time_zone   = "Europe/London"
 
   http_target {
@@ -278,7 +278,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
 resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
   name        = "transfer_view_item_to_vertex_datastore"
   description = "transfer view item vertex bq data to vertex datastore"
-  schedule    = "30 12 * * *"
+  schedule    = "45 12 * * *"
   time_zone   = "Europe/London"
 
   http_target {
