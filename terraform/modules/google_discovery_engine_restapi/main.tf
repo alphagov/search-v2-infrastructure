@@ -93,6 +93,7 @@ resource "restapi_object" "discovery_engine_serving_config" {
   create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
   update_method = "PATCH"
   update_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search"
 
   data = jsonencode({
     boostControlIds    = keys(local.boostControls)
