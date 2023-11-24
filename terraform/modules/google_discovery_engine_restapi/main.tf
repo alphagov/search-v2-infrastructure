@@ -9,10 +9,10 @@ terraform {
   required_version = "~> 1.6"
 }
 
-# locals {
-#   boostControls   = yamldecode(file("${path.module}/files/controls/boosts.yml"))
-#   synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
-# }
+locals {
+  boostControls   = yamldecode(file("${path.module}/files/controls/boosts.yml"))
+  synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
+}
 
 # The datastore to store content in
 #
@@ -75,6 +75,71 @@ resource "restapi_object" "discovery_engine_engine" {
     searchEngineConfig = {
       searchTier   = var.search_tier,
       searchAddOns = ["SEARCH_ADD_ON_LLM"] # this is the only valid value supported by the API
+    }
+  })
+}
+
+resource "restapi_object" "discovery_engine_serving_config" {
+  depends_on = [
+    restapi_object.discovery_engine_boost_control,
+    restapi_object.discovery_engine_synonym_control
+  ]
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs"
+  object_id = "default_search"
+
+  # Since the default serving config is created automatically with the datastore, we need to update
+  # even on initial Terraform resource creation
+  create_method = "PATCH"
+  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search"
+  update_method = "PATCH"
+
+  # Stop Terraform from messing with any other fields in the serving config
+  query_string = "updateMask=boostControlIds,synonymsControlIds"
+
+  data = jsonencode({
+    boostControlIds    = keys(local.boostControls)
+    synonymsControlIds = keys(local.synonymControls)
+  })
+}
+
+resource "restapi_object" "discovery_engine_boost_control" {
+  for_each = local.boostControls
+
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls"
+  object_id = each.key
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls?controlId=${each.key}"
+
+  data = jsonencode({
+    name        = each.key
+    displayName = each.key
+
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    useCases     = ["SEARCH_USE_CASE_SEARCH"]
+
+    boostAction = each.value
+  })
+}
+
+resource "restapi_object" "discovery_engine_synonym_control" {
+  for_each = local.synonymControls
+
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls"
+  object_id = each.key
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls?controlId=${each.key}"
+
+  data = jsonencode({
+    name        = each.key
+    displayName = each.key
+
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    useCases     = ["SEARCH_USE_CASE_SEARCH"]
+
+    synonymsAction = {
+      synonyms = each.value
     }
   })
 }
