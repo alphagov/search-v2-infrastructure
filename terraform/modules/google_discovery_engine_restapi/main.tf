@@ -94,6 +94,7 @@ resource "restapi_object" "discovery_engine_serving_config" {
   update_method = "PATCH"
 
   data = jsonencode({
+    updateMask         = "boostControlIds,synonymsControlIds"
     boostControlIds    = keys(local.boostControls)
     synonymsControlIds = keys(local.synonymControls)
   })
