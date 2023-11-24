@@ -3,6 +3,7 @@
 ### Add time partitioning and time argument features
 ### Add logic to evaluate whether the query has been successful
 ### Document format of date
+### Change project name variable name to project id 
 import functions_framework
 @functions_framework.http
 def function_analytics_events_transfer(request):
