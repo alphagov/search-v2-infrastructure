@@ -128,7 +128,8 @@ resource "google_project_iam_custom_role" "trigger_function_role" {
   permissions = [
     "cloudfunctions.functions.invoke",
     "run.jobs.run",
-    "run.routes.invoke"
+    "run.routes.invoke",
+    "cloudfunctions.functions.get"
   ]
 }
 
