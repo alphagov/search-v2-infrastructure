@@ -12,7 +12,10 @@ def import_user_events_vertex(request):
     from google.cloud import discoveryengine
     from google.type import date_pb2
     from datetime import datetime 
-
+    import os
+    
+    env_project_name = os.environ.get("PROJECT_NAME")
+    
     request_json = request.get_json(silent=True)
     event_type = request_json.get("event_type") # `view-item` or `search`
 

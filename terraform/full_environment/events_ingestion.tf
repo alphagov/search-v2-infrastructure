@@ -253,6 +253,9 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
     max_instance_count    = 5
     ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
+    environment_variables = {
+      PROJECT_NAME           = var.gcp_project_id
+    }
   }
 }
 
