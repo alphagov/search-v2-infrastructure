@@ -8,8 +8,8 @@
 ### Documentation diagram update
 
 # custom role for writing ga analytics data to our bq store
-resource "google_project_iam_custom_role" "analytics_write_role" {
-  role_id     = "analytics_write_role"
+resource "google_project_iam_custom_role" "analytics_write" {
+  role_id     = "analytics_write"
   title       = "ga4-write-bq-permissions"
   description = "Write data to vertex schemas in bq"
 
@@ -26,7 +26,7 @@ resource "google_project_iam_custom_role" "analytics_write_role" {
 # binding ga write role to ga write service account
 resource "google_project_iam_binding" "analytics_write" {
   project = var.gcp_project_id
-  role    = google_project_iam_custom_role.analytics_write_role.id
+  role    = google_project_iam_custom_role.analytics_write.id
 
   members = [
     google_service_account.analytics_events_pipeline.member
@@ -122,8 +122,8 @@ resource "google_service_account" "trigger_function" {
 }
 
 # custom role for triggering transfer function
-resource "google_project_iam_custom_role" "trigger_function_role" {
-  role_id     = "trigger_function_role"
+resource "google_project_iam_custom_role" "trigger_function" {
+  role_id     = "trigger_function"
   title       = "scheduler_ga4_to_bq_vertex_transfer-permissions"
   description = "Trigger the function for BQ GA4 -> BQ Vertex Schema data"
 
@@ -138,7 +138,7 @@ resource "google_project_iam_custom_role" "trigger_function_role" {
 # binding role to trigger function to service account for the function
 resource "google_project_iam_binding" "trigger_function" {
   project = var.gcp_project_id
-  role    = google_project_iam_custom_role.trigger_function_role.id
+  role    = google_project_iam_custom_role.trigger_function.id
 
   members = [
     google_service_account.trigger_function.member
