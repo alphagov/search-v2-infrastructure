@@ -84,17 +84,16 @@ resource "restapi_object" "discovery_engine_serving_config" {
     restapi_object.discovery_engine_boost_control,
     restapi_object.discovery_engine_synonym_control
   ]
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs?updateMask=boostControlIds,synonymsControlIds"
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs?updateMask=boost_control_ids,synonyms_control_ids"
   object_id = "default_search"
 
   # Since the default serving config is created automatically with the datastore, we need to update
   # even on initial Terraform resource creation
   create_method = "PATCH"
-  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boostControlIds,synonymsControlIds"
+  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
   update_method = "PATCH"
 
   data = jsonencode({
-    updateMask         = "boostControlIds,synonymsControlIds"
     boostControlIds    = keys(local.boostControls)
     synonymsControlIds = keys(local.synonymControls)
   })
