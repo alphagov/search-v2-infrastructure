@@ -1,8 +1,11 @@
 ### TO DO
 ### Change deletion protection to true once I'm happy with the BQ
-### have just the service account - pr - read role and read role binding we can take out too
+### Tidy up IAM (have just the service account - pr - read role and read role binding we can take out too)
 ### Modularise the below codebase
-### renable triggers and allow bq -> vertex ds scheduler job to provide a date
+### Consistent date formats for functions
+### Error handling for vertex ingestion
+### Vertex function return future
+### Documentation diagram update
 
 # custom role for writing ga analytics data to our bq store
 resource "google_project_iam_custom_role" "analytics_write_role" {
@@ -84,7 +87,6 @@ data "archive_file" "analytics_transfer_function" {
 }
 
 # gen 2 function for transferring from bq - ga4 to bq - vertex events schema
-### TO DO - starting with just one schema
 resource "google_cloudfunctions2_function" "function_analytics_events_transfer" {
   name        = "function_analytics_events_transfer"
   description = "function that will trigger daily transfer of GA4 data within BQ to BQ instance used for search"
