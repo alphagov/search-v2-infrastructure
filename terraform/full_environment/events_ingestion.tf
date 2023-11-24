@@ -101,7 +101,7 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
   }
   service_config {
     max_instance_count    = 5
-    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
       PROJECT_NAME           = var.gcp_project_id,
@@ -248,7 +248,7 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
   }
   service_config {
     max_instance_count    = 5
-    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
   }
 }
