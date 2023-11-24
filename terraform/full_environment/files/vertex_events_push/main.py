@@ -2,7 +2,6 @@
 ### Partition Date needs to be included in BigQuerySource
 ### Better exception handling
 ### Add error config to store error logs in gcs
-### Parameterise the parent string
 
 import functions_framework
 @functions_framework.http
@@ -36,7 +35,7 @@ def import_user_events_vertex(request):
 
     import_request = discoveryengine.ImportUserEventsRequest(
         bigquery_source = bq_client,
-        parent = 'projects/search-api-v2-integration/locations/global/collections/default_collection/dataStores/govuk_content'
+        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content' # search-api-v2-integration
     )
 
 
