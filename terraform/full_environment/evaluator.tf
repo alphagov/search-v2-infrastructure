@@ -27,6 +27,7 @@ resource "google_project_iam_custom_role" "evaluator" {
   description = "Enables write access to BigQuery for the search-v2-evaluator Rails app"
 
   permissions = [
+    "bigquery.datasets.get",
     "bigquery.tables.get",
     "bigquery.tables.updateData",
   ]
