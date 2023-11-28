@@ -397,15 +397,15 @@ resource "google_bigquery_table" "qrels" {
   external_data_configuration {
     autodetect    = true
     source_format = "CSV"
-    mode          = "AUTO"
     source_uris = [
       join("", [google_storage_bucket.automated_evaluation_output.url, "*qrels.csv"])
     ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
   }
-  hive_partitioning_options {
-    mode              = "AUTO"
-    source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
-  }
+
 }
 
 # # 
