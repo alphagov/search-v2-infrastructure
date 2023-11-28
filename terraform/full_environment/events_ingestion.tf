@@ -305,38 +305,38 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
 ################################
 # SEARCH EVAULATION
 
-# bucket for automated_eval_function function.zip
-resource "google_storage_bucket" "automated_eval_function" {
-  name     = "${var.gcp_project_id}_automated_eval"
+# bucket for automated_evaluation_function function.zip
+resource "google_storage_bucket" "automated_evaluation_function" {
+  name     = "${var.gcp_project_id}_automated_evaluation"
   location = var.gcp_region
 }
 
-# zipped automated_eval_function into bucket
-resource "google_storage_bucket_object" "automated_eval_function_zipped" {
-  name   = "automated_eval_function_${data.archive_file.automated_eval_function.output_md5}.zip"
-  bucket = google_storage_bucket.automated_eval_function.name
-  source = data.archive_file.automated_eval_function.output_path
+# zipped automated_evaluation_function into bucket
+resource "google_storage_bucket_object" "automated_evaluation_function_zipped" {
+  name   = "automated_evaluation_function_${data.archive_file.automated_evaluation_function.output_md5}.zip"
+  bucket = google_storage_bucket.automated_evaluation_function.name
+  source = data.archive_file.automated_evaluation_function.output_path
 }
 
-# archive .py and requirements.txt for automated_eval_function to zip
-data "archive_file" "automated_eval_function" {
+# archive .py and requirements.txt for automated_evaluation_function to zip
+data "archive_file" "automated_evaluation_function" {
   type        = "zip"
-  source_dir  = "${path.module}/files/automated_eval_function/"
-  output_path = "${path.module}/files/automated_eval_function.zip"
+  source_dir  = "${path.module}/files/automated_evaluation_function/"
+  output_path = "${path.module}/files/automated_evaluation_function.zip"
 }
 
 # gen 2 function for daily evaluation of search against judgement lists
-resource "google_cloudfunctions2_function" "function_automated_eval" {
-  name        = "function_automated_eval"
-  description = "function that will automatically evaluate the search results daily"
+resource "google_cloudfunctions2_function" "function_automated_evaluation" {
+  name        = "function_automated_evaluation"
+  description = "function that will automatically evaluationuate the search results daily"
   location    = var.gcp_region
   build_config {
-    entry_point = "function_automated_eval"
+    entry_point = "function_automated_evaluation"
     runtime     = "python311"
     source {
       storage_source {
-        bucket = google_storage_bucket.automated_eval_function.name
-        object = google_storage_bucket_object.automated_eval_function_zipped.name
+        bucket = google_storage_bucket.automated_evaluation_function.name
+        object = google_storage_bucket_object.automated_evaluation_function_zipped.name
       }
     }
   }
@@ -355,21 +355,79 @@ resource "google_cloudfunctions2_function" "function_automated_eval" {
 
 
 # scheduler resource that will trigger daily evaluation of search against judgement lists
-resource "google_cloud_scheduler_job" "daily_search_eval" {
-  name        = "automated_search_eval"
+resource "google_cloud_scheduler_job" "daily_search_evaluation" {
+  name        = "automated_search_evaluation"
   description = "daily evaluation of search against judgement lists"
   schedule    = "0 17 * * *"
   time_zone   = "Europe/London"
 
   http_target {
     http_method = "POST"
-    uri         = google_cloudfunctions2_function.function_automated_eval.url
+    uri         = google_cloudfunctions2_function.function_automated_evaluation.url
     headers = {
       "Content-Type" = "application/json"
     }
     oidc_token {
       service_account_email = google_service_account.trigger_function.email
-      audience              = google_cloudfunctions2_function.function_automated_eval.url
+      audience              = google_cloudfunctions2_function.function_automated_evaluation.url
     }
   }
 }
+
+# bucket for output of automated evaluation
+resource "google_storage_bucket" "automated_evaluation_output" {
+  name     = "${var.gcp_project_id}_automated_evaluation_output"
+  location = var.gcp_region
+}
+
+# top level dataset to store events for ingestion into vertex
+resource "google_bigquery_dataset" "automated_evaluation_output" {
+  dataset_id                 = "automated_evaluation_output"
+  project                    = var.gcp_project_id
+  location                   = var.gcp_region
+  delete_contents_on_destroy = true
+}
+
+# 
+resource "google_bigquery_table" "qrels" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "qrels"
+  project             = var.gcp_project_id
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    mode          = "AUTO"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "*qrels.csv"])
+    ]
+  }
+  hive_partitioning_options {
+    mode              = "AUTO"
+    source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+  }
+}
+
+# # 
+# resource "google_bigquery_table" "reports" {
+#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+#   table_id            = "reports"
+#   project             = var.gcp_project_id
+#   deletion_protection = false
+# }
+
+# # 
+# resource "google_bigquery_table" "results" {
+#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+#   table_id            = "results"
+#   project             = var.gcp_project_id
+#   deletion_protection = false
+# }
+
+# # 
+# resource "google_bigquery_table" "runs" {
+#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+#   table_id            = "runs"
+#   project             = var.gcp_project_id
+#   deletion_protection = false
+# }
