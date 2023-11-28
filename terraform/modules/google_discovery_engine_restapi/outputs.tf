@@ -10,5 +10,7 @@ output "datastore_default_branch_path" {
 
 output "serving_config_path" {
   description = "The serving config for the engine created by the module (for querying)"
-  value       = "${restapi_object.discovery_engine_engine.api_data["name"]}/servingConfigs/default_serving_config"
+  # TODO: Revert to this once Vertex engine bug is fixed
+  # value       = "${restapi_object.discovery_engine_engine.api_data["name"]}/servingConfigs/default_search"
+  value = "${restapi_object.discovery_engine_datastore.api_data["name"]}/servingConfigs/default_search"
 }

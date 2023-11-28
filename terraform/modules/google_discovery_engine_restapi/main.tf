@@ -79,34 +79,36 @@ resource "restapi_object" "discovery_engine_engine" {
   })
 }
 
-# TODO: Work out with Google why serving controls can't be updated (probably bug?)
-# resource "restapi_object" "discovery_engine_serving_config" {
-#   path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs"
-#   object_id = "default_serving_config"
+resource "restapi_object" "discovery_engine_serving_config" {
+  depends_on = [
+    restapi_object.discovery_engine_boost_control,
+    restapi_object.discovery_engine_synonym_control
+  ]
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  object_id = "default_search"
 
-#   # Since the default serving config is created automatically with the datastore, we need to update
-#   # even on initial Terraform resource creation
-#   create_method = "PATCH"
-#   create_path   = "/engines/${restapi_object.discovery_engine_engine.object_id}/servingConfigs/default_serving_config"
-#   update_method = "PATCH"
+  # Since the default serving config is created automatically with the datastore, we need to update
+  # even on initial Terraform resource creation
+  create_method = "PATCH"
+  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  update_method = "PATCH"
+  update_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search"
 
-#   # Stop Terraform from messing with any other fields in the serving config
-#   query_string = "updateMask=boostControlIds"
-
-#   data = jsonencode({
-#     boostControlIds = keys(local.boostControls)
-#     synonymsControlIds = keys(local.synonymControls)
-#   })
-# }
+  data = jsonencode({
+    boostControlIds    = keys(local.boostControls)
+    synonymsControlIds = keys(local.synonymControls)
+  })
+}
 
 resource "restapi_object" "discovery_engine_boost_control" {
   for_each = local.boostControls
 
-  path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls"
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls"
   object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls?controlId=${each.key}"
+  create_path = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key
@@ -122,11 +124,11 @@ resource "restapi_object" "discovery_engine_boost_control" {
 resource "restapi_object" "discovery_engine_synonym_control" {
   for_each = local.synonymControls
 
-  path      = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls"
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls"
   object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/engines/${restapi_object.discovery_engine_engine.object_id}/controls?controlId=${each.key}"
+  create_path = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key

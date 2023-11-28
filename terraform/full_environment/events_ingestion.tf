@@ -1,12 +1,15 @@
 ### TO DO
 ### Change deletion protection to true once I'm happy with the BQ
-### have just the service account - pr - read role and read role binding we can take out too
+### Tidy up IAM (have just the service account - pr - read role and read role binding we can take out too)
 ### Modularise the below codebase
-### renable triggers and allow bq -> vertex ds scheduler job to provide a date
+### Consistent date formats for functions
+### Error handling for vertex ingestion
+### Vertex function return future
+### Documentation diagram update
 
 # custom role for writing ga analytics data to our bq store
-resource "google_project_iam_custom_role" "analytics_write_role" {
-  role_id     = "analytics_write_role"
+resource "google_project_iam_custom_role" "analytics_write" {
+  role_id     = "analytics_write"
   title       = "ga4-write-bq-permissions"
   description = "Write data to vertex schemas in bq"
 
@@ -23,7 +26,7 @@ resource "google_project_iam_custom_role" "analytics_write_role" {
 # binding ga write role to ga write service account
 resource "google_project_iam_binding" "analytics_write" {
   project = var.gcp_project_id
-  role    = google_project_iam_custom_role.analytics_write_role.id
+  role    = google_project_iam_custom_role.analytics_write.id
 
   members = [
     google_service_account.analytics_events_pipeline.member
@@ -84,7 +87,6 @@ data "archive_file" "analytics_transfer_function" {
 }
 
 # gen 2 function for transferring from bq - ga4 to bq - vertex events schema
-### TO DO - starting with just one schema
 resource "google_cloudfunctions2_function" "function_analytics_events_transfer" {
   name        = "function_analytics_events_transfer"
   description = "function that will trigger daily transfer of GA4 data within BQ to BQ instance used for search"
@@ -101,7 +103,7 @@ resource "google_cloudfunctions2_function" "function_analytics_events_transfer" 
   }
   service_config {
     max_instance_count    = 5
-    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
       PROJECT_NAME           = var.gcp_project_id,
@@ -120,22 +122,23 @@ resource "google_service_account" "trigger_function" {
 }
 
 # custom role for triggering transfer function
-resource "google_project_iam_custom_role" "trigger_function_role" {
-  role_id     = "trigger_function_role"
+resource "google_project_iam_custom_role" "trigger_function" {
+  role_id     = "trigger_function"
   title       = "scheduler_ga4_to_bq_vertex_transfer-permissions"
   description = "Trigger the function for BQ GA4 -> BQ Vertex Schema data"
 
   permissions = [
     "cloudfunctions.functions.invoke",
     "run.jobs.run",
-    "run.routes.invoke"
+    "run.routes.invoke",
+    "cloudfunctions.functions.get"
   ]
 }
 
 # binding role to trigger function to service account for the function
 resource "google_project_iam_binding" "trigger_function" {
   project = var.gcp_project_id
-  role    = google_project_iam_custom_role.trigger_function_role.id
+  role    = google_project_iam_custom_role.trigger_function.id
 
   members = [
     google_service_account.trigger_function.member
@@ -146,7 +149,7 @@ resource "google_project_iam_binding" "trigger_function" {
 resource "google_cloud_scheduler_job" "daily_transfer_view_item" {
   name        = "transfer_ga4_to_bq_view_item"
   description = "transfer view-item ga4 bq data to vertex schemas within bq"
-  schedule    = "0 12 * * *"
+  schedule    = "15 12 * * *"
   time_zone   = "Europe/London"
 
   http_target {
@@ -248,8 +251,11 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
   }
   service_config {
     max_instance_count    = 5
-    ingress_settings      = "ALLOW_INTERNAL_ONLY"
+    ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
+    environment_variables = {
+      PROJECT_NAME = var.gcp_project_id
+    }
   }
 }
 
@@ -278,7 +284,7 @@ resource "google_cloud_scheduler_job" "daily_transfer_bq_search_to_vertex" {
 resource "google_cloud_scheduler_job" "daily_transfer_bq_view_item_to_vertex" {
   name        = "transfer_view_item_to_vertex_datastore"
   description = "transfer view item vertex bq data to vertex datastore"
-  schedule    = "30 12 * * *"
+  schedule    = "45 12 * * *"
   time_zone   = "Europe/London"
 
   http_target {

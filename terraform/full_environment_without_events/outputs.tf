@@ -1,1 +1,0 @@
-../full_environment/outputs.tf

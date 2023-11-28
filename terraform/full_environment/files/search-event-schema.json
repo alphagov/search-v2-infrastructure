@@ -15,6 +15,11 @@
     "mode": "REQUIRED"
   },
   {
+    "name": "filter",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
     "name": "documents",
     "type": "RECORD",
     "mode": "REPEATED",
@@ -39,6 +44,16 @@
       {
         "name": "searchQuery",
         "type": "STRING",
+        "mode": "REQUIRED"
+      },
+      {
+        "name": "orderBy",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "offset",
+        "type": "INT64",
         "mode": "REQUIRED"
       }
     ]
