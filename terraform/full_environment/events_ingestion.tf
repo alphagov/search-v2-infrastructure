@@ -321,8 +321,8 @@ resource "google_storage_bucket_object" "automated_evaluation_function_zipped" {
 # archive .py and requirements.txt for automated_evaluation_function to zip
 data "archive_file" "automated_evaluation_function" {
   type        = "zip"
-  source_dir  = "${path.module}/files/automated_evaluation_function/"
-  output_path = "${path.module}/files/automated_evaluation_function.zip"
+  source_dir  = "${path.module}/files/automated_evaluation/"
+  output_path = "${path.module}/files/automated_evaluation.zip"
 }
 
 # gen 2 function for daily evaluation of search against judgement lists
