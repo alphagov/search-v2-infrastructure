@@ -393,7 +393,7 @@ resource "google_bigquery_table" "qrels" {
     autodetect    = true
     source_format = "CSV"
     source_uris = [
-      join("", [google_storage_bucket.automated_evaluation_output.url, "/" ,"*qrels.csv"])
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*qrels.csv"])
     ]
     hive_partitioning_options {
       mode              = "AUTO"
