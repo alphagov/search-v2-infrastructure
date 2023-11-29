@@ -400,7 +400,7 @@ resource "google_bigquery_table" "qrels" {
   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
   table_id            = "qrels"
   project             = var.gcp_project_id
-  depends_on          = [google_storage_bucket.automated_evaluation_output]
+  depends_on          = [google_storage_bucket_object.qrels_seed_file]
   deletion_protection = false
   external_data_configuration {
     autodetect    = true
@@ -425,7 +425,7 @@ resource "google_bigquery_table" "report" {
   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
   table_id            = "report"
   project             = var.gcp_project_id
-  depends_on          = [google_storage_bucket.automated_evaluation_output]
+  depends_on          = [google_storage_bucket_object.report_seed_file]
   deletion_protection = false
   external_data_configuration {
     autodetect    = true
