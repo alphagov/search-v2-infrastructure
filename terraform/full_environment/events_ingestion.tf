@@ -415,6 +415,7 @@ resource "google_bigquery_table" "qrels" {
     csv_options {
       skip_leading_rows = 0
       field_delimiter   = ","
+      quote             = "\""
     }
   }
 
@@ -439,6 +440,7 @@ resource "google_bigquery_table" "report" {
     csv_options {
       skip_leading_rows = 0
       field_delimiter   = ","
+      quote             = "\""
     }
   }
 
