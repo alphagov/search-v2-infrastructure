@@ -412,6 +412,10 @@ resource "google_bigquery_table" "qrels" {
       mode              = "AUTO"
       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
     }
+    csv_options {
+      skip_leading_rows = 0
+      field_delimiter   = ","
+    }
   }
 
 }
@@ -431,6 +435,10 @@ resource "google_bigquery_table" "report" {
     hive_partitioning_options {
       mode              = "AUTO"
       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      skip_leading_rows = 0
+      field_delimiter   = ","
     }
   }
 
