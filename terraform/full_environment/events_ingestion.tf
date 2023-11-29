@@ -26,7 +26,8 @@ resource "google_project_iam_custom_role" "analytics_write" {
 
 # binding ga write role to ga write service account
 resource "google_project_iam_binding" "analytics_write" {
-  role = google_project_iam_custom_role.analytics_write.id
+  role    = google_project_iam_custom_role.analytics_write.id
+  project = var.gcp_project_id
   members = [
     google_service_account.analytics_events_pipeline.member
   ]
@@ -125,7 +126,8 @@ resource "google_project_iam_custom_role" "trigger_function" {
 
 # binding role to trigger function to service account for the function
 resource "google_project_iam_binding" "trigger_function" {
-  role = google_project_iam_custom_role.trigger_function.id
+  role    = google_project_iam_custom_role.trigger_function.id
+  project = var.gcp_project_id
   members = [
   google_service_account.analytics_events_pipeline.member]
 }
@@ -183,7 +185,8 @@ resource "google_project_iam_custom_role" "vertex_upload" {
 
 # binding ga write role to ga write service account
 resource "google_project_iam_binding" "vertex_datastore_write" {
-  role = google_project_iam_custom_role.vertex_upload.id
+  role    = google_project_iam_custom_role.vertex_upload.id
+  project = var.gcp_project_id
   members = [
     google_service_account.analytics_events_pipeline.member
   ]
