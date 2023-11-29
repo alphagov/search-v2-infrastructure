@@ -331,7 +331,7 @@ resource "google_cloudfunctions2_function" "function_automated_evaluation" {
   description = "function that will automatically evaluationuate the search results daily"
   location    = var.gcp_region
   build_config {
-    entry_point = "function_automated_evaluation"
+    entry_point = "evaluate_search"
     runtime     = "python311"
     source {
       storage_source {
@@ -393,6 +393,7 @@ resource "google_bigquery_table" "qrels" {
   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
   table_id            = "qrels"
   project             = var.gcp_project_id
+  depends_on          = [google_storage_bucket.automated_evaluation_output]
   deletion_protection = false
   external_data_configuration {
     autodetect    = true
@@ -412,6 +413,7 @@ resource "google_bigquery_table" "report" {
   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
   table_id            = "report"
   project             = var.gcp_project_id
+  depends_on          = [google_storage_bucket.automated_evaluation_output]
   deletion_protection = false
   external_data_configuration {
     autodetect    = true
