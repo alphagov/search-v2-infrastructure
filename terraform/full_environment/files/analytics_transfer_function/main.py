@@ -4,6 +4,9 @@
 ### Add logic to evaluate whether the query has been successful
 ### Document format of date
 ### Change project name variable name to project id 
+### MERGE INTO 
+### Both Sql scripts for Search (different ways of getting content_ids) - only need if we need 90 days data
+
 import functions_framework
 @functions_framework.http
 def function_analytics_events_transfer(request):
