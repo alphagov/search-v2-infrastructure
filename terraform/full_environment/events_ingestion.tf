@@ -413,9 +413,8 @@ resource "google_bigquery_table" "qrels" {
       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
     }
     csv_options {
-      skip_leading_rows = 0
-      field_delimiter   = ","
-      quote             = ""
+      field_delimiter = ","
+      quote           = ""
     }
   }
 
@@ -438,9 +437,8 @@ resource "google_bigquery_table" "report" {
       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
     }
     csv_options {
-      skip_leading_rows = 0
-      field_delimiter   = ","
-      quote             = ""
+      field_delimiter = ","
+      quote           = ""
     }
   }
 
