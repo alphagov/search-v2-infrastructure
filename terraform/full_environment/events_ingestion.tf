@@ -374,7 +374,14 @@ resource "google_storage_bucket" "automated_evaluation_output" {
   location = var.gcp_region
 }
 
-# top level dataset to store events for ingestion into vertex
+# 
+resource "google_storage_bucket_object" "automated_evaluation_function_zipped" {
+  name   = "qrels.csv"
+  bucket = google_storage_bucket.automated_evaluation_output.name
+  source = "${path.module}/files/automated_evaluation_default_datasets/qrels.csv"
+}
+
+# top level dataset to store automated evaluation output
 resource "google_bigquery_dataset" "automated_evaluation_output" {
   dataset_id                 = "automated_evaluation_output"
   project                    = var.gcp_project_id
