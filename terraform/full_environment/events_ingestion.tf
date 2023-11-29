@@ -6,6 +6,7 @@
 ### Error handling for vertex ingestion
 ### Vertex function return future
 ### Documentation diagram update
+### Global Access for Storage Buckets - no ACLs
 
 # custom role for writing ga analytics data to our bq store
 resource "google_project_iam_custom_role" "analytics_write" {
@@ -376,15 +377,27 @@ resource "google_storage_bucket" "automated_evaluation_output" {
 
 # 
 resource "google_storage_bucket_object" "qrels_seed_file" {
-  name   = "ts=${timestamp()}/qc=0/rc=0/judgement_list=sample/qrels.csv"
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/qrels.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/qrels.csv"
 }
 
 resource "google_storage_bucket_object" "report_seed_file" {
-  name   = "ts=${timestamp()}/qc=0/rc=0/judgement_list=sample/report.csv"
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/report.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/report.csv"
+}
+
+resource "google_storage_bucket_object" "run_seed_file" {
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/run.csv"
+  bucket = google_storage_bucket.automated_evaluation_output.name
+  source = "${path.module}/files/automated_evaluation_default_datasets/run.csv"
+}
+
+resource "google_storage_bucket_object" "results_seed_file" {
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/results.csv"
+  bucket = google_storage_bucket.automated_evaluation_output.name
+  source = "${path.module}/files/automated_evaluation_default_datasets/results.csv"
 }
 
 # top level dataset to store automated evaluation output
@@ -444,26 +457,50 @@ resource "google_bigquery_table" "report" {
 
 }
 
-# # 
-# resource "google_bigquery_table" "reports" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "reports"
-#   project             = var.gcp_project_id
-#   deletion_protection = false
-# }
+resource "google_bigquery_table" "run" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "run"
+  project             = var.gcp_project_id
+  depends_on          = [google_storage_bucket_object.run_seed_file]
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*run.csv"])
+    ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      field_delimiter = ","
+      quote           = ""
+    }
+  }
 
-# # 
-# resource "google_bigquery_table" "results" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "results"
-#   project             = var.gcp_project_id
-#   deletion_protection = false
-# }
+}
 
-# # 
-# resource "google_bigquery_table" "runs" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "runs"
-#   project             = var.gcp_project_id
-#   deletion_protection = false
-# }
+resource "google_bigquery_table" "results" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "results"
+  project             = var.gcp_project_id
+  depends_on          = [google_storage_bucket_object.results_seed_file]
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*results.csv"])
+    ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      field_delimiter = ","
+      quote           = ""
+    }
+  }
+
+}
