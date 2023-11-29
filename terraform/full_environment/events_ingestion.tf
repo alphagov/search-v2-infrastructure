@@ -327,7 +327,7 @@ data "archive_file" "automated_evaluation_function" {
 
 # gen 2 function for daily evaluation of search against judgement lists
 resource "google_cloudfunctions2_function" "function_automated_evaluation" {
-  name        = "function_automated_evaluation"
+  name        = "evaluate_search"
   description = "function that will automatically evaluationuate the search results daily"
   location    = var.gcp_region
   build_config {
@@ -344,12 +344,6 @@ resource "google_cloudfunctions2_function" "function_automated_evaluation" {
     max_instance_count    = 5
     ingress_settings      = "ALLOW_INTERNAL_ONLY"
     service_account_email = google_service_account.analytics_events_pipeline.email
-    environment_variables = {
-      PROJECT_NAME           = var.gcp_project_id,
-      DATASET_NAME           = google_bigquery_dataset.dataset.dataset_id
-      ANALYTICS_PROJECT_NAME = var.gcp_analytics_project_id
-      BQ_LOCATION            = var.gcp_region
-    }
   }
 }
 
@@ -399,7 +393,7 @@ resource "google_bigquery_table" "qrels" {
     autodetect    = true
     source_format = "CSV"
     source_uris = [
-      join("", [google_storage_bucket.automated_evaluation_output.url, "*qrels.csv"])
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/" ,"*qrels.csv"])
     ]
     hive_partitioning_options {
       mode              = "AUTO"
@@ -419,7 +413,7 @@ resource "google_bigquery_table" "report" {
     autodetect    = true
     source_format = "CSV"
     source_uris = [
-      join("", [google_storage_bucket.automated_evaluation_output.url, "*report.csv"])
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*report.csv"])
     ]
     hive_partitioning_options {
       mode              = "AUTO"
