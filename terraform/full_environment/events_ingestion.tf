@@ -375,10 +375,16 @@ resource "google_storage_bucket" "automated_evaluation_output" {
 }
 
 # 
-resource "google_storage_bucket_object" "automated_evaluation_function_zipped" {
-  name   = "qrels.csv"
+resource "google_storage_bucket_object" "qrels_seed_file" {
+  name   = "ts=${timestamp()}/qc=0/rc=0/judgement_list=sample/qrels.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/qrels.csv"
+}
+
+resource "google_storage_bucket_object" "report_seed_file" {
+  name   = "ts=${timestamp()}/qc=0/rc=0/judgement_list=sample/report.csv"
+  bucket = google_storage_bucket.automated_evaluation_output.name
+  source = "${path.module}/files/automated_evaluation_default_datasets/report.csv"
 }
 
 # top level dataset to store automated evaluation output
