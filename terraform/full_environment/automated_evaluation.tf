@@ -38,7 +38,7 @@ resource "google_cloudfunctions2_function" "automated_evaluation" {
   }
   service_config {
     max_instance_count    = 5
-    available_memory      = "1024M"
+    available_memory      = "512M"
     ingress_settings      = "ALLOW_INTERNAL_ONLY"
     service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
