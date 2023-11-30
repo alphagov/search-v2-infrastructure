@@ -41,7 +41,7 @@ resource "google_cloudfunctions2_function" "automated_evaluation" {
     ingress_settings      = "ALLOW_INTERNAL_ONLY"
     service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
-      PROJECT_NAME           = var.gcp_project_id,
+      PROJECT_NAME = var.gcp_project_id,
     }
   }
 }
@@ -56,7 +56,7 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
-    body = base64encode(file("./files/automated_evaluation_default_datasets/config.json"))
+    body        = base64encode(file("./files/automated_evaluation_default_datasets/config.json"))
     headers = {
       "Content-Type" = "application/json"
     }
