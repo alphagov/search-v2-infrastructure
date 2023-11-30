@@ -1,1 +1,9 @@
 functions_framework~=3.4
+pandas
+ranx
+matplotlib
+seaborn
+google-cloud-discoveryengine
+protobuf
+gcsfs
+fsspec
