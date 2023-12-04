@@ -38,6 +38,7 @@ resource "google_cloudfunctions2_function" "automated_evaluation" {
   }
   service_config {
     max_instance_count    = 5
+    available_cpu         = 2
     available_memory      = "4G"
     ingress_settings      = "ALLOW_INTERNAL_ONLY"
     service_account_email = google_service_account.automated_evaluation_pipeline.email
