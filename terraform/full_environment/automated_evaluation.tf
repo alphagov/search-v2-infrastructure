@@ -219,8 +219,8 @@ resource "google_service_account" "automated_evaluation_pipeline" {
 
 ## vertex role and binding
 resource "google_project_iam_custom_role" "automated_evaluation_pipeline" {
-  role_id     = "automated-evaluation-pipeline"
-  title       = "automated-evaluation-pipeline"
+  role_id     = "automated_evaluation_pipeline"
+  title       = "automated_evaluation_pipeline"
   description = ""
   permissions = [
     "discoveryengine.servingConfigs.search",
