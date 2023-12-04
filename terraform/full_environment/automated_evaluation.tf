@@ -57,7 +57,7 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
-    body        = base64encode(templatefile("./files/automated_evaluation_default_datasets/config.tftpl", { gcs_pub_with_parts_url =  join("", ["gs://", google_storage_bucket_object.judgement_list_pub_with_parts.bucket , "/" ,google_storage_bucket_object.judgement_list_pub_with_parts.name]) }))
+    body        = base64encode(templatefile("./files/automated_evaluation_default_datasets/config.tftpl", { gcs_pub_with_parts_url = join("", ["gs://", google_storage_bucket_object.judgement_list_pub_with_parts.bucket, "/", google_storage_bucket_object.judgement_list_pub_with_parts.name]) }))
     headers = {
       "Content-Type" = "application/json"
     }
