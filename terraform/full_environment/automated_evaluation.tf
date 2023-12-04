@@ -223,13 +223,13 @@ resource "google_project_iam_custom_role" "automated_evaluation_pipeline" {
   title       = "automated-evaluation-pipeline"
   description = ""
   permissions = [
-    "discoveryengine.servingConfigs.search,
-    resourcemanager.projects.get,
-    resourcemanager.projects.list,
-    storage.managedFolders.get,
-    storage.managedFolders.list,
-    storage.objects.get,
-    storage.objects.list",
+    "discoveryengine.servingConfigs.search",
+    "resourcemanager.projects.get",
+    "resourcemanager.projects.list",
+    "storage.managedFolders.get",
+    "storage.managedFolders.list",
+    "storage.objects.get",
+    "storage.objects.list",
     "bigquery.tables.update",
     "bigquery.tables.updateData",
     "bigquery.jobs.create",
