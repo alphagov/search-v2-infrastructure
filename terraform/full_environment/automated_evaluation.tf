@@ -57,7 +57,7 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
-    body        = base64encode(file("./files/automated_evaluation_default_datasets/config.json"))
+    body        = base64encode(templatefile("./files/automated_evaluation_default_datasets/config.tftpl", { gcs_pub_with_parts_url = google_storage_bucket_object.judgement_list_pub_with_parts.self_link }))
     headers = {
       "Content-Type" = "application/json"
     }
@@ -197,4 +197,16 @@ resource "google_bigquery_table" "results" {
     }
   }
 
+}
+
+### judgement lists
+resource "google_storage_bucket" "automated_evaluation_judgement_lists" {
+  name     = "${var.gcp_project_id}_automated_evaluation_judgement_lists"
+  location = var.gcp_region
+}
+
+resource "google_storage_bucket_object" "judgement_list_pub_with_parts" {
+  name   = "publication_with_parts.csv"
+  bucket = google_storage_bucket.automated_evaluation_judgement_lists.name
+  source = "${path.module}/files/automated_evaluation_default_datasets/judgement_lists/publication_with_parts.csv"
 }
