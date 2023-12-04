@@ -208,5 +208,6 @@ resource "google_storage_bucket" "automated_evaluation_judgement_lists" {
 resource "google_storage_bucket_object" "judgement_list_pub_with_parts" {
   name   = "publication_with_parts.csv"
   bucket = google_storage_bucket.automated_evaluation_judgement_lists.name
-  source = "${path.module}/files/automated_evaluation_default_datasets/judgement_lists/publication_with_parts.csv"
+  source = "${path.module}/files/automated_evaluation_default_datasets/judgement_lists/publications_with_parts.csv"
 }
+
