@@ -40,7 +40,7 @@ resource "google_cloudfunctions2_function" "automated_evaluation" {
     max_instance_count    = 5
     available_memory      = "512M"
     ingress_settings      = "ALLOW_INTERNAL_ONLY"
-    service_account_email = google_service_account.analytics_events_pipeline.email
+    service_account_email = google_service_account.automated_evaluation_pipeline.email
     environment_variables = {
       PROJECT_NAME = var.gcp_project_id,
     }
@@ -62,7 +62,7 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
       "Content-Type" = "application/json"
     }
     oidc_token {
-      service_account_email = google_service_account.analytics_events_pipeline.email
+      service_account_email = google_service_account.automated_evaluation_pipeline.email
       audience              = google_cloudfunctions2_function.automated_evaluation.url
     }
   }
@@ -209,5 +209,44 @@ resource "google_storage_bucket_object" "judgement_list_pub_with_parts" {
   name   = "publication_with_parts.csv"
   bucket = google_storage_bucket.automated_evaluation_judgement_lists.name
   source = "${path.module}/files/automated_evaluation_default_datasets/judgement_lists/publications_with_parts.csv"
+}
+
+resource "google_service_account" "automated_evaluation_pipeline" {
+  account_id   = "automated-evaluation-pipeline"
+  display_name = "automated-evaluation-pipeline"
+  description  = "Pipeline to trigger automated evaluation function, with permisssions to read google storage/ read and write to BQ / query vertex"
+}
+
+## vertex role and binding
+resource "google_project_iam_custom_role" "automated_evaluation_pipeline" {
+  role_id     = "automated_evaluation_pipeline"
+  title       = "automated_evaluation_pipeline"
+  description = ""
+  permissions = [
+    "discoveryengine.servingConfigs.search",
+    "resourcemanager.projects.get",
+    "resourcemanager.projects.list",
+    "storage.managedFolders.get",
+    "storage.managedFolders.list",
+    "storage.objects.get",
+    "storage.objects.list",
+    "bigquery.tables.update",
+    "bigquery.tables.updateData",
+    "bigquery.jobs.create",
+    "bigquery.datasets.get",
+    "bigquery.tables.get",
+    "bigquery.tables.getData",
+    "cloudfunctions.functions.invoke",
+    "run.jobs.run",
+    "run.routes.invoke",
+    "cloudfunctions.functions.get"
+  ]
+}
+
+resource "google_project_iam_binding" "automated_evaluation_pipeline" {
+  role    = google_project_iam_custom_role.automated_evaluation_pipeline.id
+  project = var.gcp_project_id
+  members = [
+  google_service_account.automated_evaluation_pipeline.member]
 }
 
