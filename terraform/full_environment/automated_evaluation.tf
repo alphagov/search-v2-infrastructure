@@ -224,8 +224,6 @@ resource "google_project_iam_custom_role" "automated_evaluation_pipeline" {
   description = ""
   permissions = [
     "discoveryengine.servingConfigs.search",
-    "resourcemanager.projects.get",
-    "resourcemanager.projects.list",
     "storage.managedFolders.get",
     "storage.managedFolders.list",
     "storage.objects.get",
