@@ -78,25 +78,25 @@ resource "google_storage_bucket" "automated_evaluation_output" {
 
 # 
 resource "google_storage_bucket_object" "qrels_seed_file" {
-  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/qrels.csv"
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/qrels.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/qrels.csv"
 }
 
 resource "google_storage_bucket_object" "report_seed_file" {
-  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/report.csv"
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/report.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/report.csv"
 }
 
 resource "google_storage_bucket_object" "run_seed_file" {
-  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/run.csv"
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/candidate=sample/run.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/run.csv"
 }
 
 resource "google_storage_bucket_object" "results_seed_file" {
-  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/results.csv"
+  name   = "ts=1970-01-01T00:00:00/qc=0/rc=0/judgement_list=sample/candidate=sample/results.csv"
   bucket = google_storage_bucket.automated_evaluation_output.name
   source = "${path.module}/files/automated_evaluation_default_datasets/results.csv"
 }
@@ -108,7 +108,7 @@ resource "google_bigquery_dataset" "automated_evaluation_output" {
   delete_contents_on_destroy = true
 }
 
-# 
+
 resource "google_bigquery_table" "qrels" {
   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
   table_id            = "qrels"
