@@ -19,7 +19,6 @@ from io import BytesIO
 from datetime import datetime,timedelta
 import ast
 
-
 def interpolate_specs(i):
     FRESH_AGE = (datetime.now()-timedelta(weeks=1)).timestamp()
     RECENT_AGE = (datetime.now()-timedelta(weeks=12)).timestamp()
@@ -223,7 +222,7 @@ def split_autocomplete_query(query:str) -> list:
     lst.append(query[:i+1:1])
   return lst
 
-def save_json(x: dict, path: str) -> None:
+def save_json(x: dict, path: str, project: str) -> None:
     if "gcs://" in path:
       fs=gcsfs.GCSFileSystem(project=project)
       with fs.open(path, "w") as f:
@@ -232,7 +231,7 @@ def save_json(x: dict, path: str) -> None:
       with open(path, "w") as f:
         f.write(json.dumps(x))
 
-def load_json(path: str) -> str:
+def load_json(path: str, project:str) -> str:
     if "gcs://" in path:
       fs=gcsfs.GCSFileSystem(project=project)
       with fs.open(path, "r") as f:
@@ -241,7 +240,7 @@ def load_json(path: str) -> str:
       with open(path, "r") as f:
         return json.loads(f.read())
       
-def save_fig(x, path: str, format: str) -> None:
+def save_fig(x, path: str, format: str, project:str) -> None:
     figfile = BytesIO()
     x.savefig(figfile, format=format)
     if "gcs://" in path:
@@ -312,7 +311,7 @@ def automated_evaluation(request):
             score_col="score",
         )
         qrels_json_path=f'{output_folder}/judgement_list={judgement_name}/qrels.json'
-        save_json(qrels.to_dict(),qrels_json_path)
+        save_json(qrels.to_dict(),qrels_json_path,project)
 
         # save qrels in CSV format
         df = pd.read_json(qrels_json_path)
@@ -347,7 +346,7 @@ def automated_evaluation(request):
             run_json_path=f'{output_folder}/judgement_list={judgement_name}/candidate={name}/run.json'
 
             # save run in json format
-            save_json(run.to_dict(),run_json_path)
+            save_json(run.to_dict(),run_json_path,project)
 
             # save run in CSV format
             df = pd.read_json(run_json_path)
@@ -357,7 +356,7 @@ def automated_evaluation(request):
 
             # save evaluate results in json format
             result_json_path=f'{output_folder}/judgement_list={judgement_name}/candidate={name}/results.json'
-            save_json(run.scores,result_json_path)
+            save_json(run.scores,result_json_path,project)
 
             # save evaluate results in csv format
             df=pd.read_json(result_json_path)
@@ -365,7 +364,7 @@ def automated_evaluation(request):
 
             # save evaluate results in png format
             fig = df.plot(title=judgement_name + '_' + name, kind='bar', figsize=(20, 16), fontsize=16, rot=45, ylim=(0,1)).get_figure()
-            save_fig(fig,f'{output_folder}/judgement_list={judgement_name}/candidate={name}/results.png',format='png')
+            save_fig(fig,f'{output_folder}/judgement_list={judgement_name}/candidate={name}/results.png','png', project)
             matplotlib.pyplot.close(fig)
 
             # append run to runs list
@@ -383,10 +382,10 @@ def automated_evaluation(request):
         )
 
         report_json_path=f'{output_folder}/judgement_list={judgement_name}/report.json'
-        save_json(report.to_dict(),report_json_path)
+        save_json(report.to_dict(),report_json_path,project)
 
         # save report in csv format
-        report_json=load_json(report_json_path)
+        report_json=load_json(report_json_path,project)
 
         df = pd.DataFrame()
         for i in report_json['model_names']:
@@ -397,7 +396,7 @@ def automated_evaluation(request):
         df.to_csv(f'{output_folder}/judgement_list={judgement_name}/report.csv')
 
         fig = df.plot(title=judgement_name, kind='bar', figsize=(20, 16), fontsize=16, rot=45, x='model', ylim=(0,1)).get_figure()
-        save_fig(fig,f'{output_folder}/judgement_list={judgement_name}/report.png',format='png')
+        save_fig(fig,f'{output_folder}/judgement_list={judgement_name}/report.png','png',project)
         matplotlib.pyplot.close(fig)
 
         # print report
