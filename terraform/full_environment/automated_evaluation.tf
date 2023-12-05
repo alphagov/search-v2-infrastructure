@@ -108,98 +108,98 @@ resource "google_bigquery_dataset" "automated_evaluation_output" {
   delete_contents_on_destroy = true
 }
 
-# 
-# resource "google_bigquery_table" "qrels" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "qrels"
-#   depends_on          = [google_storage_bucket_object.qrels_seed_file]
-#   deletion_protection = false
-#   external_data_configuration {
-#     autodetect    = true
-#     source_format = "CSV"
-#     source_uris = [
-#       join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*qrels.csv"])
-#     ]
-#     hive_partitioning_options {
-#       mode              = "AUTO"
-#       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
-#     }
-#     csv_options {
-#       field_delimiter = ","
-#       quote           = ""
-#     }
-#   }
 
-# }
+resource "google_bigquery_table" "qrels" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "qrels"
+  depends_on          = [google_storage_bucket_object.qrels_seed_file]
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*qrels.csv"])
+    ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      field_delimiter = ","
+      quote           = ""
+    }
+  }
 
-# resource "google_bigquery_table" "report" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "report"
-#   depends_on          = [google_storage_bucket_object.report_seed_file]
-#   deletion_protection = false
-#   external_data_configuration {
-#     autodetect    = true
-#     source_format = "CSV"
-#     source_uris = [
-#       join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*report.csv"])
-#     ]
-#     hive_partitioning_options {
-#       mode              = "AUTO"
-#       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
-#     }
-#     csv_options {
-#       field_delimiter = ","
-#       quote           = ""
-#     }
-#   }
+}
 
-# }
+resource "google_bigquery_table" "report" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "report"
+  depends_on          = [google_storage_bucket_object.report_seed_file]
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*report.csv"])
+    ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      field_delimiter = ","
+      quote           = ""
+    }
+  }
 
-# resource "google_bigquery_table" "run" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "run"
-#   depends_on          = [google_storage_bucket_object.run_seed_file]
-#   deletion_protection = false
-#   external_data_configuration {
-#     autodetect    = true
-#     source_format = "CSV"
-#     source_uris = [
-#       join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*run.csv"])
-#     ]
-#     hive_partitioning_options {
-#       mode              = "AUTO"
-#       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
-#     }
-#     csv_options {
-#       field_delimiter = ","
-#       quote           = ""
-#     }
-#   }
+}
 
-# }
+resource "google_bigquery_table" "run" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "run"
+  depends_on          = [google_storage_bucket_object.run_seed_file]
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*run.csv"])
+    ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      field_delimiter = ","
+      quote           = ""
+    }
+  }
 
-# resource "google_bigquery_table" "results" {
-#   dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
-#   table_id            = "results"
-#   depends_on          = [google_storage_bucket_object.results_seed_file]
-#   deletion_protection = false
-#   external_data_configuration {
-#     autodetect    = true
-#     source_format = "CSV"
-#     source_uris = [
-#       join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*results.csv"])
-#     ]
-#     hive_partitioning_options {
-#       mode              = "AUTO"
-#       source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
-#     }
-#     csv_options {
-#       field_delimiter = ","
-#       quote           = ""
-#     }
-#   }
+}
 
-# }
+resource "google_bigquery_table" "results" {
+  dataset_id          = google_bigquery_dataset.automated_evaluation_output.dataset_id
+  table_id            = "results"
+  depends_on          = [google_storage_bucket_object.results_seed_file]
+  deletion_protection = false
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+    source_uris = [
+      join("", [google_storage_bucket.automated_evaluation_output.url, "/", "*results.csv"])
+    ]
+    hive_partitioning_options {
+      mode              = "AUTO"
+      source_uri_prefix = google_storage_bucket.automated_evaluation_output.url
+    }
+    csv_options {
+      field_delimiter = ","
+      quote           = ""
+    }
+  }
+
+}
 
 ### judgement lists
 resource "google_storage_bucket" "automated_evaluation_judgement_lists" {
