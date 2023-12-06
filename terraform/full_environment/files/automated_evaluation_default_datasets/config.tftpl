@@ -12,7 +12,7 @@
   "judgements": ${
     [for name in {judgement_list_names
       } : {
-        "${name}": "${ join("",[ {gcs_output_url},{name},".csv" ])  }"
+        "${name}": "${ join("",[ {gcs_input_url},{name},".csv" ])  }"
       }
     ],
   },
