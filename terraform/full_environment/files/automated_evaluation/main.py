@@ -266,7 +266,7 @@ def automated_evaluation(request):
     for judgement in config['judgements']:
 
         judgement_name=judgement['name']
-        attributes=judgement['attributes']
+        attributes= judgement.get('attributes',{})
 
         create_subfolders(folder=output_folder,subfolders=[f'judgement_list={judgement_name}'])
 

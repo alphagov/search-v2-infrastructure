@@ -9,17 +9,7 @@
   ],
   "show_percentages": true,
   "max_p": 0.01,
-  "judgements": [
-    {
-      "name": "publication_with_parts",
-      "url": "${gcs_pub_with_parts_url}",
-      "attributes": {
-        "Search Term": "query",
-        "Link": "link",
-        "Score": "score"
-      }
-    }
-  ],
+  "judgements": ${jsonencode( [for name in judgement_list_names : "{\"${name}\":\"${ join("",[ gcs_input_url,name,".csv" ])  }\" }" ] ) },
   "candidates": [
     {
       "name": "vertex_integration",

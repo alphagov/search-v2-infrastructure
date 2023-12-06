@@ -59,7 +59,8 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
-    body        = base64encode(templatefile("./files/automated_evaluation_default_datasets/config.tftpl", { gcs_pub_with_parts_url = join("", ["gcs://", google_storage_bucket_object.judgement_list_pub_with_parts.bucket, "/", google_storage_bucket_object.judgement_list_pub_with_parts.name]), gcs_output_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_output.name]) }))
+    body        = base64encode(templatefile("${path.module}/files/automated_evaluation_default_datasets/config.tftpl", { judgement_list_names = [for file_jl in fileset("${path.module}/files/automated_evaluation_default_datasets/judgement_lists/", "*.csv") : split(".csv", file_jl)[0]], gcs_input_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_judgement_lists.name, "/"]), gcs_output_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_output.name]) }))
+
     headers = {
       "Content-Type" = "application/json"
     }
@@ -207,10 +208,11 @@ resource "google_storage_bucket" "automated_evaluation_judgement_lists" {
   location = var.gcp_region
 }
 
-resource "google_storage_bucket_object" "judgement_list_pub_with_parts" {
-  name   = "publication_with_parts.csv"
-  bucket = google_storage_bucket.automated_evaluation_judgement_lists.name
-  source = "${path.module}/files/automated_evaluation_default_datasets/judgement_lists/publications_with_parts.csv"
+resource "google_storage_bucket_object" "judgement_list" {
+  for_each = fileset("${path.module}/files/automated_evaluation_default_datasets/judgement_lists/", "*.csv")
+  name     = each.value
+  bucket   = google_storage_bucket.automated_evaluation_judgement_lists.name
+  source   = join("", ["${path.module}/files/automated_evaluation_default_datasets/judgement_lists/", each.value])
 }
 
 resource "google_service_account" "automated_evaluation_pipeline" {
