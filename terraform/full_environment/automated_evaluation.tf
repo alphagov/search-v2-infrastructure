@@ -59,7 +59,8 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
-    body        = base64encode(templatefile("${path.module}/files/automated_evaluation_default_datasets/config.tftpl", { judgement_list_names = [for file_jl in fileset("${path.module}/files/automated_evaluation_default_datasets/judgement_lists/", "*.csv") : { split(".csv", file_jl)[0] }], gcs_input_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_judgement_lists.name, "/"]), gcs_output_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_output.name]) }))
+    body        = base64encode(templatefile("${path.module}/files/automated_evaluation_default_datasets/config.tftpl", { judgement_list_names = [for file_jl in fileset("${path.module}/files/automated_evaluation_default_datasets/judgement_lists/", "*.csv") : split(".csv", file_jl)[0]], gcs_input_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_judgement_lists.name, "/"]), gcs_output_url = join("", ["gcs://", google_storage_bucket.automated_evaluation_output.name]) }))
+
     headers = {
       "Content-Type" = "application/json"
     }
