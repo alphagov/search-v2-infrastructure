@@ -9,13 +9,12 @@
   ],
   "show_percentages": true,
   "max_p": 0.01,
-  "judgements": {jsonencode({
-      [for url in gcs_urls
-         : {
-          "${name}": "${uri}"
-        }
-      ],
-    })
+  "judgements": {
+    [for name in {judgement_list_names
+      } : {
+        "${name}": "${ join("",[ {gcs_output_url},{name},".csv" ])  }"
+      }
+    ],
   },
   "candidates": [
     {
