@@ -9,11 +9,10 @@
   ],
   "show_percentages": true,
   "max_p": 0.01,
-  "judgements":
-    ${jsonencode({
-      [for url in {gcs_urls
-        } : {
-          "{url.name}": "{url.uri}"
+  "judgements": {jsonencode({
+      [for url in gcs_urls
+         : {
+          "${url.name}": "${url.uri}"
         }
       ],
     })
