@@ -10,41 +10,43 @@
   "show_percentages": true,
   "max_p": 0.01,
   "judgements":
-    "${jsonencode({[for url in ${gcs_urls
-    } : {
-      "${url.name}": "${url.uri}"
-    }
-  ],
-})
-}","candidates": [
-{
-  "name": "vertex_integration",
-  "identifier": "projects/780375417592/locations/global/collections/default_collection/dataStores/govuk_content/servingConfigs/default_search",
-  "type": "vertex:search",
-  "attributes": {
-    "document.structData.link": "docno",
-    "_index": "sim"
+    ${jsonencode({
+      [for url in {gcs_urls
+        } : {
+          "{url.name}": "{url.uri}"
+        }
+      ],
+    })
   },
-  "parameters": {
-    "condition_boost_specs": [
-      {
-        "boost": 0.2,
-        "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN({FRESH_AGE},*)"
+  "candidates": [
+    {
+      "name": "vertex_integration",
+      "identifier": "projects/780375417592/locations/global/collections/default_collection/dataStores/govuk_content/servingConfigs/default_search",
+      "type": "vertex:search",
+      "attributes": {
+        "document.structData.link": "docno",
+        "_index": "sim"
       },
-      {
-        "boost": 0.05,
-        "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN({RECENT_AGE},{FRESH_AGE})"
-      },
-      {
-        "boost": -0.5,
-        "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN({ANCIENT_AGE},{OLD_AGE})"
-      },
-      {
-        "boost": -0.75,
-        "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN(*,{ANCIENT_AGE})"
+      "parameters": {
+        "condition_boost_specs": [
+          {
+            "boost": 0.2,
+            "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN({FRESH_AGE},*)"
+          },
+          {
+            "boost": 0.05,
+            "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN({RECENT_AGE},{FRESH_AGE})"
+          },
+          {
+            "boost": -0.5,
+            "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN({ANCIENT_AGE},{OLD_AGE})"
+          },
+          {
+            "boost": -0.75,
+            "condition": "content_purpose_supergroup: ANY(\"news_and_communications\") AND public_timestamp: IN(*,{ANCIENT_AGE})"
+          }
+        ]
       }
-    ]
-  }
-}
-]
+    }
+  ]
 }
