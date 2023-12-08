@@ -9,7 +9,7 @@
   ],
   "show_percentages": true,
   "max_p": 0.01,
-  "judgements": ${jsonencode( [for name in judgement_list_names : "{"${name}":"${ join("",[ gcs_input_url,name,".csv" ])  }" }" ] ) },
+  "judgements": ${ [for name in judgement_list_names : "{\"${name}\":\"${ join("",[ gcs_input_url,name,".csv" ])  }\" }" ]  },
   "candidates": [
     {
       "name": "vertex_integration",
