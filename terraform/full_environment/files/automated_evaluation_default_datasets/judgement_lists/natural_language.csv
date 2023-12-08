@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 wheres my reply,/guidance/check-when-you-can-expect-a-reply-from-hmrc,3 perfect,3
 where is my reply,/guidance/check-when-you-can-expect-a-reply-from-hmrc,3 perfect,3
 where's my reply,/guidance/check-when-you-can-expect-a-reply-from-hmrc,3 perfect,3

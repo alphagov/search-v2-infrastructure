@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 not,/check-mot-history,3 perfect,3
 not,/check-mot-status,3 perfect,3
 not check,/check-mot-history,3 perfect,3

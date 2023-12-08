@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 apply for ni,/apply-national-insurance-number,3 perfect,3
 apply for ni number,/apply-national-insurance-number,3 perfect,3
 bro,/biometric-residence-permits,3 perfect,3

@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 retirement,/government/case-studies/retirement-calculator,1 okay,1
 contact number,/lost-national-insurance-number,1 okay,1
 northern ireland,/government/collections/moving-goods-into-out-of-or-through-northern-ireland,2 good,2

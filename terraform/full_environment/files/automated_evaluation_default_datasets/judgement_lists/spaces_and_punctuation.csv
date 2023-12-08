@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 logbook,/vehicle-log-book,3 perfect,3
 logbook,/change-address-v5c,3 perfect,3
 eu ss,/settled-status-eu-citizens-families,3 perfect,3

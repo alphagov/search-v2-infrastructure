@@ -1,4 +1,4 @@
-query,link,score,score,,Search results page,Total Unique Searches,% Search Refinements,,
+query,link,score_description,score,,Search results page,Total Unique Searches,% Search Refinements,,
 prs,/guidance/mot-testing-guide/abbreviations-and-definitions,2 good,2,,/search/all?§/guidance/mot-inspection-manual-for-private-passenger-and-light-commercial-vehicles&q=prs,"2,001",45%,,
 subframe,/guidance/mot-inspection-manual-for-private-passenger-and-light-commercial-vehicles/5-axles-wheels-tyres-and-suspension,3 perfect,3,,/search/all?manual[]=/guidance/mot-inspection-manual-for-private-passenger-and-light-commercial-vehicles&q=subframe,"1,477",76%,,
 cpd,/mot-tester-training-assessments,3 perfect,3,,/search/all?manual[]=/guidance/mot-testing-guide&q=cpd,921,60%,,

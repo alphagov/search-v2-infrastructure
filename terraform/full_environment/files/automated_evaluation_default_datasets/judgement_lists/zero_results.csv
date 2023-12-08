@@ -1,4 +1,4 @@
-query,link,score,score,,Total Unique Searches,% Search Refinements,clusterID
+query,link,score_description,score,,Total Unique Searches,% Search Refinements,clusterID
 [postcode],,,,,"30,431",20%,338
 not,/check-mot-history,3 perfect,3,,"6,275",91%,100
 not,/check-mot-status,3 perfect,3,,"6,275",,100
