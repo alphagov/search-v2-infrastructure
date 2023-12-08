@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 tell hmrc no amount is due,/pay-paye-tax/tell-hmrc-no-payment-due,3 perfect,3
 tell hmrc no amount is due,/pay-corporation-tax/tell-hmrc-no-payment-due,3 perfect,3
 tell hmrc no amount is due,/pay-paye-tax,2 good,2

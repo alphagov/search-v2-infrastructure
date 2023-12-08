@@ -1,4 +1,4 @@
-query,link,score,score,,In Search API?,query translated,Page title,Page title translated by Google Translate,Page views (7 days)
+query,link,score_description,score,,In Search API?,query translated,Page title,Page title translated by Google Translate,Page views (7 days)
 cymraeg,/cymraeg,3 perfect,3,,no,,Cynnwys yn yr iaith Gymraeg sydd ar gael ar GOV.UK,Content in the Welsh Language available on Gov.uk,"1,414"
 ,/mewngofnodi-ich-cyfrif-credyd-cynhwysol,,,,no,,Mewngofnodi i’ch cyfrif Credyd Cynhwysol,Login to your Universal Credit account,"1,163"
 treth car,/treth-car,3 perfect,3,,no,,Trethu eich cerbyd,Taxing your vehicle,433

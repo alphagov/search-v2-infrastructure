@@ -1,4 +1,4 @@
-query,link,score,score,,Searches - GA4 Item-list view events (3 months Feb to April),Clicks - GA4 Item-list click events (3 months Feb to April),Item-list CTR,Weighted sort (Expected True Value),clusterID
+query,link,score_description,score,,Searches - GA4 Item-list view events (3 months Feb to April),Clicks - GA4 Item-list click events (3 months Feb to April),Item-list CTR,Weighted sort (Expected True Value),clusterID
 [postcode],,,,,"26,285",885,3%,54.04%,998
 [email],,,,,"6,225",557,9%,61.08%,998
 contact number,/contact-hmrc,3 perfect,3,,"6,838","1,755",26%,61.54%,868

@@ -1,4 +1,4 @@
-query,link,score,score
+query,link,score_description,score
 p50,/government/publications/income-tax-claiming-tax-back-when-you-have-stopped-working-p50,3 perfect,3
 ni 38,/government/publications/social-security-abroad-ni38,3 perfect,3
 ni 38,/government/publications/social-security-abroad-ni38/guidance-on-social-security-abroad-ni38,3 perfect,3
