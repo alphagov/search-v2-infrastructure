@@ -55,5 +55,10 @@
     "name": "comments",
     "type": "STRING",
     "mode": "NULLABLE"
+  },
+  {
+    "name": "discovery_engine_attribution_token",
+    "type": "STRING",
+    "mode": "NULLABLE"
   }
 ]
