@@ -37,23 +37,26 @@ def function_analytics_events_transfer(request):
 
     all_queries = {
         'view-item' : {
-            'query' : f'''
-                INSERT INTO `{env_project_name}.{env_dataset_name}.view-item-event` (_PARTITIONTIME, eventType, userPseudoId, eventTime, documents)
-                SELECT
+        'query' : f'''
+                merge into `{env_project_name}.{env_dataset_name}.view-item-event` T
+                using (SELECT
                 TIMESTAMP_TRUNC(TIMESTAMP_MICROS(ga.event_timestamp),DAY) as _PARTITIONTIME,
                 'view-item' AS eventType,
                 ga.user_pseudo_id AS userPseudoId,
                 FORMAT_TIMESTAMP("%FT%TZ",TIMESTAMP_MICROS(ga.event_timestamp)) AS eventTime,
                 (case when params.value.string_value is not null then [STRUCT(params.value.string_value AS id, CAST(NULL as string) as name)] end) AS documents
-                FROM `{env_analytics_project_name}.analytics_330577055.events_{source_date}` ga,
+                FROM `{env_analytics_project_name}.analytics_330577055.events_{source_date}` ga ,
                 UNNEST(event_params) AS params
                 WHERE
                 ga.event_name='page_view' AND
-                params.key='content_id'
-
-            '''},
+                params.key='content_id') S
+                on T._PARTITIONTIME = S._PARTITIONTIME and T.eventType = S.eventType and T.userPseudoId = S.userPseudoId and T.eventTime = S.eventTime and to_json_string(T.documents) = to_json_string(S.documents)
+                -- and T.documents.id = S.documents.id and T.documents.name = S.documents.name
+                WHEN NOT MATCHED THEN 
+                INSERT (_PARTITIONTIME, eventType, userPseudoId, eventTime, documents) VALUES (_PARTITIONTIME, eventType, userPseudoId, eventTime, documents)'''
+                        },
         'search': {'query': f'''
-                INSERT INTO `{env_project_name}.{env_dataset_name}.search-event` (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, documents)
+                merge into `{env_project_name}.{env_dataset_name}.search-event` T using (
                 with events AS
                 (
                     SELECT
@@ -92,7 +95,10 @@ def function_analytics_events_transfer(request):
                 FROM events
                 WHERE id IS NOT NULL AND
                     searchQuery IS NOT NULL
-                group by eventDate, eventTime,userPseudoId,eventType,searchQuery, `offset`, orderBy, filter
+                group by eventDate, eventTime,userPseudoId,eventType,searchQuery, `offset`, orderBy, filter) S
+                on T._PARTITIONTIME = S._PARTITIONTIME and T.eventType = S.eventType and T.userPseudoId = S.userPseudoId and T.eventTime = S.eventTime and to_json_string(T.documents) = to_json_string(S.documents) and to_json_string(S.searchInfo) = to_json_string(T.searchInfo) and ifnull(S.filter,"") = ifnull(T.filter,"")
+                when not matched then
+                insert (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, documents) values (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, documents)
                    '''}
     }
 
