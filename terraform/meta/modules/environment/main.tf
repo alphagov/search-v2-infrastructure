@@ -91,6 +91,16 @@ resource "tfe_variable" "gcp_project_id" {
   sensitive = false
 }
 
+resource "tfe_variable" "gcp_project_number" {
+  workspace_id = tfe_workspace.environment_workspace.id
+  category     = "terraform"
+  description  = "The GCP project number for the ${var.display_name} environment"
+
+  key       = "gcp_project_number"
+  value     = google_project.environment_project.number
+  sensitive = false
+}
+
 # Set up Workload Identity Federation between Terraform Cloud and GCP
 # see https://github.com/hashicorp/terraform-dynamic-credentials-setup-examples
 resource "google_iam_workload_identity_pool" "tfc_pool" {
