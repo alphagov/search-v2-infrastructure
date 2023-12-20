@@ -3,6 +3,11 @@ variable "gcp_project_id" {
   description = "GCP Project ID of the project to create infrastructure in, e.g. search-api-v2-integration"
 }
 
+variable "gcp_project_number" {
+  type        = string
+  description = "GCP Project number"
+}
+
 variable "gcp_analytics_project_id" {
   type        = string
   description = "GCP project ID for the project containing BigQuery analytics data"
