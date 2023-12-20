@@ -52,10 +52,11 @@ resource "google_cloudfunctions2_function" "automated_evaluation" {
 
 # scheduler resource that will trigger daily evaluation of search against judgement lists
 resource "google_cloud_scheduler_job" "daily_search_evaluation" {
-  name        = "daily_search_evaluation"
-  description = "daily evaluation of search against judgement lists"
-  schedule    = "0 17 * * *"
-  time_zone   = "Europe/London"
+  name             = "daily_search_evaluation"
+  description      = "daily evaluation of search against judgement lists"
+  schedule         = "0 17 * * *"
+  time_zone        = "Europe/London"
+  attempt_deadline = "1800s"
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
