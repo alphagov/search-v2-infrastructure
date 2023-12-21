@@ -42,7 +42,8 @@ def import_user_events_vertex(request):
 
     import_request = discoveryengine.ImportUserEventsRequest(
         bigquery_source = bq_client,
-        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content' 
+        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content',
+        error_config = error_config
     )
 
 
