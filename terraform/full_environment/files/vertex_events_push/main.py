@@ -44,8 +44,7 @@ def import_user_events_vertex(request):
 
 
     try:
-        operation = client.import_user_events(request=import_request)
-        result = operation.result()
-        return result
+        client.import_user_events(request=import_request)
+        return 'Success'
     except Exception as e:
         raise e
