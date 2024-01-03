@@ -124,25 +124,25 @@
       "description": "A list of organisation slugs this content belongs to (for filtering)",
       "type": "array",
       "items": {
-        "type": "string"
-      },
-      "indexable": true
+        "type": "string",
+        "indexable": true
+      }
     },
     "topical_events": {
       "description": "A list of topical events slugs this content belongs to (for filtering)",
       "type": "array",
       "items": {
-        "type": "string"
-      },
-      "indexable": true
+        "type": "string",
+        "indexable": true
+      }
     },
     "world_locations": {
       "description": "A list of world locations slugs this content belongs to (for filtering)",
       "type": "array",
       "items": {
-        "type": "string"
-      },
-      "indexable": true
+        "type": "string",
+        "indexable": true
+      }
     },
     "manual": {
       "description": "The manual this content belongs to (if applicable) (for filtering)",
