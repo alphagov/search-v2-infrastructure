@@ -24,6 +24,7 @@
       "retrievable": true
     },
     "additional_searchable_text": {
+      "$comment": "We've decided not to use this as structured fields don't contribute enough to relevance. Vertex does not support removing a field from the schema (as of Jan 2024) so it stays here.",
       "description": "Additional textual content such as keywords that should be searchable but don't form part of the main body of content",
       "type": "string",
       "searchable": true
