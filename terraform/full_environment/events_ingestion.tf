@@ -239,7 +239,7 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
     ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
-      PROJECT_NAME       = var.gcp_project_id,
+      PROJECT_NAME = var.gcp_project_id,
       GCS_ERROR_LOGS_URL = google_storage_bucket.vertex_event_ingestion_error_logs.url
     }
   }
