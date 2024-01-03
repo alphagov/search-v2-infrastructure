@@ -15,8 +15,7 @@ def import_user_events_vertex(request):
     import os
     
     env_project_name = os.environ.get("PROJECT_NAME")
-    gcs_error_logs_url = os.environ.get("GCS_ERROR_LOGS_URL") + "/" + datetime.now().isoformat(timespec='seconds')
-
+    
     request_json = request.get_json(silent=True)
     event_type = request_json.get("event_type") # `view-item` or `search`
 
@@ -37,12 +36,10 @@ def import_user_events_vertex(request):
         )
 
     client = discoveryengine.UserEventServiceClient()
-    error_config= discoveryengine.ImportErrorConfig()
-    error_config.gcs_prefix=gcs_error_logs_url
 
     import_request = discoveryengine.ImportUserEventsRequest(
         bigquery_source = bq_client,
-        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content' 
+        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content' # search-api-v2-integration
     )
 
 
