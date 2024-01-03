@@ -120,7 +120,37 @@
         "additionalProperties": false
       }
     },
+    "organisations": {
+      "description": "A list of organisation slugs this content belongs to (for filtering)",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "indexable": true
+    },
+    "topical_events": {
+      "description": "A list of topical events slugs this content belongs to (for filtering)",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "indexable": true
+    },
+    "world_locations": {
+      "description": "A list of world locations slugs this content belongs to (for filtering)",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "indexable": true
+    },
+    "manual": {
+      "description": "The manual this content belongs to (if applicable) (for filtering)",
+      "type": "string",
+      "indexable": true
+    },
     "payload_version": {
+      "$comment": "We've decided not to use this in the end as there isn't enough of a risk and we cannot guarantee atomic writes anyway. Vertex does not support removing a field from the schema (as of Jan 2024) so it stays here.",
       "description": "Incrementing document version number (used to avoid document update race conditions)",
       "type": "integer"
     }
