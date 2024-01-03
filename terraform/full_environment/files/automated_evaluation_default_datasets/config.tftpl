@@ -12,7 +12,7 @@
   "judgements": ${jsonencode( [for name in judgement_list_names : {"name":"${name}","url":"${ join("",[ gcs_input_url,name,".csv" ])  }" } ] ) },
   "candidates": [
     {
-      "name": "vertex_integration",
+      "name": "vertex",
       "identifier": "projects/${gcp_project_number}/locations/global/collections/default_collection/dataStores/govuk_content/servingConfigs/default_search",
       "type": "vertex:search",
       "attributes": {
