@@ -228,7 +228,6 @@ resource "google_project_iam_custom_role" "automated_evaluation_pipeline" {
   title       = "automated_evaluation_pipeline"
   description = ""
   permissions = [
-    "discoveryengine.operations.get",
     "discoveryengine.servingConfigs.search",
     "storage.objects.get",
     "storage.objects.list",

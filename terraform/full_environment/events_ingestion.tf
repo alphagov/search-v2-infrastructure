@@ -83,12 +83,6 @@ data "archive_file" "analytics_transfer_function" {
   output_path = "${path.module}/files/analytics_transfer_function.zip"
 }
 
-# bucket for vertex_event_ingestion_error_logs
-resource "google_storage_bucket" "vertex_event_ingestion_error_logs" {
-  name     = "${var.gcp_project_id}_vertex_event_ingestion_error_logs"
-  location = var.gcp_region
-}
-
 # gen 2 function for transferring from bq - ga4 to bq - vertex events schema
 resource "google_cloudfunctions2_function" "function_analytics_events_transfer" {
   name        = "function_analytics_events_transfer"
@@ -239,8 +233,7 @@ resource "google_cloudfunctions2_function" "import_user_events_vertex" {
     ingress_settings      = "ALLOW_ALL"
     service_account_email = google_service_account.analytics_events_pipeline.email
     environment_variables = {
-      PROJECT_NAME       = var.gcp_project_id,
-      GCS_ERROR_LOGS_URL = google_storage_bucket.vertex_event_ingestion_error_logs.url
+      PROJECT_NAME = var.gcp_project_id
     }
   }
 }

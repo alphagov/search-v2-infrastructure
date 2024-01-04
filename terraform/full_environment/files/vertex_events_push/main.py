@@ -1,19 +1,13 @@
+### TO DO
+### Partition Date needs to be included in BigQuerySource
+### Better exception handling
+### Add error config to store error logs in gcs
+### Change project name variable name to project id 
+
 import functions_framework
 @functions_framework.http
 def import_user_events_vertex(request):
     '''
-    Description: 
-        - GCP Gen 2 Function Python code. Isolates the previous day's search and view-item events within the same GCP Project in Big Query and ingests said events into vertex.
-    
-    Args:
-        - Request object of format { "event_type" : "search", "date" : null}
-        - "event_type" can be "search" or "view-item"
-        - "date" value of null will default to yesterday's data, otherwise can specify date in YYYY-MM-DD format to allow for backdating
-    
-    Returns:
-        - If successful, will return the result of the long running event ingestion operation
-        - Otherwise will raise an error
-
     '''
     from google.cloud import discoveryengine
     from google.type import date_pb2
@@ -22,9 +16,6 @@ def import_user_events_vertex(request):
     
     env_project_name = os.environ.get("PROJECT_NAME")
     
-    # hive partitioned folder structure with ISO standard folder timestamp
-    gcs_error_logs_url = os.environ.get("GCS_ERROR_LOGS_URL") + "/" + "ts=" + datetime.now().isoformat(timespec='seconds')
-
     request_json = request.get_json(silent=True)
     event_type = request_json.get("event_type") # `view-item` or `search`
 
@@ -45,19 +36,15 @@ def import_user_events_vertex(request):
         )
 
     client = discoveryengine.UserEventServiceClient()
-    error_config = discoveryengine.ImportErrorConfig()
-    error_config.gcs_prefix = gcs_error_logs_url
 
     import_request = discoveryengine.ImportUserEventsRequest(
         bigquery_source = bq_client,
-        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content',
-        error_config = error_config
+        parent = f'projects/{env_project_name}/locations/global/collections/default_collection/dataStores/govuk_content' # search-api-v2-integration
     )
 
 
     try:
-        operation = client.import_user_events(request=import_request)
-        result = operation.result()
-        return result
+        client.import_user_events(request=import_request)
+        return 'Success'
     except Exception as e:
         raise e
