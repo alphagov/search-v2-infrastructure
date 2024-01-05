@@ -83,6 +83,12 @@ data "archive_file" "analytics_transfer_function" {
   output_path = "${path.module}/files/analytics_transfer_function.zip"
 }
 
+resource "google_storage_bucket" "vertex_event_ingestion_error_logs" {
+  name          = "${var.gcp_project_id}_vertex_event_ingestion_error_logs"
+  force_destroy = true
+  location      = var.gcp_region
+}
+
 # gen 2 function for transferring from bq - ga4 to bq - vertex events schema
 resource "google_cloudfunctions2_function" "function_analytics_events_transfer" {
   name        = "function_analytics_events_transfer"
