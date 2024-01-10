@@ -95,4 +95,12 @@ module "environment_production" {
   display_name                = "Production"
   has_deployed_service_in_aws = true
   terraform_module            = "full_environment"
+
+  # NOTE: There are limits on the Google side on how high we are permitted to set these quotas. If
+  # you attempt to increase these beyond the ceiling, a `COMMON_QUOTA_CONSUMER_OVERRIDE_TOO_HIGH`
+  # error will be raised (including some metadata that should tell you what the current ceiling is)
+  # and you will need to manually request a quota increase from Google through the console first
+  # (see the environment module for the exact quota names you need to request increases for).
+  discovery_engine_quota_search_requests_per_minute = 1000
+  discovery_engine_quota_documents                  = 2000000
 }
