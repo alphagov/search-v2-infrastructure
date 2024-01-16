@@ -151,9 +151,25 @@
       "indexable": true
     },
     "payload_version": {
-      "$comment": "We've decided not to use this in the end as there isn't enough of a risk and we cannot guarantee atomic writes anyway. Vertex does not support removing a field from the schema (as of Jan 2024) so it stays here.",
+      "$comment": "We've decided not to use this in the end as there isn't enough of a risk and we cannot guarantee atomic writes anyway. It is now included in the `debug` object field. Vertex does not support removing a field from the schema (as of Jan 2024) so it stays here.",
       "description": "Incrementing document version number (used to avoid document update race conditions)",
       "type": "integer"
+    },
+    "debug": {
+      "description": "Metadata that is only used for debugging purposes",
+      "type": "object",
+      "retrievable": false,
+      "properties": {
+        "payload_version": {
+          "type": "integer",
+          "description": "Incrementing version number of an export run from Publishing API"
+        },
+        "last_synced_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of when this document was last synced to Vertex"
+        }
+      }
     }
   },
   "required": [
