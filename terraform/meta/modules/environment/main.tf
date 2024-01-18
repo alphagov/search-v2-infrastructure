@@ -8,6 +8,11 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 5.2"
     }
+    # required for `google_service_usage_consumer_quota_override` resources
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 5.11"
+    }
   }
 
   required_version = "~> 1.6"
@@ -33,6 +38,34 @@ resource "google_project_service" "api_service" {
   project                    = google_project.environment_project.project_id
   service                    = each.value
   disable_dependent_services = true
+}
+
+resource "google_service_usage_consumer_quota_override" "discoveryengine_search_requests" {
+  provider = google-beta
+  project  = google_project.environment_project.project_id
+
+  service = "discoveryengine.googleapis.com"
+  metric  = urlencode("discoveryengine.googleapis.com/search_requests")
+  force   = true
+
+  # limit is equivalent to `unit` field when making a GET request against the metric, but without
+  # leading `1/` and without curly braces
+  limit          = urlencode("/min/project")
+  override_value = var.discovery_engine_quota_search_requests_per_minute
+}
+
+resource "google_service_usage_consumer_quota_override" "discoveryengine_documents" {
+  provider = google-beta
+  project  = google_project.environment_project.project_id
+
+  service = "discoveryengine.googleapis.com"
+  metric  = urlencode("discoveryengine.googleapis.com/documents")
+  force   = true
+
+  # limit is equivalent to `unit` field when making a GET request against the metric, but without
+  # leading `1/` and without curly braces
+  limit          = urlencode("/project")
+  override_value = var.discovery_engine_quota_documents
 }
 
 data "tfe_oauth_client" "github" {

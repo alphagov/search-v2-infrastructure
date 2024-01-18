@@ -56,6 +56,18 @@ variable "google_cloud_apis" {
   ]
 }
 
+variable "discovery_engine_quota_search_requests_per_minute" {
+  type        = number
+  description = "The maximum number of search requests per minute for the Discovery Engine"
+  default     = 250
+}
+
+variable "discovery_engine_quota_documents" {
+  type        = number
+  description = "The maximum number of documents across Discovery Engine datastores"
+  default     = 1000000
+}
+
 variable "tfc_project" {
   type = object({
     id   = string
