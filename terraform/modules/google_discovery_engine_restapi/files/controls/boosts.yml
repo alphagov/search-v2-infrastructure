@@ -9,26 +9,22 @@
 # see https://cloud.google.com/generative-ai-app-builder/docs/reference/rest/v1alpha/projects.locations.collections.dataStores.controls#boostaction
 # and https://cloud.google.com/retail/docs/filter-and-order for `filter` syntax
 
-boost_promote_heavy:
-  filter: 'content_purpose_supergroup: ANY("services")'
-  boost: 0.4
-
-boost_promote_moderate:
-  filter: 'document_type: ANY("coronavirus_landing_page", "minister", "organisation", "specialist_sector", "transaction", "guide", "detailed_guide", "travel_advice")'
+boost_promote_medium:
+  filter: 'content_purpose_supergroup: ANY("services") OR document_type: ANY("calendar", "detailed_guide", "document_collection", "external_content", "organisation", "topical_event")'
   boost: 0.2
 
-boost_promote_light:
-  filter: 'document_type: ANY("document_collection", "person")'
+boost_promote_low:
+  filter: 'document_type: ANY("guidance", "mainstream_browse_page", "news_story", "policy_paper", "press_release", "travel_advice")'
   boost: 0.05
 
-boost_demote_light:
-  filter: 'document_type: ANY("aaib_report", "research_for_development_output")'
+boost_demote_low:
+  filter: 'document_type: ANY("about", "taxon", "world_news_story")'
   boost: -0.25
 
-boost_demote_moderate:
-  filter: 'document_type: ANY("service_manual_guide", "service_manual_topic", "service_standard_report", "service_standard_report", "foi_release")'
+boost_demote_medium:
+  filter: 'document_type: ANY("employment_tribunal_decision", "foi_release", "service_standard_report") OR organisation_state: ANY("devolved", "closed")'
   boost: -0.5
 
-boost_demote_heavy:
-  filter: 'is_historic = 1 OR organisation_state: ANY("devolved", "closed") OR document_type: ANY("hmrc_manual_section")'
+boost_demote_strong:
+  filter: "is_historic = 1"
   boost: -0.75
