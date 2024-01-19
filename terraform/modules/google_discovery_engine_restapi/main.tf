@@ -96,11 +96,8 @@ resource "restapi_object" "discovery_engine_serving_config" {
   read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search"
 
   data = jsonencode({
-    # TODO: Re-enable when we have more clarity on how we will use boosts and which
-    # boostControlIds    = keys(local.boostControls)
-    # synonymsControlIds = keys(local.synonymControls)
-    boostControlIds    = []
-    synonymsControlIds = []
+    boostControlIds    = keys(local.boostControls)
+    synonymsControlIds = keys(local.synonymControls)
   })
 }
 
