@@ -20,6 +20,11 @@
     "mode": "NULLABLE"
   },
   {
+    "name": "tagIds",
+    "type": "STRING",
+    "mode": "REPEATED"
+  },
+  {
     "name": "documents",
     "type": "RECORD",
     "mode": "REPEATED",

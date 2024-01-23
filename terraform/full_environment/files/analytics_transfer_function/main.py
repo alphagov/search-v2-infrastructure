@@ -68,6 +68,7 @@ def function_analytics_events_transfer(request):
                         safe_cast(regexp_extract((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location'), "page=(\\\\d+)" ) as int64)-1 as `offset`,
                         regexp_extract((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location'), "order=([a-zA-Z\\\\-]+)" ) as orderBy,
                         ARRAY_TO_STRING(regexp_extract_all((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location'), "((?:level_one_taxon|level_two_taxon|content_purpose_supergroup%5B%5D|public_timestamp%5Bfrom%5D|public_timestamp%5Bto%5D)=(?:%20&%20|[^&])*)" ), "&") as filter,
+                        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'ab_test') AS ab_test,
                         item_params.value.string_value as id,
                         max(item.item_id),
                         item.item_list_index
@@ -79,7 +80,7 @@ def function_analytics_events_transfer(request):
                         (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'publishing_app') = "search-api" AND
                         EXISTS (SELECT 1 FROM UNNEST(event_params) WHERE key = 'search_term') AND
                         event_name='view_item_list'
-                    GROUP BY eventDate, eventTime,userPseudoId,eventType,searchQuery, `offset`,orderBy, id, item_list_index, filter
+                    GROUP BY eventDate, eventTime,userPseudoId,eventType,searchQuery, `offset`,orderBy, id, item_list_index, filter, ab_test
                 )
                 SELECT 
                     eventDate as _PARTITIONTIME,
@@ -91,14 +92,15 @@ def function_analytics_events_transfer(request):
                         else STRUCT(searchQuery, case when orderBy = "relevance" then null else orderBy end as orderBy, `offset`) 
                     end as searchInfo,
                     case when filter = '' then null else filter end as filter,
+                    case when ab_test is not null then ARRAY[ab_test] end as tagIds,
                     ARRAY_AGG(STRUCT(id as id, CAST(NULL as string) as name) ORDER BY SAFE_CAST(item_list_index AS INT64) ) as documents
                 FROM events
                 WHERE id IS NOT NULL AND
                     searchQuery IS NOT NULL
-                group by eventDate, eventTime,userPseudoId,eventType,searchQuery, `offset`, orderBy, filter) S
+                group by eventDate, eventTime,userPseudoId,eventType,searchQuery, `offset`, orderBy, filter, ab_test) S
                 on T._PARTITIONTIME = S._PARTITIONTIME and T.eventType = S.eventType and T.userPseudoId = S.userPseudoId and T.eventTime = S.eventTime and to_json_string(T.documents) = to_json_string(S.documents) and to_json_string(S.searchInfo) = to_json_string(T.searchInfo) and ifnull(S.filter,"") = ifnull(T.filter,"")
                 when not matched then
-                insert (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, documents) values (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, documents)
+                insert (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, tagIds, documents) values (_PARTITIONTIME, eventType, userPseudoId, eventTime, searchInfo, filter, tagIds, documents)
                    '''}
     }
 
