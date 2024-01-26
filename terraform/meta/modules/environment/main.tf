@@ -15,7 +15,7 @@ terraform {
     }
   }
 
-  required_version = "~> 1.6"
+  required_version = "~> 1.7"
 }
 
 locals {
@@ -89,7 +89,7 @@ resource "tfe_workspace" "environment_workspace" {
   execution_mode    = "remote"
   working_directory = "terraform/environment"
   auto_apply        = true
-  terraform_version = "~> 1.6.3"
+  terraform_version = "~> 1.7.1"
 
   file_triggers_enabled = true
   trigger_patterns = [
