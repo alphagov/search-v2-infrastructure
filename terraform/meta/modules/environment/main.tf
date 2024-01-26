@@ -77,20 +77,20 @@ resource "tfe_workspace" "environment_workspace" {
   name        = "search-api-v2-${var.name}"
   project_id  = var.tfc_project.id
   description = "Provisions search-api-v2 Discovery Engine resources for the ${var.display_name} environment"
-  tag_names   = ["govuk", "search-api-v2", "search-api-v2-${var.terraform_module}", var.name]
+  tag_names   = ["govuk", "search-api-v2", "search-api-v2-environment", var.name]
 
   source_name = "search-v2-infrastructure meta module"
   source_url  = "https://github.com/alphagov/search-v2-infrastructure/tree/main/terraform/meta"
 
   execution_mode    = "remote"
-  working_directory = "terraform/${var.terraform_module}"
-  auto_apply        = true
+  working_directory = "terraform/environment"
+  auto_apply        = false
   terraform_version = "~> 1.6.3"
 
   file_triggers_enabled = true
   trigger_patterns = [
-    "/terraform/${var.terraform_module}/**/*.tf",
-    "/terraform/${var.terraform_module}/**/files/**/*",
+    "/terraform/environment/**/*.tf",
+    "/terraform/environment/**/files/**/*",
     "/terraform/modules/**/*.tf",
     "/terraform/modules/**/files/**/*",
   ]
@@ -103,15 +103,12 @@ resource "tfe_workspace" "environment_workspace" {
 }
 
 data "tfe_variable_set" "aws_credentials" {
-  name  = "aws-credentials-${var.name}"
-  count = var.has_deployed_service_in_aws ? 1 : 0
+  name = "aws-credentials-${var.name}"
 }
 
 resource "tfe_workspace_variable_set" "aws_workspace_credentials" {
-  variable_set_id = data.tfe_variable_set.aws_credentials[0].id
+  variable_set_id = data.tfe_variable_set.aws_credentials.id
   workspace_id    = tfe_workspace.environment_workspace.id
-
-  count = var.has_deployed_service_in_aws ? 1 : 0
 }
 
 resource "tfe_variable" "gcp_project_id" {

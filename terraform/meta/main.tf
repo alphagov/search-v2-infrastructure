@@ -44,20 +44,6 @@ resource "tfe_workspace" "meta_workspace" {
   execution_mode = "local"
 }
 
-module "environment_dev" {
-  source = "./modules/environment"
-
-  google_cloud_billing_account = var.google_cloud_billing_account
-  google_cloud_folder          = var.google_cloud_folder
-  tfc_project                  = tfe_project.project
-
-  name                        = "dev"
-  display_name                = "Development"
-  has_deployed_service_in_aws = false
-  terraform_module            = "dev_environment"
-}
-
-
 module "environment_integration" {
   source = "./modules/environment"
 
@@ -65,10 +51,8 @@ module "environment_integration" {
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
 
-  name                        = "integration"
-  display_name                = "Integration"
-  has_deployed_service_in_aws = true
-  terraform_module            = "full_environment"
+  name         = "integration"
+  display_name = "Integration"
 }
 
 module "environment_staging" {
@@ -78,10 +62,8 @@ module "environment_staging" {
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
 
-  name                        = "staging"
-  display_name                = "Staging"
-  has_deployed_service_in_aws = true
-  terraform_module            = "full_environment"
+  name         = "staging"
+  display_name = "Staging"
 }
 
 module "environment_production" {
@@ -91,10 +73,8 @@ module "environment_production" {
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
 
-  name                        = "production"
-  display_name                = "Production"
-  has_deployed_service_in_aws = true
-  terraform_module            = "full_environment"
+  name         = "production"
+  display_name = "Production"
 
   # NOTE: There are limits on the Google side on how high we are permitted to set these quotas. If
   # you attempt to increase these beyond the ceiling, a `COMMON_QUOTA_CONSUMER_OVERRIDE_TOO_HIGH`
