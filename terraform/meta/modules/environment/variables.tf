@@ -3,11 +3,6 @@ variable "name" {
   description = "A short name for this environment (used in resource IDs)"
 }
 
-variable "display_name" {
-  type        = string
-  description = "A longer, more descriptive name for this environment"
-}
-
 variable "google_cloud_folder" {
   type        = string
   description = "The ID of the Google Cloud folder to create projects under"

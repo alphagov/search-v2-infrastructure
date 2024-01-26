@@ -18,8 +18,12 @@ terraform {
   required_version = "~> 1.6"
 }
 
+locals {
+  display_name = title(var.name)
+}
+
 resource "google_project" "environment_project" {
-  name       = "Search API V2 ${var.display_name}"
+  name       = "Search API V2 ${local.display_name}"
   project_id = "search-api-v2-${var.name}"
 
   folder_id       = var.google_cloud_folder
@@ -76,7 +80,7 @@ data "tfe_oauth_client" "github" {
 resource "tfe_workspace" "environment_workspace" {
   name        = "search-api-v2-${var.name}"
   project_id  = var.tfc_project.id
-  description = "Provisions search-api-v2 Discovery Engine resources for the ${var.display_name} environment"
+  description = "Provisions search-api-v2 Discovery Engine resources for the ${local.display_name} environment"
   tag_names   = ["govuk", "search-api-v2", "search-api-v2-environment", var.name]
 
   source_name = "search-v2-infrastructure meta module"
@@ -114,7 +118,7 @@ resource "tfe_workspace_variable_set" "aws_workspace_credentials" {
 resource "tfe_variable" "gcp_project_id" {
   workspace_id = tfe_workspace.environment_workspace.id
   category     = "terraform"
-  description  = "The GCP project ID for the ${var.display_name} environment"
+  description  = "The GCP project ID for the ${local.display_name} environment"
 
   key       = "gcp_project_id"
   value     = google_project.environment_project.project_id
@@ -124,7 +128,7 @@ resource "tfe_variable" "gcp_project_id" {
 resource "tfe_variable" "gcp_project_number" {
   workspace_id = tfe_workspace.environment_workspace.id
   category     = "terraform"
-  description  = "The GCP project number for the ${var.display_name} environment"
+  description  = "The GCP project number for the ${local.display_name} environment"
 
   key       = "gcp_project_number"
   value     = google_project.environment_project.number
