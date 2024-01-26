@@ -8,17 +8,6 @@ variable "display_name" {
   description = "A longer, more descriptive name for this environment"
 }
 
-variable "has_deployed_service_in_aws" {
-  type        = bool
-  description = "Whether this environment has a deployed API service (if so, service accounts and access keys are provisioned for consumption by Kubernetes)"
-  default     = true
-}
-
-variable "terraform_module" {
-  type        = string
-  description = "The name of the Terraform module for this environment (used as working directory)"
-}
-
 variable "google_cloud_folder" {
   type        = string
   description = "The ID of the Google Cloud folder to create projects under"
