@@ -47,34 +47,29 @@ resource "tfe_workspace" "meta_workspace" {
 module "environment_integration" {
   source = "./modules/environment"
 
+  name                         = "integration"
   google_cloud_billing_account = var.google_cloud_billing_account
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
-
-  name         = "integration"
-  display_name = "Integration"
 }
 
 module "environment_staging" {
   source = "./modules/environment"
 
+  name                         = "staging"
   google_cloud_billing_account = var.google_cloud_billing_account
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
-
-  name         = "staging"
-  display_name = "Staging"
 }
 
 module "environment_production" {
   source = "./modules/environment"
 
+  name                         = "production"
   google_cloud_billing_account = var.google_cloud_billing_account
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
 
-  name         = "production"
-  display_name = "Production"
 
   # NOTE: There are limits on the Google side on how high we are permitted to set these quotas. If
   # you attempt to increase these beyond the ceiling, a `COMMON_QUOTA_CONSUMER_OVERRIDE_TOO_HIGH`
