@@ -14,7 +14,7 @@ boost_promote_medium:
   boost: 0.2
 
 boost_promote_low:
-  filter: 'document_type: ANY("guidance", "mainstream_browse_page", "news_story", "policy_paper", "press_release", "travel_advice")'
+  filter: 'document_type: ANY("guidance", "mainstream_browse_page", "policy_paper", "travel_advice")'
   boost: 0.05
 
 boost_demote_low:
