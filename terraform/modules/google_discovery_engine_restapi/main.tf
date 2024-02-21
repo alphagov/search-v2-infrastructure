@@ -74,7 +74,7 @@ resource "restapi_object" "discovery_engine_engine" {
     },
     searchEngineConfig = {
       searchTier   = var.search_tier,
-      searchAddOns = ["SEARCH_ADD_ON_LLM"] # this is the only valid value supported by the API
+      searchAddOns = [] # "SEARCH_ADD_ON_LLM" is the only valid value supported by the API - leave empty to disable
     }
   })
 }
