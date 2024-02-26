@@ -76,6 +76,6 @@ module "environment_production" {
   # error will be raised (including some metadata that should tell you what the current ceiling is)
   # and you will need to manually request a quota increase from Google through the console first
   # (see the environment module for the exact quota names you need to request increases for).
-  discovery_engine_quota_search_requests_per_minute = 2000
+  discovery_engine_quota_search_requests_per_minute = 20000
   discovery_engine_quota_documents                  = 2000000
 }
