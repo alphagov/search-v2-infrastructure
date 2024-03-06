@@ -10,7 +10,7 @@
 # and https://cloud.google.com/retail/docs/filter-and-order for `filter` syntax
 
 boost_promote_medium:
-  filter: 'content_purpose_supergroup: ANY("services") OR document_type: ANY("calendar", "detailed_guide", "document_collection", "external_content", "organisation", "topical_event")'
+  filter: 'content_purpose_supergroup: ANY("services") OR document_type: ANY("calendar", "detailed_guide", "document_collection", "external_content", "organisation")'
   boost: 0.2
 
 boost_promote_low:
