@@ -56,7 +56,9 @@ module "environment_integration" {
 module "environment_staging" {
   source = "./modules/environment"
 
-  name                         = "staging"
+  name                      = "staging"
+  upstream_environment_name = "integration"
+
   google_cloud_billing_account = var.google_cloud_billing_account
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project
@@ -65,7 +67,9 @@ module "environment_staging" {
 module "environment_production" {
   source = "./modules/environment"
 
-  name                         = "production"
+  name                      = "production"
+  upstream_environment_name = "staging"
+
   google_cloud_billing_account = var.google_cloud_billing_account
   google_cloud_folder          = var.google_cloud_folder
   tfc_project                  = tfe_project.project

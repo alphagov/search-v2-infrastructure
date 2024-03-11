@@ -88,8 +88,11 @@ resource "tfe_workspace" "environment_workspace" {
 
   execution_mode    = "remote"
   working_directory = "terraform/environment"
-  auto_apply        = true
   terraform_version = "~> 1.7.1"
+
+  # Only auto apply if there is no workspace defined that we need to wait for (in which case a
+  # trigger will determine when to apply this workspace)
+  auto_apply = var.upstream_environment_name == null
 
   file_triggers_enabled = true
   trigger_patterns = [
@@ -104,6 +107,20 @@ resource "tfe_workspace" "environment_workspace" {
     branch         = "main"
     oauth_token_id = data.tfe_oauth_client.github.oauth_token_id
   }
+}
+
+# Only relevant for the run trigger, if we have an upstream workspace to wait for
+data "tfe_workspace" "upstream_workspace" {
+  count = var.upstream_environment_name != null ? 1 : 0
+
+  name = "search-api-v2-${var.upstream_environment_name}"
+}
+
+resource "tfe_run_trigger" "apply_after_upstream_workspace" {
+  count = length(data.tfe_workspace.upstream_workspace)
+
+  workspace_id  = tfe_workspace.environment_workspace.id
+  sourceable_id = data.tfe_workspace.upstream_workspace[0].id
 }
 
 data "tfe_variable_set" "aws_credentials" {
