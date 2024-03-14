@@ -75,7 +75,8 @@
       "multipleOf": 1,
       "minimum": 0,
       "maximum": 1,
-      "indexable": true
+      "indexable": true,
+      "retrievable": true
     },
     "organisation_state": {
       "description": "The state of the organisation (for boosting)",
