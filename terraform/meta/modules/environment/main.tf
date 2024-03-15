@@ -2,16 +2,16 @@ terraform {
   required_providers {
     tfe = {
       source  = "hashicorp/tfe"
-      version = "~> 0.49.2"
+      version = "~> 0.53.0"
     }
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.2"
+      version = "~> 5.20"
     }
     # required for `google_service_usage_consumer_quota_override` resources
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "~> 5.11"
+      version = "~> 5.20"
     }
   }
 
@@ -88,7 +88,7 @@ resource "tfe_workspace" "environment_workspace" {
 
   execution_mode    = "remote"
   working_directory = "terraform/environment"
-  terraform_version = "~> 1.7.1"
+  terraform_version = "~> 1.7.5"
 
   # Only auto apply if there is no workspace defined that we need to wait for (in which case a
   # trigger will determine when to apply this workspace)
