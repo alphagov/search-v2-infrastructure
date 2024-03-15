@@ -86,7 +86,6 @@ resource "tfe_workspace" "environment_workspace" {
   source_name = "search-v2-infrastructure meta module"
   source_url  = "https://github.com/alphagov/search-v2-infrastructure/tree/main/terraform/meta"
 
-  execution_mode    = "remote"
   working_directory = "terraform/environment"
   terraform_version = "~> 1.7.5"
 
@@ -108,6 +107,12 @@ resource "tfe_workspace" "environment_workspace" {
     branch         = "main"
     oauth_token_id = data.tfe_oauth_client.github.oauth_token_id
   }
+}
+
+resource "tfe_workspace_settings" "environment_workspace_settings" {
+  workspace_id = tfe_workspace.environment_workspace.id
+
+  execution_mode = "remote"
 }
 
 # Only relevant for the run trigger, if we have an upstream workspace to wait for

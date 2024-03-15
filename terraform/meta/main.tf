@@ -40,6 +40,10 @@ resource "tfe_workspace" "meta_workspace" {
   project_id  = tfe_project.project.id
   description = "Meta workspace for cross-environment TF Cloud resources (state backend only)"
   tag_names   = ["govuk", "search-api-v2"]
+}
+
+resource "tfe_workspace_settings" "meta_workspace_settings" {
+  workspace_id = tfe_workspace.meta_workspace.id
 
   execution_mode = "local"
 }
