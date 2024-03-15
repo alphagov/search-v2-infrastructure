@@ -92,7 +92,8 @@ resource "tfe_workspace" "environment_workspace" {
 
   # Only auto apply if there is no workspace defined that we need to wait for (in which case a
   # trigger will determine when to apply this workspace)
-  auto_apply = var.upstream_environment_name == null
+  auto_apply             = var.upstream_environment_name == null
+  auto_apply_run_trigger = var.upstream_environment_name != null
 
   file_triggers_enabled = true
   trigger_patterns = [
