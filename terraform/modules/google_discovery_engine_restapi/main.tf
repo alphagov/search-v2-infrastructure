@@ -124,8 +124,8 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
     name = each.key,
     displayName = each.key,
     solutionType = "SOLUTION_TYPE_SEARCH"
-    boostControlIds = each.value["boostControlIds"]
-    synonymsControlIds = each.value["synonymsControlIds"]
+    boostControlIds = lookup(each.value, "boostControlIds", [])
+    synonymsControlIds = lookup(each.value, "synonymsControlIds", [])
   })
 }
 
