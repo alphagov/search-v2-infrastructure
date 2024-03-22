@@ -10,6 +10,7 @@ terraform {
 }
 
 locals {
+  servingConfigs  = yamldecode(file("${path.module}/files/servingConfigs/servingConfigs.yml"))
   boostControls   = yamldecode(file("${path.module}/files/controls/boosts.yml"))
   synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
 }
@@ -98,6 +99,33 @@ resource "restapi_object" "discovery_engine_serving_config" {
   data = jsonencode({
     boostControlIds    = keys(local.boostControls)
     synonymsControlIds = keys(local.synonymControls)
+  })
+}
+
+# Handles additional serving configs beyond the default_search serving config
+resource "restapi_object" "discovery_engine_serving_config_additional" {
+  depends_on = [
+    restapi_object.discovery_engine_boost_control,
+    restapi_object.discovery_engine_synonym_control
+  ]
+
+  for_each = local.servingConfigs
+
+  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs"
+  object_id = each.key
+
+  create_method = "CREATE"
+  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs?servingConfigId=${each.key}"
+  update_method = "PATCH"
+  update_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/${each.key}"
+  read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/${each.key}"
+
+  data = jsonencode({
+    name = each.key,
+    displayName = each.key,
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    boostControlIds = each.value["boostControlIds"]
+    synonymsControlIds = each.value["synonymsControlIds"]
   })
 }
 
