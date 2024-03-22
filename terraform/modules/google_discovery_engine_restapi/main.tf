@@ -121,10 +121,10 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
   read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/${each.key}"
 
   data = jsonencode({
-    name = each.key,
-    displayName = each.key,
-    solutionType = "SOLUTION_TYPE_SEARCH"
-    boostControlIds = lookup(each.value, "boostControlIds", [])
+    name               = each.key,
+    displayName        = each.key,
+    solutionType       = "SOLUTION_TYPE_SEARCH",
+    boostControlIds    = lookup(each.value, "boostControlIds", []),
     synonymsControlIds = lookup(each.value, "synonymsControlIds", [])
   })
 }
