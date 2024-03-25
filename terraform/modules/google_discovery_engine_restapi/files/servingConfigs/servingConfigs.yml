@@ -11,4 +11,4 @@
 
 search_raw:
   boostControlIds: []
-  synonymControlIds: []
+  synonymsControlIds: []
