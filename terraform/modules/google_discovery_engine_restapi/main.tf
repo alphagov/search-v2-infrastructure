@@ -114,7 +114,7 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
   path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs"
   object_id = each.key
 
-  create_method = "CREATE"
+  create_method = "POST"
   create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs?servingConfigId=${each.key}"
   update_method = "PATCH"
   update_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/${each.key}"
