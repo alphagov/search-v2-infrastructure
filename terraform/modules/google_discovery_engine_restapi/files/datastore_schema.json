@@ -66,7 +66,7 @@
       "items": {
         "type": "string",
         "format": "uuid",
-        "keyPropertyMapping": "category"
+        "indexable": true
       }
     },
     "is_historic": {
