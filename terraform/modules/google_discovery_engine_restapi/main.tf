@@ -15,16 +15,6 @@ locals {
   synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
 }
 
-# This has been moved into a first party resource in terraform/environment/discovery_engine.tf
-# TODO: This block can be deleted once successfully applied in all environments
-removed {
-  from = restapi_object.discovery_engine_datastore
-
-  lifecycle {
-    destroy = false
-  }
-}
-
 # The data schema for the datastore
 #
 # The API resource relationship is one-to-many, but currently only a single schema is supported and
