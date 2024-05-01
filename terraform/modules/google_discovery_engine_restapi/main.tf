@@ -15,22 +15,14 @@ locals {
   synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
 }
 
-# The datastore to store content in
-#
-# API resource: v1alpha.projects.locations.collections.dataStores
-resource "restapi_object" "discovery_engine_datastore" {
-  path      = "/dataStores"
-  object_id = var.datastore_id
+# This has been moved into a first party resource in terraform/environment/discovery_engine.tf
+# TODO: This block can be deleted once successfully applied in all environments
+removed {
+  from = restapi_object.discovery_engine_datastore
 
-  # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores?dataStoreId=${var.datastore_id}"
-
-  data = jsonencode({
-    displayName      = var.datastore_id
-    industryVertical = "GENERIC"
-    solutionTypes    = ["SOLUTION_TYPE_SEARCH"]
-    contentConfig    = "CONTENT_REQUIRED" # makes the engine type "unstructured"
-  })
+  lifecycle {
+    destroy = false
+  }
 }
 
 # The data schema for the datastore
@@ -41,13 +33,13 @@ resource "restapi_object" "discovery_engine_datastore" {
 #
 # API resource: v1alpha.projects.locations.collections.dataStores.schemas
 resource "restapi_object" "discovery_engine_datastore_schema" {
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/schemas"
+  path      = "/dataStores/${var.datastore_id}/schemas"
   object_id = "default_schema"
 
   # Since the default schema is created automatically with the datastore, we need to update even on
   # initial Terraform resource creation
   create_method = "PATCH"
-  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/schemas/default_schema"
+  create_path   = "/dataStores/${var.datastore_id}/schemas/default_schema"
 
   data = jsonencode({
     jsonSchema = file("${path.module}/files/datastore_schema.json")
@@ -85,16 +77,16 @@ resource "restapi_object" "discovery_engine_serving_config" {
     restapi_object.discovery_engine_boost_control,
     restapi_object.discovery_engine_synonym_control
   ]
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  path      = "/dataStores/${var.datastore_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
   object_id = "default_search"
 
   # Since the default serving config is created automatically with the datastore, we need to update
   # even on initial Terraform resource creation
   create_method = "PATCH"
-  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  create_path   = "/dataStores/${var.datastore_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
   update_method = "PATCH"
-  update_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
-  read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/default_search"
+  update_path   = "/dataStores/${var.datastore_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  read_path     = "/dataStores/${var.datastore_id}/servingConfigs/default_search"
 
   data = jsonencode({
     boostControlIds    = keys(local.boostControls)
@@ -111,14 +103,14 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
 
   for_each = local.servingConfigs
 
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs"
+  path      = "/dataStores/${var.datastore_id}/servingConfigs"
   object_id = each.key
 
   create_method = "POST"
-  create_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs?servingConfigId=${each.key}"
+  create_path   = "/dataStores/${var.datastore_id}/servingConfigs?servingConfigId=${each.key}"
   update_method = "PATCH"
-  update_path   = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/${each.key}"
-  read_path     = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/servingConfigs/${each.key}"
+  update_path   = "/dataStores/${var.datastore_id}/servingConfigs/${each.key}"
+  read_path     = "/dataStores/${var.datastore_id}/servingConfigs/${each.key}"
 
   data = jsonencode({
     name               = each.key,
@@ -132,11 +124,11 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
 resource "restapi_object" "discovery_engine_boost_control" {
   for_each = local.boostControls
 
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls"
+  path      = "/dataStores/${var.datastore_id}/controls"
   object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls?controlId=${each.key}"
+  create_path = "/dataStores/${var.datastore_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key
@@ -152,11 +144,11 @@ resource "restapi_object" "discovery_engine_boost_control" {
 resource "restapi_object" "discovery_engine_synonym_control" {
   for_each = local.synonymControls
 
-  path      = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls"
+  path      = "/dataStores/${var.datastore_id}/controls"
   object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores/${restapi_object.discovery_engine_datastore.object_id}/controls?controlId=${each.key}"
+  create_path = "/dataStores/${var.datastore_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key
