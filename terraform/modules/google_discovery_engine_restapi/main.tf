@@ -36,30 +36,13 @@ resource "restapi_object" "discovery_engine_datastore_schema" {
   })
 }
 
-# The engine used for querying the datastore
-#
-# API resource: v1alpha.projects.locations.collections.engines
-resource "restapi_object" "discovery_engine_engine" {
-  path      = "/engines"
-  object_id = var.engine_id
+# TODO: Remove after change has been applied in all environments
+removed {
+  from = restapi_object.discovery_engine_engine
 
-  # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/engines?engineId=${var.engine_id}"
-
-  data = jsonencode({
-    displayName = var.engine_id,
-    dataStoreIds = [
-      var.datastore_id
-    ],
-    solutionType = "SOLUTION_TYPE_SEARCH",
-    commonConfig = {
-      companyName = "GOV.UK"
-    },
-    searchEngineConfig = {
-      searchTier   = var.search_tier,
-      searchAddOns = [] # "SEARCH_ADD_ON_LLM" is the only valid value supported by the API - leave empty to disable
-    }
-  })
+  lifecycle {
+    destroy = false
+  }
 }
 
 resource "restapi_object" "discovery_engine_serving_config" {
