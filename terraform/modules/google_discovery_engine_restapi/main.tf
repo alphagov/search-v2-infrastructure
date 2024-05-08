@@ -133,8 +133,8 @@ resource "restapi_object" "discovery_engine_synonym_control" {
 
 resource "restapi_object" "discovery_engine_serving_config_engine" {
   depends_on = [
-    restapi_object.discovery_engine_boost_control_engine,
-    restapi_object.discovery_engine_synonym_control_engine
+    restapi_object.discovery_engine_boost_control,
+    restapi_object.discovery_engine_synonym_control
   ]
 
   path      = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
@@ -151,47 +151,5 @@ resource "restapi_object" "discovery_engine_serving_config_engine" {
   data = jsonencode({
     boostControlIds    = keys(local.boostControls)
     synonymsControlIds = keys(local.synonymControls)
-  })
-}
-
-resource "restapi_object" "discovery_engine_boost_control_engine" {
-  for_each = local.boostControls
-
-  path      = "/engines/${var.engine_id}/controls"
-  object_id = each.key
-
-  # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/engines/${var.engine_id}/controls?controlId=${each.key}"
-
-  data = jsonencode({
-    name        = each.key
-    displayName = each.key
-
-    solutionType = "SOLUTION_TYPE_SEARCH"
-    useCases     = ["SEARCH_USE_CASE_SEARCH"]
-
-    boostAction = each.value
-  })
-}
-
-resource "restapi_object" "discovery_engine_synonym_control_engine" {
-  for_each = local.synonymControls
-
-  path      = "/engines/${var.engine_id}/controls"
-  object_id = each.key
-
-  # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/engines/${var.engine_id}/controls?controlId=${each.key}"
-
-  data = jsonencode({
-    name        = each.key
-    displayName = each.key
-
-    solutionType = "SOLUTION_TYPE_SEARCH"
-    useCases     = ["SEARCH_USE_CASE_SEARCH"]
-
-    synonymsAction = {
-      synonyms = each.value
-    }
   })
 }
