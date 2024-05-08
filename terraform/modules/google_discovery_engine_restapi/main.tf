@@ -36,15 +36,6 @@ resource "restapi_object" "discovery_engine_datastore_schema" {
   })
 }
 
-# TODO: Remove after change has been applied in all environments
-removed {
-  from = restapi_object.discovery_engine_engine
-
-  lifecycle {
-    destroy = false
-  }
-}
-
 resource "restapi_object" "discovery_engine_serving_config" {
   depends_on = [
     restapi_object.discovery_engine_boost_control,
