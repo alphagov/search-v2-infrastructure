@@ -15,6 +15,8 @@ locals {
   synonymControls = yamldecode(file("${path.module}/files/controls/synonyms.yml"))
 }
 
+############## DATASTORE ##############
+
 # The data schema for the datastore
 #
 # The API resource relationship is one-to-many, but currently only a single schema is supported and
@@ -113,6 +115,73 @@ resource "restapi_object" "discovery_engine_synonym_control" {
 
   # API uses query strings to specify ID of the resource to create (not payload)
   create_path = "/dataStores/${var.datastore_id}/controls?controlId=${each.key}"
+
+  data = jsonencode({
+    name        = each.key
+    displayName = each.key
+
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    useCases     = ["SEARCH_USE_CASE_SEARCH"]
+
+    synonymsAction = {
+      synonyms = each.value
+    }
+  })
+}
+
+############## ENGINE ##############
+
+resource "restapi_object" "discovery_engine_serving_config_engine" {
+  depends_on = [
+    restapi_object.discovery_engine_boost_control_engine,
+    restapi_object.discovery_engine_synonym_control_engine
+  ]
+
+  path      = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  object_id = "default_search"
+
+  # Since the default serving config is created automatically with the datastore, we need to update
+  # even on initial Terraform resource creation
+  create_method = "PATCH"
+  create_path   = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  update_method = "PATCH"
+  update_path   = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  read_path     = "/engines/${var.engine_id}/servingConfigs/default_search"
+
+  data = jsonencode({
+    boostControlIds    = keys(local.boostControls)
+    synonymsControlIds = keys(local.synonymControls)
+  })
+}
+
+resource "restapi_object" "discovery_engine_boost_control_engine" {
+  for_each = local.boostControls
+
+  path      = "/engines/${var.engine_id}/controls"
+  object_id = each.key
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/engines/${var.engine_id}/controls?controlId=${each.key}"
+
+  data = jsonencode({
+    name        = each.key
+    displayName = each.key
+
+    solutionType = "SOLUTION_TYPE_SEARCH"
+    useCases     = ["SEARCH_USE_CASE_SEARCH"]
+
+    boostAction = each.value
+  })
+}
+
+resource "restapi_object" "discovery_engine_synonym_control_engine" {
+  for_each = local.synonymControls
+
+  path      = "/engines/${var.engine_id}/controls"
+  object_id = each.key
+
+  # API uses query strings to specify ID of the resource to create (not payload)
+  create_path = "/engines/${var.engine_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key
