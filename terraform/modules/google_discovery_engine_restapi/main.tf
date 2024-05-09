@@ -131,13 +131,3 @@ resource "restapi_object" "discovery_engine_synonym_control" {
     }
   })
 }
-
-# Remove now unnecessary extra engine serving config from state
-# TODO: Remove after change has been applied in all environments
-removed {
-  from = restapi_object.discovery_engine_serving_config_engine
-
-  lifecycle {
-    destroy = false
-  }
-}
