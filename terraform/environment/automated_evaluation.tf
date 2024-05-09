@@ -57,6 +57,7 @@ resource "google_cloud_scheduler_job" "daily_search_evaluation" {
   schedule         = "0 07 * * *"
   time_zone        = "Europe/London"
   attempt_deadline = "1800s"
+  depends_on = [ google_storage_bucket_object.judgement_list ]
   http_target {
     http_method = "POST"
     uri         = google_cloudfunctions2_function.automated_evaluation.url
