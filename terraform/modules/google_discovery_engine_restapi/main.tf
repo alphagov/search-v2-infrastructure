@@ -38,21 +38,24 @@ resource "restapi_object" "discovery_engine_datastore_schema" {
   })
 }
 
+############## ENGINE ##############
+
 resource "restapi_object" "discovery_engine_serving_config" {
   depends_on = [
     restapi_object.discovery_engine_boost_control,
     restapi_object.discovery_engine_synonym_control
   ]
-  path      = "/dataStores/${var.datastore_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+
+  path      = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
   object_id = "default_search"
 
-  # Since the default serving config is created automatically with the datastore, we need to update
+  # Since the default serving config is created automatically with the engine, we need to update
   # even on initial Terraform resource creation
   create_method = "PATCH"
-  create_path   = "/dataStores/${var.datastore_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  create_path   = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
   update_method = "PATCH"
-  update_path   = "/dataStores/${var.datastore_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
-  read_path     = "/dataStores/${var.datastore_id}/servingConfigs/default_search"
+  update_path   = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
+  read_path     = "/engines/${var.engine_id}/servingConfigs/default_search"
 
   data = jsonencode({
     boostControlIds    = keys(local.boostControls)
@@ -69,14 +72,14 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
 
   for_each = local.servingConfigs
 
-  path      = "/dataStores/${var.datastore_id}/servingConfigs"
+  path      = "/engines/${var.engine_id}/servingConfigs"
   object_id = each.key
 
   create_method = "POST"
-  create_path   = "/dataStores/${var.datastore_id}/servingConfigs?servingConfigId=${each.key}"
+  create_path   = "/engines/${var.engine_id}/servingConfigs?servingConfigId=${each.key}"
   update_method = "PATCH"
-  update_path   = "/dataStores/${var.datastore_id}/servingConfigs/${each.key}"
-  read_path     = "/dataStores/${var.datastore_id}/servingConfigs/${each.key}"
+  update_path   = "/engines/${var.engine_id}/servingConfigs/${each.key}"
+  read_path     = "/engines/${var.engine_id}/servingConfigs/${each.key}"
 
   data = jsonencode({
     name               = each.key,
@@ -129,27 +132,12 @@ resource "restapi_object" "discovery_engine_synonym_control" {
   })
 }
 
-############## ENGINE ##############
+# Remove now unnecessary extra engine serving config from state
+# TODO: Remove after change has been applied in all environments
+removed {
+  from = restapi_object.discovery_engine_serving_config_engine
 
-resource "restapi_object" "discovery_engine_serving_config_engine" {
-  depends_on = [
-    restapi_object.discovery_engine_boost_control,
-    restapi_object.discovery_engine_synonym_control
-  ]
-
-  path      = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
-  object_id = "default_search"
-
-  # Since the default serving config is created automatically with the datastore, we need to update
-  # even on initial Terraform resource creation
-  create_method = "PATCH"
-  create_path   = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
-  update_method = "PATCH"
-  update_path   = "/engines/${var.engine_id}/servingConfigs/default_search?updateMask=boost_control_ids,synonyms_control_ids"
-  read_path     = "/engines/${var.engine_id}/servingConfigs/default_search"
-
-  data = jsonencode({
-    boostControlIds    = keys(local.boostControls)
-    synonymsControlIds = keys(local.synonymControls)
-  })
+  lifecycle {
+    destroy = false
+  }
 }
