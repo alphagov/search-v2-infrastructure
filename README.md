@@ -1,10 +1,11 @@
 # search-v2-infrastructure
 IaC definitions for GOV.UK Search v2
 
-This repository contains Terraform resource definitions to provision Google Cloud's Vertex AI Search
-(also previously known as "Gen App Builder" or in the APIs as "Discovery Engine") for use as a
-search engine for GOV.UK through [search-api-v2](https://github.com/alphagov/search-api-v2), and to
-set up a data pipeline for analytics events to feed into the search engine model.
+This repository contains Terraform resource definitions to provision Google Cloud's Vertex AI Agent
+Builder Search (also previously known as "Vertex AI Search and Conversation" or "Gen App Builder" or
+in the APIs as "Discovery Engine") for use as a search engine for GOV.UK through
+[search-api-v2](https://github.com/alphagov/search-api-v2), and to set up a data pipeline for
+analytics events to feed into the search engine model.
 
 To that end, the following modules are part of this repository:
 - [`terraform/meta`](terraform/meta/): Bootstrap Terraform Cloud project/workspaces, GCP projects,
