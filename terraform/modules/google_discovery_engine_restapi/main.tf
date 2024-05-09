@@ -93,11 +93,11 @@ resource "restapi_object" "discovery_engine_serving_config_additional" {
 resource "restapi_object" "discovery_engine_boost_control" {
   for_each = local.boostControls
 
-  path      = "/dataStores/${var.datastore_id}/controls"
+  path      = "/engines/${var.engine_id}/controls"
   object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores/${var.datastore_id}/controls?controlId=${each.key}"
+  create_path = "/engines/${var.engine_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key
@@ -113,11 +113,11 @@ resource "restapi_object" "discovery_engine_boost_control" {
 resource "restapi_object" "discovery_engine_synonym_control" {
   for_each = local.synonymControls
 
-  path      = "/dataStores/${var.datastore_id}/controls"
+  path      = "/engines/${var.engine_id}/controls"
   object_id = each.key
 
   # API uses query strings to specify ID of the resource to create (not payload)
-  create_path = "/dataStores/${var.datastore_id}/controls?controlId=${each.key}"
+  create_path = "/engines/${var.engine_id}/controls?controlId=${each.key}"
 
   data = jsonencode({
     name        = each.key
