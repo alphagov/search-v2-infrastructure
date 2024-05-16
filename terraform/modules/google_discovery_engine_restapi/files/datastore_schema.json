@@ -69,6 +69,7 @@
     "part_of_taxonomy_tree": {
       "description": "A list of GOV.UK taxon IDs that this content object is tagged to (for filtering)",
       "type": "array",
+      "keyPropertyMapping": "category",
       "items": {
         "type": "string",
         "format": "uuid",
