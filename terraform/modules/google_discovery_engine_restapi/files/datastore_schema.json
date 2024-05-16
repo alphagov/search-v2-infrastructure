@@ -48,6 +48,12 @@
       "retrievable": true,
       "indexable": true
     },
+    "public_timestamp_datetime": {
+      "description": "RFC3339 timestamp of when this object was last updated (for boosting and displaying)",
+      "type": "datetime",
+      "retrievable": true,
+      "indexable": true
+    },
     "document_type": {
       "description": "The source document type (for boosting)",
       "type": "string",
