@@ -72,8 +72,7 @@
       "items": {
         "type": "string",
         "keyPropertyMapping": "category",
-        "format": "uuid",
-        "indexable": true
+        "format": "uuid"
       }
     },
     "is_historic": {
