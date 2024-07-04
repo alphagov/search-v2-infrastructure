@@ -142,7 +142,7 @@ resource "restapi_object" "discovery_engine_datastore_completion_config" {
   create_path   = "/dataStores/${var.datastore_id}/completionConfig"
 
   data = jsonencode({
-    name            = "comletionConfig"
+    name            = "completionConfig"
     matchingOrder   = "out-of-order"
     maxSuggestions  = 5,
     minPrefixLength = 3,
