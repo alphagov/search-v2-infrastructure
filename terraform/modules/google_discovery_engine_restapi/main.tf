@@ -134,12 +134,15 @@ resource "restapi_object" "discovery_engine_synonym_control" {
 
 resource "restapi_object" "discovery_engine_datastore_completion_config" {
   path      = "/dataStores/${var.datastore_id}/completionConfig"
-  object_id = ""
+  object_id = "completionConfig"
 
   # Since the default completionConfig is created automatically with the datastore, we need to update even on
   # initial Terraform resource creation
   create_method = "PATCH"
   create_path   = "/dataStores/${var.datastore_id}/completionConfig"
+  update_method = "PATCH"
+  update_path   = "/dataStores/${var.datastore_id}/completionConfig?updateMask=name,matching_order,max_suggestions,min_prefix_length,query_model,enable_mode"
+  read_path     = "/dataStores/${var.datastore_id}/completionConfig"
 
   data = jsonencode({
     name            = "completionConfig"
