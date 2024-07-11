@@ -34,6 +34,8 @@ resource "google_discovery_engine_data_store" "govuk_content" {
   }
 }
 
+# Existing engine, currently used, to be superseded by `govuk_site_search` (which has Search Admin
+# controls rather than Terraform-defined ones)
 resource "google_discovery_engine_search_engine" "govuk" {
   engine_id    = "govuk"
   display_name = "GOV.UK Site Search"
@@ -44,6 +46,28 @@ resource "google_discovery_engine_search_engine" "govuk" {
   # TODO: The engine was originally created before this field existed. It now defaults to "GENERIC",
   # but setting that explicitly causes it to be replaced. This is a workaround to avoid that.
   industry_vertical = ""
+
+  data_store_ids = [google_discovery_engine_data_store.govuk_content.data_store_id]
+
+  search_engine_config {
+    search_tier    = "SEARCH_TIER_STANDARD"
+    search_add_ons = []
+  }
+
+  common_config {
+    company_name = "GOV.UK"
+  }
+}
+
+# Future engine including Search Admin controls, will take over from `govuk` engine
+resource "google_discovery_engine_search_engine" "govuk_site_search" {
+  engine_id    = "govuk_site_search"
+  display_name = "GOV.UK Site Search (future engine with Search Admin controls)"
+
+  location      = google_discovery_engine_data_store.govuk_content.location
+  collection_id = "default_collection"
+
+  industry_vertical = "GENERIC"
 
   data_store_ids = [google_discovery_engine_data_store.govuk_content.data_store_id]
 
