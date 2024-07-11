@@ -40,6 +40,8 @@ resource "restapi_object" "discovery_engine_datastore_schema" {
 
 ############## ENGINE ##############
 
+# Default serving config (currently used by search-api-v2, to be superseded by site_search serving
+# config)
 resource "restapi_object" "discovery_engine_serving_config" {
   depends_on = [
     restapi_object.discovery_engine_boost_control,
@@ -60,6 +62,22 @@ resource "restapi_object" "discovery_engine_serving_config" {
   data = jsonencode({
     boostControlIds    = keys(local.boostControls)
     synonymsControlIds = keys(local.synonymControls)
+  })
+}
+
+# Future serving config managed by Search Admin
+resource "restapi_object" "discovery_engine_serving_config_site_search" {
+  path      = "/engines/${var.engine_id}/servingConfigs/site_search"
+  object_id = "site_search"
+
+  create_method = "POST"
+  create_path   = "/engines/${var.engine_id}/servingConfigs?servingConfigId=site_search"
+  update_method = "PATCH"
+  update_path   = "/engines/${var.engine_id}/servingConfigs/site_search"
+  read_path     = "/engines/${var.engine_id}/servingConfigs/site_search"
+
+  data = jsonencode({
+    solutionType = "SOLUTION_TYPE_SEARCH",
   })
 }
 
