@@ -77,7 +77,8 @@ resource "restapi_object" "discovery_engine_serving_config_site_search" {
   read_path     = "/engines/${var.engine_id}/servingConfigs/site_search"
 
   data = jsonencode({
-    solutionType = "SOLUTION_TYPE_SEARCH",
+    displayName  = "Site Search serving config (controls managed by Search Admin)"
+    solutionType = "SOLUTION_TYPE_SEARCH"
   })
 }
 
