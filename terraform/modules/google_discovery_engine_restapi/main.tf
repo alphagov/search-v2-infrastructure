@@ -167,7 +167,7 @@ resource "restapi_object" "discovery_engine_datastore_completion_config" {
     name            = "completionConfig"
     matchingOrder   = "out-of-order"
     maxSuggestions  = 5,
-    minPrefixLength = 3,
+    minPrefixLength = 1,
     queryModel      = "automatic",
     enableMode      = "AUTOMATIC"
   })
