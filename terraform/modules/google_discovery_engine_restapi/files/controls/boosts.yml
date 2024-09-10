@@ -28,3 +28,8 @@ boost_demote_medium:
 boost_demote_strong:
   filter: "is_historic = 1"
   boost: -0.75
+
+# Temporary demotion of poor results that can't be dealt with in another way right now
+boost_demote_pages:
+  filter: 'link: ANY("/government/publications/pension-credit-claim-form--2")'
+  boost: -0.5
