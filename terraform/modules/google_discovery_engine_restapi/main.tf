@@ -126,8 +126,8 @@ resource "restapi_object" "discovery_engine_boost_control" {
     useCases     = ["SEARCH_USE_CASE_SEARCH"]
 
     boostAction = {
-      boost     = lookup(each.value, "boost", []),
-      filter    = lookup(each.value, "filter", []),
+      boost     = lookup(each.value, "boost", 0),
+      filter    = lookup(each.value, "filter", ""),
       datastore = "/dataStores/${var.datastore_id}"
     }
   })
