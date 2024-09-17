@@ -125,7 +125,6 @@ resource "restapi_object" "discovery_engine_boost_control" {
     solutionType = "SOLUTION_TYPE_SEARCH"
     useCases     = ["SEARCH_USE_CASE_SEARCH"]
 
-    # boostAction = each.value
     boostAction = {
       boost     = lookup(each.value, "boost", []),
       filter    = lookup(each.value, "filter", []),
