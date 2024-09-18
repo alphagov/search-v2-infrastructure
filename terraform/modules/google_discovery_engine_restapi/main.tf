@@ -130,7 +130,7 @@ resource "restapi_object" "discovery_engine_boost_control" {
     boostAction = {
       boost     = lookup(each.value, "boost", 0.00000001),
       filter    = lookup(each.value, "filter", ""),
-      datastore = var.datastore_path
+      dataStore = var.datastore_path
     }
   })
 }
