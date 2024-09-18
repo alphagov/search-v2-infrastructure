@@ -25,12 +25,6 @@ locals {
 #
 # API resource: v1alpha.projects.locations.collections.dataStores.schemas
 
-data "restapi_object" "discovery_engine_datastore" {
-  path = "/dataStores/${var.datastore_id}"
-  search_key = "displayName"
-  search_value = var.datastore_id
-}
-
 
 resource "restapi_object" "discovery_engine_datastore_schema" {
   path      = "/dataStores/${var.datastore_id}/schemas"
@@ -136,7 +130,7 @@ resource "restapi_object" "discovery_engine_boost_control" {
     boostAction = {
       boost     = lookup(each.value, "boost", 0.00000001),
       filter    = lookup(each.value, "filter", ""),
-      datastore = data.restapi_object.discovery_engine_datastore.name
+      datastore = var.datastore_path
     }
   })
 }
