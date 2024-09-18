@@ -27,6 +27,8 @@ locals {
 
 data "restapi_object" "discovery_engine_datastore" {
   path = "/dataStores/${var.datastore_id}"
+  search_key = "displayName"
+  search_value = var.datastore_id
 }
 
 
