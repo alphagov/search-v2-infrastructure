@@ -26,7 +26,7 @@ locals {
 # API resource: v1alpha.projects.locations.collections.dataStores.schemas
 
 data "restapi_object" "discovery_engine_datastore" {
-  path="/dataStores/${var.datastore_id}"
+  path = "/dataStores/${var.datastore_id}"
 }
 
 
