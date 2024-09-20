@@ -32,4 +32,4 @@ boost_demote_strong:
 # Temporary demotion of poor results that can't be dealt with in another way right now
 boost_demote_pages:
   filter: 'link: ANY("/government/publications/pension-credit-claim-form--2")'
-  boost: -0.5
+  boost: -0.75
