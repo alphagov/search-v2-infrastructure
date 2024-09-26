@@ -12,3 +12,8 @@ variable "engine_id" {
   description = "The name of the engine to create resources against"
   type        = string
 }
+
+variable "storage_bucket_name" {
+  description = "The name of the bucket containing VAIS artifacts"
+  type        = string
+}
