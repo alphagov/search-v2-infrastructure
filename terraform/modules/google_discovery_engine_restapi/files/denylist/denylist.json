@@ -1,0 +1,24 @@
+{"blockPhrase":"[date]","matchOperator":"CONTAINS"}
+{"blockPhrase":"[postcode]","matchOperator":"CONTAINS"}
+{"blockPhrase":"[email]","matchOperator":"CONTAINS"}
+{"blockPhrase":"[id]","matchOperator":"CONTAINS"}
+{"blockPhrase":"nessus","matchOperator":"CONTAINS"}
+{"blockPhrase":"adrian bell","matchOperator":"CONTAINS"}
+{"blockPhrase":"misconduct","matchOperator":"CONTAINS"}
+{"blockPhrase":"ltd","matchOperator":"CONTAINS"}
+{"blockPhrase":"xxx","matchOperator":"CONTAINS"}
+{"blockPhrase":"king charle","matchOperator":"CONTAINS"}
+{"blockPhrase":"rachel reeve","matchOperator":"CONTAINS"}
+{"blockPhrase":"jonathan reynold","matchOperator":"CONTAINS"}
+{"blockPhrase":"jo steven","matchOperator":"CONTAINS"}
+{"blockPhrase":"darren jone","matchOperator":"CONTAINS"}
+{"blockPhrase":"anneliese dodd","matchOperator":"CONTAINS"}
+{"blockPhrase":"damian hind","matchOperator":"CONTAINS"}
+{"blockPhrase":"victoria atkin","matchOperator":"CONTAINS"}
+{"blockPhrase":"lord davie","matchOperator":"CONTAINS"}
+{"blockPhrase":"mims davie","matchOperator":"CONTAINS"}
+{"blockPhrase":"hercule","matchOperator":"EXACT_MATCH"}
+{"blockPhrase":"contact hercule","matchOperator":"EXACT_MATCH"}
+{"blockPhrase":"paying hercule","matchOperator":"EXACT_MATCH"}
+{"blockPhrase":"paying hard","matchOperator":"EXACT_MATCH"}
+{"blockPhrase":"paying harv","matchOperator":"EXACT_MATCH"}

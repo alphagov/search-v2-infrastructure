@@ -189,6 +189,9 @@ data "google_storage_bucket_object" "denylist" {
 }
 
 resource "restapi_object" "discovery_engine_datastore_completion_denylist" {
+  depends_on = [
+    google_storage_bucket_object.denylist
+  ]
   path      = "/dataStores/${var.datastore_id}/suggestionDenyListEntries"
   object_id = "suggestionDenyListEntries"
 
