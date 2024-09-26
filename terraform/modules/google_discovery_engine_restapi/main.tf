@@ -4,6 +4,10 @@ terraform {
       source  = "Mastercard/restapi"
       version = "~> 1.19.1"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.27.0"
+    }
   }
 
   required_version = "~> 1.7"
