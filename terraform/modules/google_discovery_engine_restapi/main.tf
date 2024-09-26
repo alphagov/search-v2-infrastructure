@@ -194,13 +194,13 @@ resource "restapi_object" "discovery_engine_datastore_completion_denylist" {
 
   create_method = "POST"
   create_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
-  update_method = "PATCH"
+  update_method = "POST"
   update_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
 
   data = jsonencode({
     "gcsSource" : {
       "inputUris" : [
-        data.google_storage_bucket_object.denylist.self_link
+        "gs://${var.storage_bucket_name}/denylist.jsonl"
       ]
     }
   })
