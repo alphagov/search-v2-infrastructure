@@ -190,8 +190,8 @@ resource "restapi_object" "discovery_engine_datastore_completion_denylist" {
   update_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
 
   data = jsonencode({
-    "gcsSource" : {
-      "inputUris" : [
+    gcsSource = {
+      inputUris = [
         "gs://${var.storage_bucket_name}/denylist.jsonl"
       ]
     }
