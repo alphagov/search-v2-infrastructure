@@ -13,7 +13,7 @@ variable "engine_id" {
   type        = string
 }
 
-variable "storage_bucket_name" {
-  description = "The name of the bucket containing VAIS artifacts"
-  type        = string
-}
+# variable "storage_bucket_name" {
+#   description = "The name of the bucket containing VAIS artifacts"
+#   type        = string
+# }

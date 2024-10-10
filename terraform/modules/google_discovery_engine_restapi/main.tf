@@ -179,21 +179,21 @@ resource "restapi_object" "discovery_engine_datastore_completion_config" {
   })
 }
 
-resource "restapi_object" "discovery_engine_datastore_completion_denylist" {
+# resource "restapi_object" "discovery_engine_datastore_completion_denylist" {
 
-  path      = "/dataStores/${var.datastore_id}/suggestionDenyListEntries"
-  object_id = "suggestionDenyListEntries"
+#   path      = "/dataStores/${var.datastore_id}/suggestionDenyListEntries"
+#   object_id = "suggestionDenyListEntries"
 
-  create_method = "POST"
-  create_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
-  update_method = "POST"
-  update_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
+#   create_method = "POST"
+#   create_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
+#   update_method = "POST"
+#   update_path   = "/dataStores/${var.datastore_id}/suggestionDenyListEntries:import"
 
-  data = jsonencode({
-    gcsSource = {
-      inputUris = [
-        "gs://${var.storage_bucket_name}/denylist.jsonl"
-      ]
-    }
-  })
-}
+#   data = jsonencode({
+#     gcsSource = {
+#       inputUris = [
+#         "gs://${var.storage_bucket_name}/denylist.jsonl"
+#       ]
+#     }
+#   })
+# }
