@@ -36,6 +36,13 @@ resource "google_project" "environment_project" {
   }
 }
 
+resource "google_project_iam_member" "environment_project_owner" {
+  project = google_project.environment_project.project_id
+  role    = "roles/owner"
+
+  member = "group:govuk-gcp-access@digital.cabinet-office.gov.uk"
+}
+
 resource "google_project_service" "api_service" {
   for_each = var.google_cloud_apis
 
