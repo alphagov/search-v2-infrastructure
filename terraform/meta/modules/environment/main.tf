@@ -93,7 +93,7 @@ resource "tfe_workspace" "environment_workspace" {
   source_name = "search-v2-infrastructure meta module"
   source_url  = "https://github.com/alphagov/search-v2-infrastructure/tree/main/terraform/meta"
 
-  working_directory = "terraform/environment"
+  working_directory = "terraform/deployments/search-api-v2"
   terraform_version = "~> 1.7.5"
 
   # Only auto apply if there is no workspace defined that we need to wait for (in which case a
@@ -103,14 +103,12 @@ resource "tfe_workspace" "environment_workspace" {
 
   file_triggers_enabled = true
   trigger_patterns = [
-    "/terraform/environment/**/*.tf",
-    "/terraform/environment/**/files/**/*",
-    "/terraform/modules/**/*.tf",
-    "/terraform/modules/**/files/**/*",
+    "/terraform/deployments/search-api-v2/**/*.tf",
+    "/terraform/deployments/search-api-v2/**/files/**/*",
   ]
 
   vcs_repo {
-    identifier     = "alphagov/search-v2-infrastructure"
+    identifier     = "alphagov/govuk-infrastructure"
     branch         = "main"
     oauth_token_id = data.tfe_oauth_client.github.oauth_token_id
   }
