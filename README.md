@@ -1,5 +1,11 @@
 # search-v2-infrastructure
-IaC definitions for GOV.UK Search v2
+
+> [!CAUTION]
+> This repo has been archived as of 20th January 2025 and code has been migrated to [alphagov/govuk-infrastructure](https://github.com/alphagov/govuk-infrastructure)
+
+---
+
+### IaC definitions for GOV.UK Search v2
 
 This repository contains Terraform resource definitions to provision Google Cloud's Vertex AI Agent
 Builder Search (also previously known as "Vertex AI Search and Conversation" or "Gen App Builder" or
